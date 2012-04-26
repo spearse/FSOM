@@ -1,0 +1,15 @@
+CMakeFiles/
+Makefile
+cmake_install.cmake
+src/CMakeFiles/
+src/Freeverb/CMakeFiles/
+src/Freeverb/Makefile
+src/Freeverb/cmake_install.cmake
+src/Freeverb/libFreeverb.a
+src/cmake_install.cmake
+src/libfsom.a
+src/tinyxml/CMakeFiles/
+src/tinyxml/Makefile
+src/tinyxml/cmake_install.cmake
+src/tinyxml/libtinyxml.a
+
