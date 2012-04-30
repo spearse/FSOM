@@ -12,4 +12,18 @@ src/tinyxml/CMakeFiles/
 src/tinyxml/Makefile
 src/tinyxml/cmake_install.cmake
 src/tinyxml/libtinyxml.a
+src/Debug/
+src/Freeverb/Debug/
+src/Freeverb/Freeverb.dir
+src/Freeverb/Freeverb.vcproj.Dave-PC.Dave.user
+src/Freeverb/Release/
+src/Release/
+src/fsom.dir/
+src/fsom.vcproj.Dave-PC.dave.user
+src/tinyxml/Debug
+src/tinyxml/Release
+src/tinyxml/tinyxml.dir
+src/tinyxml/tinyxml.vcproj.Dave-PC.dave.user
 
+*.vcproj
+*.sln
