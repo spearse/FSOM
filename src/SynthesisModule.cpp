@@ -85,8 +85,8 @@ void LFOModule::process(float** input, float** output, int frameSize, int channe
 		
 		amnt =   get_parameter("Amount")->get_value();
 		val = float(m_sineTable.linear_lookup(m_sineTable.get_size() * m_phasor.get_phase() )) ;  
-		output[0][frame] +=   (input[0][frame] * val)*amnt; 
-		output[1][frame] +=   (input[1][frame] * val)*amnt;
+		output[0][frame] =   (input[0][frame] * val)*amnt; 
+		output[1][frame] =   (input[1][frame] * val)*amnt;
 		m_phasor.tick();
 		
 	}

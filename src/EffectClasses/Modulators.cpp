@@ -31,7 +31,7 @@ HighAmpMod::HighAmpMod(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("HighAmpMod");
-	add_parameter("Frequency",10.0,500.0,10.0); //add parameter for phasor frequency
+	add_parameter("Frequency",10.0,15000.0,500.0); //add parameter for phasor frequency
 	add_parameter("Amplitude",0.0,1.0,0.5); //add parameter for phasor amplitude
 	set_meta(get_tutId(),"link to html");
 // 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
@@ -52,8 +52,8 @@ void HighAmpMod::process(float** input, float** output, int frameSize, int chann
 	  float phasorAmp = get_parameter("Amplitude")->get_value();
 	  for(int n = 0; n < frameSize; ++n){
 		  float v = sin(TWOPI*m_phasor.get_phase());
-		  output[0][n] += (v*phasorAmp) * input[0][n];
-		  output[1][n] += (v*phasorAmp) * input[1][n];
+		  output[0][n] = (v*phasorAmp) * input[0][n];
+		  output[1][n] = (v*phasorAmp) * input[1][n];
 		  m_phasor.tick();
 	  }
 	}else{
@@ -90,8 +90,8 @@ void LowAmpMod::process(float** input, float** output, int frameSize, int channe
 	  float phasorAmp = get_parameter("Amplitude")->get_value();
 	  for(int n = 0; n < frameSize; ++n){
 		  float v = sin(TWOPI*m_phasor.get_phase());
-		  output[0][n] += (v*phasorAmp) * input[0][n];
-		  output[1][n] += (v*phasorAmp) * input[1][n];
+		  output[0][n] = (v*phasorAmp) * input[0][n];
+		  output[1][n] = (v*phasorAmp) * input[1][n];
 		  m_phasor.tick();
 	  //	get_parent_region().set_gain(v * input[0][n]);	
 	  }
@@ -125,8 +125,8 @@ void Tremelo::process(float** input, float** output, int frameSize, int channels
 	assert(channels == 2);
 	for(int n = 0; n < frameSize; ++n){
 		float v = sin(TWOPI*m_phasor.get_phase());
-		output[0][n] += v * input[0][n];
-		output[1][n] += v * input[1][n];
+		output[0][n] = v * input[0][n];
+		output[1][n] = v * input[1][n];
 		m_phasor.tick();
 	}		
 
@@ -157,8 +157,8 @@ void RingMod::process(float** input, float** output, int frameSize, int channels
 
 	for(int n = 0; n < frameSize; ++n){
 		float v = sin(TWOPI*m_phasor.get_phase());
-		output[0][n] += v * input[0][n];
-		output[1][n] += v * input[1][n];
+		output[0][n] = v * input[0][n];
+		output[1][n] = v * input[1][n];
 		m_phasor.tick();
 	}
 	
