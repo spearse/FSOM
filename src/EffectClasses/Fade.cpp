@@ -60,7 +60,7 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
   }else{
    samplesRead = sess.get_previed_playhead_value(); 
   }
-  std::cout << samplesRead <<std::endl;
+ // std::cout << samplesRead <<std::endl;
   if(!bypass_active()){
        m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time")->get_value()*44100.0;
        m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time")->get_value()*44100.0;
@@ -73,6 +73,7 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
 	    
 	    samplesRead++;
       }
+      
   }else{
     output[0] = input[0];
     output[1] = input[1];

@@ -195,7 +195,7 @@ DSPStack& Region::get_DSPStack(){
 void Region::process_region(float** input, float** output, int frameSize, int channels, SamplePosition globalPosition){
     if(!m_isInExtensionMode){
 	m_internalPos = globalPosition - m_dataStruct.m_startPos;
-	std::cout << "pos "<< globalPosition;
+	//std::cout << "pos "<< globalPosition;
 	process(input,output,frameSize,channels);
     }else{
 	m_stackBufferB.clear();
@@ -212,7 +212,7 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 	A = m_stackBufferB.get_buffers();
  	while(it !=m_DSPStack.end()){
 		std::swap(A,B);
-	    (*it)->process(A,B,frameSize,channels );
+		(*it)->process(A,B,frameSize,channels );
 		++it;
 	}
 	// now sum B onto output;

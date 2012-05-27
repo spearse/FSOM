@@ -17,7 +17,8 @@
 */
 
 
-
+#include "../include/fsom/Session.hpp"
+#include "../include/fsom/Engine.hpp"
 #include "../include/fsom/SynthesisRegion.hpp"
 #include "../include/fsom/SynthesisModuleManager.hpp"
 
@@ -30,6 +31,21 @@ SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 	m_stackBufferA(2,4096),
 	m_stackBufferB(2,4096)
 {
+	const float preferedFadeTime = 44.0; //duration for prefered fading in and out if smaller make fades half duration
+  
+	if(creationStruct.m_duration < (preferedFadeTime*2)){
+	      float fadeTime = creationStruct.m_duration/2.0;
+	  
+	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(fadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-fadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
+	}else{
+	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(preferedFadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-preferedFadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
+	}
 	
 }
 	
@@ -42,7 +58,6 @@ GeneratorPtr SynthesisRegion::get_generator(int index){
 	
 }
 
-
 GeneratorStack& SynthesisRegion::get_generator_stack(){
 	return m_generatorStack;
 }
@@ -51,16 +66,38 @@ void SynthesisRegion::add_generator(GeneratorPtr generator){
 	m_generatorStack.push_back(generator);
 }
 
-
-
-
-
 void SynthesisRegion::process(float** input, float** output, int frameSize, int channels){
+  
+	SamplePosition samplesRead;
+      
+	fsom::Session& sess = fsom::Engine::get_instance().get_active_session();
+  
+	if(sess.get_preview_state() == false){
+	    samplesRead = get_sample_position();
+	    
+	}else{
+	    samplesRead = sess.get_previed_playhead_value(); 
+	}
+    
 	float** t = m_stackBufferA.get_buffers();
-	float** t2 = m_stackBufferB.get_buffers();
+	float** t2 = m_stackBufferA.get_buffers();
+	float** t3 = m_stackBufferB.get_buffers();
 	process_generator_stack(0,t,frameSize,channels);
-	process_module_stack(t,t2,frameSize,channels);
-	process_dsp_stack(t2,output,frameSize,channels);
+	
+	for(int n = 0; n < frameSize; ++n){ 
+	    
+	    t2[0][n] = t[0][n] * m_internalFadeUnit.get_value(samplesRead);   
+	    t2[1][n] = t[1][n] * m_internalFadeUnit.get_value(samplesRead);
+	    
+	    samplesRead++;
+	}
+	
+	process_module_stack(t2,t3,frameSize,channels);
+	
+
+	process_dsp_stack(t3,output,frameSize,channels);
+	
+	
 }
 	
 	
@@ -103,9 +140,6 @@ void SynthesisRegion::add_module(std::string id){
 	m_moduleStack.push_back( SynthesisModuleManager::get_instance().create(id,dspCreationStruct())  );
   
 }
-
-
-
 
 void SynthesisRegion::process_module_stack(float** input, float** output, int frameSize, int channels){
 	for(int n = 0; n < m_moduleStack.size();++n){

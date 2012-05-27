@@ -35,6 +35,7 @@ class SynthesisRegion :public Region{
 	GeneratorStack m_generatorStack;
 	SynthesisModuleStack m_moduleStack;
 	MultiChannelBuffer m_stackBufferA,m_stackBufferB;
+	BreakPointUnit m_internalFadeUnit;
 	
 public:
 	SynthesisRegion(regionCreationStruct creationStruct);
