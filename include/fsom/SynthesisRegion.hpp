@@ -36,6 +36,8 @@ class SynthesisRegion :public Region{
 	SynthesisModuleStack m_moduleStack;
 	MultiChannelBuffer m_stackBufferA,m_stackBufferB;
 	BreakPointUnit m_internalFadeUnit;
+		
+	const float m_preferedFadeTime; //duration for prefered fading in and out if smaller make fades half duration
 	
 public:
 	SynthesisRegion(regionCreationStruct creationStruct);
@@ -67,6 +69,8 @@ public:
 	
 	void process_generator_stack(float** input, float** output, int frameSize, int channels);	
 	void process_module_stack(float** input, float** output, int frameSize, int channels);	
+	
+	void update_fade_points();
 	
 	MultiChannelBuffer& get_bufferA();
 	MultiChannelBuffer& get_bufferB();

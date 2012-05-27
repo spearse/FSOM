@@ -24,16 +24,16 @@
 
 #include "tinyxml/tinyxml.h"
 
-namespace fsom{
-	
+namespace fsom{  
+  
 SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 	Region(creationStruct),
 	m_stackBufferA(2,4096),
-	m_stackBufferB(2,4096)
+	m_stackBufferB(2,4096),	
+	m_preferedFadeTime(44.0) //duration for prefered fading in and out if smaller make fades half duration
 {
-	const float preferedFadeTime = 44.0; //duration for prefered fading in and out if smaller make fades half duration
-  
-	if(creationStruct.m_duration < (preferedFadeTime*2)){
+	
+	if(creationStruct.m_duration < (m_preferedFadeTime*2)){
 	      float fadeTime = creationStruct.m_duration/2.0;
 	  
 	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
@@ -42,11 +42,10 @@ SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
 	}else{
 	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
-	      m_internalFadeUnit.add_breakpoint(TVPair(preferedFadeTime, 1.0));
-	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-preferedFadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(m_preferedFadeTime, 1.0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-m_preferedFadeTime, 1.0));
 	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
 	}
-	
 }
 	
 SynthesisRegion::~SynthesisRegion(){
@@ -201,6 +200,30 @@ void SynthesisRegion::add_modulePtr(SynthesisModulePtr module){
 void SynthesisRegion::add_generatorPtr(GeneratorPtr generator){
   m_generatorStack.push_back(generator);
 }
+
+void SynthesisRegion::update_fade_points(){
+ 
+  	if(get_duration() < (m_preferedFadeTime*2)){
+		float fadeTime = get_duration()/2.0;
+	      
+	        m_internalFadeUnit.get_pair(0).t_ = 0.0;
+		m_internalFadeUnit.get_pair(1).t_ = fadeTime;
+		m_internalFadeUnit.get_pair(2).t_ = get_duration()-fadeTime;
+		m_internalFadeUnit.get_pair(3).t_ = get_duration();
+		m_internalFadeUnit.sort();
+	}else{
+	      
+	      m_internalFadeUnit.get_pair(0).t_ = 0.0;
+	      m_internalFadeUnit.get_pair(1).t_ = m_preferedFadeTime;
+	      m_internalFadeUnit.get_pair(2).t_ = get_duration()-m_preferedFadeTime;
+	      m_internalFadeUnit.get_pair(3).t_ = get_duration();
+	      m_internalFadeUnit.sort();
+	}
+  
+  
+  
+}
+ 
 	
 	
 	
