@@ -46,6 +46,11 @@ Envelope::Envelope(dspCreationStruct data) :
 	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time")->get_value()*44100,
 					   get_parameter("Sustain Amplitude")->get_value()));
 	  m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
+
+	    get_arrange_list().push_back(2);
+	    get_arrange_list().push_back(3);
+	    get_arrange_list().push_back(1);
+	    get_arrange_list().push_back(0);
 	  
 	  set_implementation();
 }

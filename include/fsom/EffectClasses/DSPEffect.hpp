@@ -45,7 +45,6 @@ struct dspCreationStruct{
 	  dspCreationStruct(fsom::Region* region):attatchedRegion(region){}
 	  dspCreationStruct(){}
 };
-
  
  
 class DSPEffect : public MetaDataStore
@@ -56,7 +55,7 @@ class DSPEffect : public MetaDataStore
 	ParameterList m_parameterList;
 	dspCreationStruct m_dataStruct;
 	bool m_isImplemented, m_bypass;
-	
+	std::vector<int> m_paramArrangeList;
 protected:
 	DSPEffect(const DSPEffect& op);
 	DSPEffect& operator = (const DSPEffect& op); // not defined
@@ -82,6 +81,9 @@ public:
 	bool bypass_active();
 	virtual void reset_effect(){};
 	void set_bypass(bool state);
+	std::vector<int>& get_arrange_list(){
+	    return m_paramArrangeList;
+	}
 };
 
 typedef boost::shared_ptr<DSPEffect> DSPEffectPtr;

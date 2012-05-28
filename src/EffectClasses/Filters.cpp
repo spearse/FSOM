@@ -43,6 +43,9 @@ LowPassFilter::LowPassFilter(dspCreationStruct data):
 	get_biquad_right().set_LPF(10000.0,5.0);
 	get_biquad_left().print_coef();
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 }
 
 LowPassFilter::~LowPassFilter(){
@@ -54,6 +57,7 @@ void LowPassFilter::one_shot(){
 	float q = get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_LPF(f,q);
 	get_biquad_right().set_LPF(f,q);
+
 }
 
 
@@ -85,6 +89,9 @@ HighPassFilter::HighPassFilter(dspCreationStruct data):
 	get_biquad_left().set_HPF(440,5.0);
 	get_biquad_right().set_HPF(440.0,5.0);
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 }
 
 HighPassFilter::~HighPassFilter(){
@@ -127,6 +134,9 @@ ResonatingFilter::ResonatingFilter(dspCreationStruct data):
 	get_biquad_left().set_BPF(440,1);
 	get_biquad_right().set_BPF(440,1);
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 }
 
 ResonatingFilter::~ResonatingFilter(){
@@ -169,6 +179,9 @@ BandRejectFilter::BandRejectFilter(dspCreationStruct data):
 	get_biquad_left().set_BAND_REJECT(440,1);
 	get_biquad_right().set_BAND_REJECT(440,1);
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -212,6 +225,9 @@ BandPassFilter::BandPassFilter(dspCreationStruct data):
 	get_biquad_left().set_BPF(440,1);
 	get_biquad_right().set_BPF(440,1);
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -258,6 +274,10 @@ CombFilter::CombFilter(dspCreationStruct data):
 	add_parameter("Feedforward",0.0,0.99,0.68);
 	get_parameter("Feedforward")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 }
 
 CombFilter::~CombFilter(){}
@@ -307,6 +327,9 @@ AllPassFilter::AllPassFilter(dspCreationStruct data):
 	get_biquad_left().set_ALL(440,1);
 	get_biquad_right().set_ALL(440,1);
 	set_implementation();
+	
+	get_arrange_list().push_back(1);
+	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -376,7 +399,9 @@ MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biqu
     
     set_implementation();
 
-
+     for(int i = 0; i < get_parameter_list().size(); i++){
+    	get_arrange_list().push_back(i);
+     }
 }
 
 void MultiBandFilter::process(float** input, float** output, int frameSize, int channels){

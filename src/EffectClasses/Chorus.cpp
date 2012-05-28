@@ -39,6 +39,11 @@ Chorus::Chorus(dspCreationStruct data):
     get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 
     set_implementation();
+    
+    get_arrange_list().push_back(2);
+    get_arrange_list().push_back(0);
+    get_arrange_list().push_back(1);
+
 }
 
 Chorus::~Chorus()

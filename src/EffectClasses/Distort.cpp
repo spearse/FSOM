@@ -34,6 +34,10 @@ Distort::Distort(dspCreationStruct data):
 	//m_table.print_table();
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_implementation();
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 }
 
 Distort::~Distort()

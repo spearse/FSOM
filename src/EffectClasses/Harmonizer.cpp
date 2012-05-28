@@ -24,10 +24,19 @@ namespace fsom{
   
 Harmonizer::Harmonizer(dspCreationStruct data): DSPEffect(data){
   set_effect_name("Harmonizer");
-  add_parameter("Pitch One Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0);
+  add_parameter("Pitch One Shift Amount",-12.0,12.0,0.0); 
+  add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);  
+  add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0); 
+  add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0); 
+  
+
+
+    get_arrange_list().push_back(0);
+    get_arrange_list().push_back(2);
+    get_arrange_list().push_back(3);
+    get_arrange_list().push_back(1);
+  
+  
   set_implementation();
 }
 

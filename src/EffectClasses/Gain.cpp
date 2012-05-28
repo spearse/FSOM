@@ -32,6 +32,9 @@ Gain::Gain(dspCreationStruct data) :
 	get_parameter("Gain")->set_meta("GuiHint","soCustomFader");
 	get_parameter("Gain")->set_meta("Tip","Volume Control");
 	set_implementation();
+
+	get_arrange_list().push_back(0);
+
 }
 Gain::~Gain(){
 

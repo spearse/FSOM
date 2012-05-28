@@ -37,6 +37,10 @@ AsymmetricDelay::AsymmetricDelay(dspCreationStruct data):
     add_parameter("Third Delay Time",0,10,5);
     add_parameter("Third Delay Volume",0,1,0.5);
     data.attatchedRegion->set_extension(44100*15);
+    set_implementation();
+    	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back((get_parameter_list().size()-1)-i);
+	}
 }
  
  

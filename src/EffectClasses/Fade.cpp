@@ -41,6 +41,10 @@ Fade::Fade(dspCreationStruct data):
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time")->get_value()*44100.0, 1.0));
    m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
   
+
+    get_arrange_list().push_back(1);
+    get_arrange_list().push_back(0);
+   
    set_implementation();
 }
 

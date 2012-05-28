@@ -39,6 +39,10 @@ HighAmpMod::HighAmpMod(dspCreationStruct data) :
 	//set_implementation();
 	m_phasor.set_frequency(get_parameter("Frequency")->get_value());
 	set_implementation();
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 }
 
 HighAmpMod::~HighAmpMod(){}
@@ -76,6 +80,11 @@ LowAmpMod::LowAmpMod(dspCreationStruct data) :
 // 	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");
 	//set_implementation();
 	m_phasor.set_frequency(get_parameter("Frequency")->get_value());
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
+	
 	set_implementation();
 }
 
@@ -114,6 +123,10 @@ Tremelo::Tremelo(dspCreationStruct data) :
 	m_phasor.set_frequency(get_parameter("Frequency")->get_value());
 // 	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");
 	//set_implementation();
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 }
 
 
@@ -143,8 +156,12 @@ RingMod::RingMod(dspCreationStruct data) :
 
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");
-	//set_implementation();
+	set_implementation();
 	m_phasor.set_frequency(get_parameter("Freq")->get_value());
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 }
 
 RingMod::~RingMod(){}

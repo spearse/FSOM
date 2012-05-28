@@ -28,10 +28,12 @@ DSPEffect::DSPEffect(dspCreationStruct creationStruct) :
 	m_tutId("TutorialLink"),
 	m_dataStruct(creationStruct),
 	m_isImplemented(false),
-	m_bypass(false)
+	m_bypass(false),
+	m_paramArrangeList(0)
 {
 	register_meta(m_tutId);
 	register_meta("Tip");
+	
 }
 
 DSPEffect::DSPEffect(const DSPEffect& op) :
@@ -47,16 +49,16 @@ DSPEffect::DSPEffect(const DSPEffect& op) :
 	for(ParameterList::const_iterator it = op.m_parameterList.begin();
 		it != op.m_parameterList.end();
 		++it){
-		std::pair<ParameterList::iterator,bool> ret = m_parameterList.insert( std::make_pair(it->first, ParameterPtr(new Parameter( *(it->second) ) ) ) );
+		std::pair<ParameterList::iterator,bool> ret = m_parameterList.insert( std::make_pair(it->first, ParameterPtr(new Parameter(*(it->second) ) ) ) );
 		assert(ret.second == true && "could not insert into the map");
 	}
+	
 }
 
 DSPEffect::~DSPEffect()
 {
 
 }
-
 
 ParameterPtr DSPEffect::get_parameter(std::string IDName) {
 	std::map<std::string, ParameterPtr>::iterator it;

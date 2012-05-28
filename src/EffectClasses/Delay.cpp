@@ -35,6 +35,10 @@ Delay::Delay(dspCreationStruct data):
 	get_parameter("Delay Volume")->set_meta("GuiHint","soCustomFader");
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_implementation();
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
 	data.attatchedRegion->set_extension(44100*15);
 }
 

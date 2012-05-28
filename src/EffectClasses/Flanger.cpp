@@ -38,6 +38,11 @@ Flanger::Flanger(dspCreationStruct data):
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Feedback",0.0,1.0,0.2);
 	get_parameter("Feedback")->set_meta("GuiHint","soCustomFader");
+	
+	for(int i = 0; i < get_parameter_list().size(); i++){
+	    get_arrange_list().push_back(i);
+	}
+	
 	set_implementation();
 	
 }
