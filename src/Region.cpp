@@ -44,13 +44,13 @@ Region::Region(regionCreationStruct creationStruct) :
 	set_reverse_state(m_dataStruct.m_reverseState);
 	set_extension(m_dataStruct.m_extension);
 }
-
+/*
 Region::~Region(){
 
 clear_all_effects();
 
 }
-
+*/
 void Region::set_start_pos(SamplePosition startPos){
 	m_dataStruct.m_startPos=startPos;
 }
@@ -160,7 +160,7 @@ void Region::attach_effect(DSPEffectPtr p){
 }
 
 void Region::add_effect(std::string id){
-	m_DSPStack.push_back(fsom::DSPManager::get_instance().create(id,dspCreationStruct(this)));
+	m_DSPStack.push_back(fsom::DSPManager::get_instance().create(id,dspCreationStruct(RegionPtr(this))));
 	std::cout << "***    Effect Stack  ***"<<std::endl;
 	for(int n = 0; n < m_DSPStack.size();++n){
 	 std::cout << "***" <<  m_DSPStack.at(n)->get_effect_name()<< "***"<<std::endl;
@@ -224,7 +224,7 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 }
 
 void Region::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
-	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(IdName,lowerBound,upperBound,value))));
+	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(RegionPtr(this),IdName,lowerBound,upperBound,value))));
 }
 
 ParameterPtr Region::get_parameter(std::string IdName){

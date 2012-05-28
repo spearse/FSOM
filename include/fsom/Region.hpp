@@ -68,7 +68,7 @@ public:
 	Region(regionCreationStruct creationStruct);
 	//copy constructor
 	//Region(const Region& _region);
-	virtual ~Region();
+	//virtual ~Region();
 	/// abstract function that specific implementors must overide
 	virtual void process(float** input, float** output, int frameSize, int channels) = 0;
 	

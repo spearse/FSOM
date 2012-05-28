@@ -84,7 +84,7 @@ int DSPEffect::get_num_parameter() const {
 }
 
 void DSPEffect::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
-	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(IdName,lowerBound,upperBound,value) )      ));
+	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(m_dataStruct.attatchedRegion,IdName,lowerBound,upperBound,value) )      ));
 }
 
 std::string& DSPEffect::get_effect_name(){

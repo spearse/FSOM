@@ -61,7 +61,7 @@ Session::~Session(){
 
 // }
 
-Parameter Session::create_parameter_from_node(TiXmlElement* element){
+Parameter Session::create_parameter_from_node(TiXmlElement* element,RegionPtr region){
 	assert(element);
 	std::string id = element->Attribute("Id");
 	assert(id != "");
@@ -72,20 +72,17 @@ Parameter Session::create_parameter_from_node(TiXmlElement* element){
 // 	assert(value);
 	element->QueryFloatAttribute("UpperBound", &upperBound);
 // 	assert(value);
-	Parameter t(id, lowerBound,upperBound,value);
+	Parameter t(region, id, lowerBound,upperBound,value);
 	std::cout  << "Loaded parameter:" << id << std::endl;
 	return t;
 
 }
 
-
-
-
 DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,RegionPtr region){
 
-    assert(element);
+  assert(element);
   std::string typeName = element->Attribute("name");
-  DSPEffectPtr t =  DSPManager::get_instance().create(typeName,dspCreationStruct(region.get()));
+  DSPEffectPtr t =  DSPManager::get_instance().create(typeName,dspCreationStruct(region));
   assert(t);
   TiXmlElement * meta = element->FirstChildElement("MetaData");
   //TODO streamline this process of loading, specific function for loading dspeffect and region meta needed
@@ -97,7 +94,7 @@ DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,RegionPtr re
 
   TiXmlElement * child = element->FirstChildElement("Parameter");
   while(child){
-    Parameter p = create_parameter_from_node(child);
+    Parameter p = create_parameter_from_node(child, region);
     t->get_parameter(p.get_name())->set_value(p.get_value());
     child = child->NextSiblingElement("Parameter");
   }
@@ -106,7 +103,7 @@ DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,RegionPtr re
   
 }
 
-GeneratorPtr Session::create_generator_from_node(TiXmlElement* element){
+GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, RegionPtr region){
     std::cout << "Attempting to create generator"<<std::endl;
     GeneratorPtr gen = GeneratorPtr(new Generator(Generator::GEN_Sine));
     
@@ -131,7 +128,7 @@ GeneratorPtr Session::create_generator_from_node(TiXmlElement* element){
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
       std::cout << "Parameter in generator found"<<std::endl;
-      Parameter p = create_parameter_from_node(child);
+      Parameter p = create_parameter_from_node(child, region);
       gen->get_parameter(p.get_name())->set_value(p.get_value());
       child = child->NextSiblingElement("Parameter");
     }
@@ -139,7 +136,7 @@ GeneratorPtr Session::create_generator_from_node(TiXmlElement* element){
     return gen;
 }
 
-SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element){
+SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, RegionPtr region){
   std::cout << "Attempting to create module from node"<<std::endl;
    TiXmlElement* basicInfoElement = element->FirstChildElement("BasicInfo");
    SynthesisModulePtr module;
@@ -150,7 +147,7 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element){
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
       std::cout << "Parameter in module found"<<std::endl;
-      Parameter p = create_parameter_from_node(child);
+      Parameter p = create_parameter_from_node(child, region);
       module->get_parameter(p.get_name())->set_value(p.get_value());
       child = child->NextSiblingElement("Parameter");
     }
@@ -230,14 +227,14 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
       
       TiXmlElement* generatorElement = element->FirstChildElement("Generator");
       while(generatorElement){
-	GeneratorPtr gen = create_generator_from_node(generatorElement);
+	GeneratorPtr gen = create_generator_from_node(generatorElement,pRegion);
 	synthregion->add_generatorPtr(gen);
 	generatorElement = generatorElement->NextSiblingElement("Generator");
       }
       std::cout << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
       TiXmlElement* moduleElement = element->FirstChildElement("Module");
       while(moduleElement){
-	SynthesisModulePtr mod = create_module_from_node(moduleElement);
+	SynthesisModulePtr mod = create_module_from_node(moduleElement,pRegion);
 	synthregion->add_modulePtr(mod);
 	moduleElement = moduleElement->NextSiblingElement("Module");
       }

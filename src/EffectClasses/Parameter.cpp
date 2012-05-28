@@ -19,11 +19,13 @@
 
 
 #include "../include/fsom/EffectClasses/Parameter.hpp"
+#include "../include/fsom/Utilities.hpp"
+#include "../include/fsom/Region.hpp"
 #include <iostream>
 
 using namespace fsom;
 
-Parameter::Parameter(std::string IDName, float lowerBound, float upperBound, float value ) : 
+Parameter::Parameter(RegionPtr parentRegion, std::string IDName, float lowerBound, float upperBound, float value ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
 	m_lowerBound(lowerBound),
@@ -35,6 +37,14 @@ Parameter::Parameter(std::string IDName, float lowerBound, float upperBound, flo
 	register_meta("UpperBound");
 	set_meta_as_float("UpperBound",upperBound);
 	register_meta("Tip");
+	
+	m_bpUnit = new BreakPointUnit();
+	
+	//TODO temporary test breakpoints
+	m_bpUnit->add_breakpoint(TVPair(1, 0.1));
+	m_bpUnit->add_breakpoint(TVPair(4410, 1.0));
+	m_bpUnit->add_breakpoint(TVPair(22050, 1.0));
+	m_bpUnit->add_breakpoint(TVPair(44100, 0.1));
 }
 
 Parameter::~Parameter(){
@@ -71,5 +81,9 @@ float Parameter::get_range(){
     return m_upperBound - m_lowerBound;
 }
 
+BreakPointUnit* Parameter::get_breakpoints(){
+  
+  return m_bpUnit;
+}
 
 
