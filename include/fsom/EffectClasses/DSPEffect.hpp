@@ -41,8 +41,8 @@ typedef std::map<std::string,ParameterPtr> ParameterList;
 
 struct dspCreationStruct{
 	  int dummy;
-	  RegionPtr attatchedRegion;
-	  dspCreationStruct(fsom::RegionPtr region):attatchedRegion(region){}
+	  Region* attatchedRegion;
+	  dspCreationStruct(fsom::Region* region):attatchedRegion(region){}
 	  dspCreationStruct(){}
 };
 

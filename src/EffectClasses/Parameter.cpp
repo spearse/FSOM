@@ -25,11 +25,12 @@
 
 using namespace fsom;
 
-Parameter::Parameter(RegionPtr parentRegion, std::string IDName, float lowerBound, float upperBound, float value ) : 
+Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
 	m_lowerBound(lowerBound),
-	m_upperBound(upperBound)
+	m_upperBound(upperBound),
+	m_duration(duration)
 	{
 	register_meta("GuiHint");
 	register_meta("LowerBound");
@@ -44,7 +45,7 @@ Parameter::Parameter(RegionPtr parentRegion, std::string IDName, float lowerBoun
 	m_bpUnit->add_breakpoint(TVPair(1, 0.1));
 	m_bpUnit->add_breakpoint(TVPair(4410, 1.0));
 	m_bpUnit->add_breakpoint(TVPair(22050, 1.0));
-	m_bpUnit->add_breakpoint(TVPair(44100, 0.1));
+	m_bpUnit->add_breakpoint(TVPair(m_duration, 0.1));
 }
 
 Parameter::~Parameter(){

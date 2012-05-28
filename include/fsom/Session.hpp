@@ -105,10 +105,10 @@ class Session : public MetaDataStore{
 	std::string m_workingDirectory;
 	
 	RegionPtr create_region_from_node(TiXmlElement* element);
-	Parameter create_parameter_from_node(TiXmlElement* element,RegionPtr region);
-	DSPEffectPtr create_effect_from_node(TiXmlElement* element,RegionPtr region);
-	GeneratorPtr create_generator_from_node(TiXmlElement* element, RegionPtr region);
-	SynthesisModulePtr create_module_from_node(TiXmlElement* element, RegionPtr region);
+	ParameterPtr create_parameter_from_node(TiXmlElement* element,Region* region);
+	DSPEffectPtr create_effect_from_node(TiXmlElement* element,Region* region);
+	GeneratorPtr create_generator_from_node(TiXmlElement* element, Region* region);
+	SynthesisModulePtr create_module_from_node(TiXmlElement* element, Region* region);
 public:
 	Session();
 	~Session();

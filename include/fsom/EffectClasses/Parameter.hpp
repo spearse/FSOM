@@ -22,24 +22,22 @@
 
 #include "../MetaDataStore.hpp"
 #include <boost/shared_ptr.hpp>
+#include "../Utilities.hpp"
 
 
 namespace fsom{
 
   class BreakPointUnit;
-  class Region;
-  
-  typedef boost::shared_ptr<Region> RegionPtr;
   
 class Parameter : public MetaDataStore {
 
 std::string m_IDName;
 float m_currentValue,m_lowerBound,m_upperBound;
 BreakPointUnit* m_bpUnit;
-
+SampleLength m_duration;
 public:
 
-Parameter(RegionPtr parentRegion ,std::string IDName,float lowerBound,float upperBound,float value);
+Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value);
 ~Parameter();
 void set_value(float value);
 //void set_value(float value, double timeCode);
