@@ -271,6 +271,22 @@ class BreakPointUnit{
     const TVPair& get_pair(int index) const {return bpList_.at(index);}
     TVPair& get_pair(int index) {return bpList_.at(index);}
     int get_list_size(){ return bpList_.size();}
+    
+    TVPair get_closest_pair(float Time){
+	    assert( bpList_.size() > 0 );
+	//    if(  Time <= bpList_.begin()->t_ ) return bpList_.begin();
+	//    if(  Time >= bpList_.rbegin()->t_ ) return bpList_.rbegin();
+	    
+	  BPList::iterator itB = std::upper_bound(bpList_.begin(), bpList_.end(), Time);
+	  BPList::iterator itA = itB-1;
+      
+	 if((itB->t_ - Time) < (Time - itA->t_)){
+	    return (*itB);
+	 }else{
+	   return (*itA);  
+	 }
+    }
+    
     void sort(){ std::sort(bpList_.begin(), bpList_.end());}
 };
 
