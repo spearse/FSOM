@@ -42,10 +42,8 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	m_bpUnit = new BreakPointUnit();
 	
 	//TODO temporary test breakpoints
-	m_bpUnit->add_breakpoint(TVPair(1, 0.1));
-	m_bpUnit->add_breakpoint(TVPair(4410, 1.0));
-	m_bpUnit->add_breakpoint(TVPair(22050, 1.0));
-	m_bpUnit->add_breakpoint(TVPair(m_duration, 0.1));
+	m_bpUnit->add_breakpoint(TVPair(0, 0.0));
+	m_bpUnit->add_breakpoint(TVPair(m_duration, 0.0));
 }
 
 Parameter::~Parameter(){

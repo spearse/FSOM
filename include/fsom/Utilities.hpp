@@ -224,7 +224,7 @@ struct TVPair{
     v_(v)
     {};
    bool operator < (const TVPair& op) const {
-     return t_ < op.t_ && v_ < op.v_;
+     return t_ < op.t_;// && v_ < op.v_;
    }
    
 };
@@ -279,12 +279,23 @@ class BreakPointUnit{
 	    
 	  BPList::iterator itB = std::upper_bound(bpList_.begin(), bpList_.end(), Time);
 	  BPList::iterator itA = itB-1;
-      
+	  
+	 std::cout << "time = " << Time << std::endl;
+	 std::cout << "itB->t_ = " << itB->t_ << " : itA->t_ = " << itA->t_ << std::endl;
+	 std::cout << "itB index = " << itB - bpList_.begin() << std::endl;	  
+	 
 	 if((itB->t_ - Time) < (Time - itA->t_)){
 	    return (*itB);
 	 }else{
-	   return (*itA);  
+	    return (*itA);  
 	 }
+    }
+    
+    void print_breakpoints(){
+      
+       for( BPList::iterator it = bpList_.begin();it != bpList_.end();	++it){
+		std::cout << " : time = " << it->t_ << " : val ="  << it->v_ << std::endl;
+       } 
     }
     
     void sort(){ std::sort(bpList_.begin(), bpList_.end());}
