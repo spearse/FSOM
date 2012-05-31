@@ -19,6 +19,8 @@
 
 
 #include "../../include/fsom/EffectClasses/Chorus.hpp"
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 namespace fsom{
   
@@ -47,14 +49,32 @@ Chorus::~Chorus()
 }
 
 void Chorus::process(float** input, float** output, int frameSize, int channels){
-
+  
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+    
+	  
   if(!bypass_active()){
-      float depth = get_parameter("Depth")->get_value() * 100.0f;
-      float mix = get_parameter("Mix")->get_value();
-      float invmix = 1.0f - mix;
-      float frequency = get_parameter("Frequency")->get_value() *0.8 ;
+      float depth;
+      float mix;
+      float invmix;
+      float frequency;
       m_modPhasor.set_frequency( frequency );
       for(int n = 0; n < frameSize; ++n){
+	
+	  depth = get_parameter("Depth")->get_value() * 100.0f;
+	  mix = get_parameter("Mix")->get_value();
+	  invmix = 1.0f - mix;
+	  frequency = get_parameter("Frequency")->get_value() *0.8 ;
+	
 	  float dt = m_modTable.linear_lookup( m_modPhasor.get_phase()* m_modTable.get_size()) * depth + depth + 1.0f;
 	  m_delayUnitL.write_sample(input[0][n]);
 	  m_delayUnitR.write_sample(input[1][n]);
@@ -63,6 +83,12 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
 	  m_modPhasor.tick();
 	  m_delayUnitL.tick();
 	  m_delayUnitR.tick();
+	  
+	  for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	      (*it).second->tick(samplesRead);
+	  }
+	  
+	  samplesRead++;
       }
   }else{
     output[0] = input[0];

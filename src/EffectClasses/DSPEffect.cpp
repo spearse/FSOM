@@ -53,6 +53,7 @@ DSPEffect::DSPEffect(const DSPEffect& op) :
 	}
 }
 
+
 DSPEffect::~DSPEffect()
 {
 

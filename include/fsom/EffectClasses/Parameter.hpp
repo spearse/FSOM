@@ -43,7 +43,7 @@ void set_value(float value);
 //void set_value(float value, double timeCode);
 float get_value();
 std::string get_name();
-void tick();
+void tick(SampleLength& samplesRead);
 float get_lowerBound();
 float get_upperBound();
 float get_range();

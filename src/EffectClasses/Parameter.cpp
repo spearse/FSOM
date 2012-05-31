@@ -46,9 +46,7 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	m_bpUnit->add_breakpoint(TVPair(m_duration, 0.0));
 }
 
-Parameter::~Parameter(){
-
-}
+Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){
 	m_currentValue = value; 
@@ -65,9 +63,8 @@ std::string Parameter::get_name(){
     return m_IDName;
 }
 
-void Parameter::tick(){
-
-
+void Parameter::tick(SampleLength& samplesRead){
+    m_currentValue = m_bpUnit->get_value(samplesRead);
 }
 
 float Parameter::get_lowerBound(){
