@@ -272,7 +272,7 @@ class BreakPointUnit{
     TVPair& get_pair(int index) {return bpList_.at(index);}
     int get_list_size(){ return bpList_.size();}
     
-    TVPair get_closest_pair(float Time){
+  /*  TVPair get_closest_pair(float Time){
 	    assert( bpList_.size() > 0 );
 	//    if(  Time <= bpList_.begin()->t_ ) return bpList_.begin();
 	//    if(  Time >= bpList_.rbegin()->t_ ) return bpList_.rbegin();
@@ -289,7 +289,7 @@ class BreakPointUnit{
 	 }else{
 	    return (*itA);  
 	 }
-    }
+    }*/
     
     void print_breakpoints(){
       
