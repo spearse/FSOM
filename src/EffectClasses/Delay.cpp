@@ -20,7 +20,9 @@
 
 #include "../../include/fsom/EffectClasses/Delay.hpp"
 #include <fsom/Region.hpp>
-#include <iostream>
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
+
 namespace fsom{
 Delay::Delay(dspCreationStruct data):
 	DSPEffect(data),
@@ -44,6 +46,19 @@ Delay::~Delay()
 }
 void Delay::process(float** input, float** output, int frameSize, int channels){
   
+	
+	SamplePosition samplesRead;
+	
+	Session& sess = fsom::Engine::get_instance().get_active_session();
+	
+	if(sess.get_preview_state() == false){
+	    samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	    
+	}else{
+	    samplesRead = sess.get_previed_playhead_value(); 
+	}  
+	  
+  
 	if(!bypass_active()){
   
 	  float a,b;
@@ -58,6 +73,12 @@ void Delay::process(float** input, float** output, int frameSize, int channels){
 		  m_delayUnitR.write_sample(a * get_parameter("Delay Volume")->get_value());
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
+		  
+		  for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+		      (*it).second->tick(samplesRead);
+		  }
+		  
+		  samplesRead++;
 	  }
 	}else{
 	    output[0] = input[0];
@@ -67,7 +88,6 @@ void Delay::process(float** input, float** output, int frameSize, int channels){
 }
 
 void Delay::reset_effect(){
-  std::cout << "Reseting Delay's delay units"<<std::endl;
   m_delayUnitL.clear_buffer();
   m_delayUnitR.clear_buffer();
 }

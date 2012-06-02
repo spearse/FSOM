@@ -19,6 +19,8 @@
 
 
 #include "../../include/fsom/EffectClasses/Harmonizer.hpp"
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 namespace fsom{
   
@@ -36,16 +38,37 @@ Harmonizer::~Harmonizer(){
 }
 
 void Harmonizer::process(float** input, float** output, int frameSize, int channels){
+  
+    SamplePosition samplesRead;
+  
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+    
+  
    if(!bypass_active()){
-	m_unit1.set_frequency(get_parameter("Pitch One Shift Amount")->get_value());
-	m_unit2.set_frequency(get_parameter("Pitch Two Shift Amount")->get_value());
-	m_unit3.set_frequency(get_parameter("Pitch Three Shift Amount")->get_value());
-	m_unit4.set_frequency(get_parameter("Pitch Four Shift Amount")->get_value());
+	
 	for (int n = 0; n < frameSize; ++n){
+	      m_unit1.set_frequency(get_parameter("Pitch One Shift Amount")->get_value());
+	      m_unit2.set_frequency(get_parameter("Pitch Two Shift Amount")->get_value());
+	      m_unit3.set_frequency(get_parameter("Pitch Three Shift Amount")->get_value());
+	      m_unit4.set_frequency(get_parameter("Pitch Four Shift Amount")->get_value());
+	  
 	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit2.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit3.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit4.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
+	      
+	      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+		  (*it).second->tick(samplesRead);
+	      }
+	      
+	      samplesRead++;
 	}
     }else{
 	    output[0] = input[0];
