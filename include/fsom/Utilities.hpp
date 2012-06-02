@@ -269,7 +269,10 @@ class BreakPointUnit{
     }
     
     const TVPair& get_pair(int index) const {return bpList_.at(index);}
-    TVPair& get_pair(int index) {return bpList_.at(index);}
+    TVPair& get_pair(int index) {
+      return bpList_.at(index);
+    }
+      
     int get_list_size(){ return bpList_.size();}
     
   /*  TVPair get_closest_pair(float Time){

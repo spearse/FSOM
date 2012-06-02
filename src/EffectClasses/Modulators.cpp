@@ -21,6 +21,8 @@
 #include "../include/fsom/EffectClasses/Modulators.hpp"
 #include <cmath>
 #include <fsom/Region.hpp>
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 //#include <iostream>
 
@@ -46,16 +48,39 @@ HighAmpMod::~HighAmpMod(){}
 
 //Low Amplitude Modulation Process gets the phase at each sample (A-Rate)
 void HighAmpMod::process(float** input, float** output, int frameSize, int channels) {
+  
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+  
+  
 	if(!bypass_active()){
 	  assert(channels == 2);
-	  m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
-	  float phasorAmp = get_parameter("Amplitude")->get_value();
+	  
 	  for(int n = 0; n < frameSize; ++n){
+		  m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
+		  float phasorAmp = get_parameter("Amplitude")->get_value();
+	    
 		  float v = sin(TWOPI*m_phasor.get_phase());
 		  output[0][n] = (v*phasorAmp) * input[0][n];
 		  output[1][n] = (v*phasorAmp) * input[1][n];
 		  m_phasor.tick();
+		  
+		   for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+			(*it).second->tick(samplesRead);
+		   }
+		  
+		   samplesRead++;
 	  }
+
+	  
 	}else{
 	    output[0] = input[0];
 	    output[1] = input[1];
@@ -84,21 +109,41 @@ LowAmpMod::~LowAmpMod(){}
 
 //Low Amplitude Modulation Process gets the phase at each sample (A-Rate)
 void LowAmpMod::process(float** input, float** output, int frameSize, int channels) {
-	    if(!bypass_active()){
-	  assert(channels == 2);
-      m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
-	  float phasorAmp = get_parameter("Amplitude")->get_value();
-	  for(int n = 0; n < frameSize; ++n){
-		  float v = sin(TWOPI*m_phasor.get_phase());
-		  output[0][n] = (v*phasorAmp) * input[0][n];
-		  output[1][n] = (v*phasorAmp) * input[1][n];
-		  m_phasor.tick();
-	  //	get_parent_region().set_gain(v * input[0][n]);	
-	  }
-	    }else{
+	    
+  
+	  SamplePosition samplesRead;
+	    
+	  Session& sess = fsom::Engine::get_instance().get_active_session();
+	    
+	  if(sess.get_preview_state() == false){
+		samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	  }else{
+		samplesRead = sess.get_previed_playhead_value(); 
+	  }  
+  
+	  if(!bypass_active()){
+	      assert(channels == 2);
+	     
+	      for(int n = 0; n < frameSize; ++n){
+		       m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
+		      float phasorAmp = get_parameter("Amplitude")->get_value();
+		
+		      float v = sin(TWOPI*m_phasor.get_phase());
+		      output[0][n] = (v*phasorAmp) * input[0][n];
+		      output[1][n] = (v*phasorAmp) * input[1][n];
+		      m_phasor.tick();
+		      //get_parent_region().set_gain(v * input[0][n]);	
+		      
+		      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+			    (*it).second->tick(samplesRead);
+		      }
+		      
+		      samplesRead++;
+	      }
+	  }else{
 	    output[0] = input[0];
 	    output[1] = input[1];
-	}
+	  }
 	
 }
 
@@ -152,14 +197,31 @@ RingMod::~RingMod(){}
 
 //Ring Mod Process gets the phase at each sample (A-Rate)
 void RingMod::process(float** input, float** output, int frameSize, int channels) {
-	m_phasor.set_frequency(get_parameter("Freq")->get_value());
+  
+	SamplePosition samplesRead;
+	  
+	Session& sess = fsom::Engine::get_instance().get_active_session();
+	  
+	if(sess.get_preview_state() == false){
+	      samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	}else{
+	      samplesRead = sess.get_previed_playhead_value(); 
+	}
+  
+	
 	assert(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
+		m_phasor.set_frequency(get_parameter("Freq")->get_value());
 		float v = sin(TWOPI*m_phasor.get_phase());
 		output[0][n] = v * input[0][n];
 		output[1][n] = v * input[1][n];
 		m_phasor.tick();
+		for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+			    (*it).second->tick(samplesRead);
+		}
+		      
+		samplesRead++;
 	}
 	
 }
