@@ -269,8 +269,14 @@ class BreakPointUnit{
     }
     
     const TVPair& get_pair(int index) const {return bpList_.at(index);}
+    
     TVPair& get_pair(int index) {
       return bpList_.at(index);
+    }
+    
+    void remove_pair(int index){
+	bpList_.erase(bpList_.begin()+index);
+	sort();
     }
       
     int get_list_size(){ return bpList_.size();}
