@@ -63,11 +63,9 @@ void Generator::process(float** input, float** output, int frameSize, int channe
 				output[chan][frame] += 0.6 * ((rand()%100)/50)-1.0f;
 			}
 		}
-	}
-	
+	}	
 }
 
-	
 
 void Generator:: set_generator_voice(GeneratorType type){
 	m_genType = type;
@@ -93,6 +91,9 @@ void Generator::fill_generator_accordingly(){
 			break;
 		case(GEN_Square):
 			m_shape.fill_square();
+			break;
+		case(GEN_Saw):
+			m_shape.fill_linear_offset();
 			break;
 	}
 }

@@ -98,9 +98,9 @@ public:
 	    T f = 2.0*PI/(m_table.size()-1);
 	    for (int n = 0; n < m_table.size();++n){
 	    if(n <= m_table.size()/2.0f){
-	    m_table.at(n) = 1.0f;
+		m_table.at(n) = 1.0f;
 	    }else{
-	    m_table.at(n) = -1.0f;
+		m_table.at(n) = -1.0f;
 	    }
 	    }
 	    m_table.at(m_table.size()-1) = m_table.at(0);
