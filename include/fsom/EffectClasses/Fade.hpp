@@ -32,6 +32,7 @@ class Fade : public DSPEffect
 {
   float m_currentAmp;
   BreakPointUnit m_fadeUnit;
+  SampleLength m_duration;
 public:
 	Fade(dspCreationStruct data);
 	virtual ~Fade();

@@ -28,18 +28,18 @@ namespace fsom{
 Fade::Fade(dspCreationStruct data):
 	DSPEffect(data), m_currentAmp(0.0)
 {
-  const SampleLength regionDuration(data.attatchedRegion->get_duration());
+  m_duration = data.attatchedRegion->get_duration();
   set_effect_name("Fade");
 
   set_meta(get_tutId(),"link to html");
-  add_parameter("Fade In Time",0.1,regionDuration/44100.0,1.0);
+  add_parameter("Fade In Time",0.1,m_duration/44100.0,1.0);
   
-  add_parameter("Fade Out Time",0.1,regionDuration/44100.0,2.0);
+  add_parameter("Fade Out Time",0.1,m_duration/44100.0,2.0);
     
    m_fadeUnit.add_breakpoint(TVPair(0, 0));
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time")->get_value()*44100.0, 1.0));
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time")->get_value()*44100.0, 1.0));
-   m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
+   m_fadeUnit.add_breakpoint(TVPair(m_duration, 0));
   
 
     get_arrange_list().push_back(1);
@@ -62,12 +62,12 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
       samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
       
   }else{
-   samplesRead = sess.get_previed_playhead_value(); 
+      samplesRead = sess.get_previed_playhead_value(); 
   }
  // std::cout << samplesRead <<std::endl;
   if(!bypass_active()){
        m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time")->get_value()*44100.0;
-       m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time")->get_value()*44100.0;
+       m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time")->get_value()*44100.0);
       for(int n = 0; n < frameSize; ++n){ 
 	
 	    m_currentAmp = m_fadeUnit.get_value(samplesRead);

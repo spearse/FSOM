@@ -73,7 +73,7 @@ LowAmpMod::LowAmpMod(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("LowAmpMod");
-	add_parameter("Frequency",0.01,10.0,1); //add parameter for phasor frequency
+	add_parameter("Frequency",0.01,20.0,1); //add parameter for phasor frequency
 	add_parameter("Amplitude",0.0,1.0,0.5); //add parameter for phasor amplitude
 	set_meta(get_tutId(),"link to html");
 //  	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
