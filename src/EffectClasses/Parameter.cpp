@@ -25,6 +25,8 @@
 
 using namespace fsom;
 
+bool Parameter::s_inDynamicMode = false;
+
 Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
@@ -42,8 +44,8 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	m_bpUnit = new BreakPointUnit();
 	
 	//TODO temporary test breakpoints
-	m_bpUnit->add_breakpoint(TVPair(0, 0.0));
-	m_bpUnit->add_breakpoint(TVPair(m_duration, 0.0));
+	m_bpUnit->add_breakpoint(TVPair(0, lowerBound));
+	m_bpUnit->add_breakpoint(TVPair(m_duration, lowerBound));
 }
 
 Parameter::~Parameter(){}
@@ -64,7 +66,9 @@ std::string Parameter::get_name(){
 }
 
 void Parameter::tick(SampleLength& samplesRead){
-    m_currentValue = m_bpUnit->get_value(samplesRead);
+    if(s_inDynamicMode){
+	  m_currentValue = m_bpUnit->get_value(samplesRead);
+    }
 }
 
 float Parameter::get_lowerBound(){

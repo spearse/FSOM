@@ -35,8 +35,12 @@ std::string m_IDName;
 float m_currentValue,m_lowerBound,m_upperBound;
 BreakPointUnit* m_bpUnit;
 SampleLength m_duration;
+
+
 public:
 
+static bool s_inDynamicMode;  
+  
 Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value);
 ~Parameter();
 void set_value(float value);
