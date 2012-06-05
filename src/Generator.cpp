@@ -95,6 +95,8 @@ void Generator::fill_generator_accordingly(){
 		case(GEN_Saw):
 			m_shape.fill_linear_offset();
 			break;
+		case(GEN_Tri):
+			m_shape.fill_triangle();
 	}
 }
 	

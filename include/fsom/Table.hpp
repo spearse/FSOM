@@ -64,6 +64,21 @@ public:
 			m_table.at(n) =   n*f;
 		}
 	}
+	
+	void fill_triangle(){
+		std::cout << "filling table with triangle" << std::endl;
+		T f = (1.0/(m_table.size()-1));
+		for (int n = 0; n < m_table.size();++n){
+		      if(n <= m_table.size()/2){
+			m_table.at(n) = (((m_table.size() - n) * f) - 1.0);
+			
+		      }else{
+			m_table.at(n) = ((n*f) - 1.0);
+		      }
+		}
+		m_table.at(m_table.size()-1) = m_table.at(0);
+	}
+	
 	//for working with audio
 	void fill_linear_offset(){
 		std::cout << "filling table withg linear data offset between -1 to 1" <<std::endl;
@@ -95,7 +110,7 @@ public:
 	      }
 	}
 	void fill_square(){
-	    T f = 2.0*PI/(m_table.size()-1);
+	    T f = 2.0/(m_table.size()-1);
 	    for (int n = 0; n < m_table.size();++n){
 	    if(n <= m_table.size()/2.0f){
 		m_table.at(n) = 1.0f;

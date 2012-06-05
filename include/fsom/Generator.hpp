@@ -38,7 +38,8 @@ public:
 		GEN_Cos,
 		GEN_Square,
 		GEN_Noise,
-		GEN_Saw
+		GEN_Saw,
+		GEN_Tri
 	};
 private:
 	GeneratorType m_genType;
