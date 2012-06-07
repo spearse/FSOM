@@ -34,9 +34,6 @@ Pan::Pan(dspCreationStruct data):
 	set_meta(get_tutId(),"learning/pantree.xml");
 	get_parameter("Pan")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
-	
-
-	get_arrange_list().push_back(0);
 
 }
 

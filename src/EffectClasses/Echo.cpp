@@ -34,9 +34,6 @@ Echo::Echo(dspCreationStruct data) :
 		add_parameter("Echo Volume",0.0,1.0,0.9);
 		get_parameter("Echo Volume")->set_meta("GuiHint","soCustomFader");
 		//m_delayUnitL.m_delayTime = 44100;
-		for(int i = 0; i < get_parameter_list().size(); i++){
-		    get_arrange_list().push_back(i);
-		}
 		
 		set_implementation();
 		data.attatchedRegion->set_extension(44100*10);

@@ -28,8 +28,7 @@ DSPEffect::DSPEffect(dspCreationStruct creationStruct) :
 	m_tutId("TutorialLink"),
 	m_dataStruct(creationStruct),
 	m_isImplemented(false),
-	m_bypass(false),
-	m_paramArrangeList(0)
+	m_bypass(false)
 {
 	register_meta(m_tutId);
 	register_meta("Tip");

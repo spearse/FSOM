@@ -33,10 +33,6 @@ Reverb::Reverb(dspCreationStruct data):
 
   data.attatchedRegion->set_extension(44100*10);
   
-  for(int i = 0; i < get_parameter_list().size(); i++){
-	      get_arrange_list().push_back(i);
-  }
-  
 }
 
 Reverb::~Reverb()

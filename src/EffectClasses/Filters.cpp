@@ -44,8 +44,6 @@ LowPassFilter::LowPassFilter(dspCreationStruct data):
 	get_biquad_left().print_coef();
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 }
 
 LowPassFilter::~LowPassFilter(){
@@ -90,8 +88,6 @@ HighPassFilter::HighPassFilter(dspCreationStruct data):
 	get_biquad_right().set_HPF(440.0,5.0);
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 }
 
 HighPassFilter::~HighPassFilter(){
@@ -135,8 +131,6 @@ ResonatingFilter::ResonatingFilter(dspCreationStruct data):
 	get_biquad_right().set_BPF(440,1);
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 }
 
 ResonatingFilter::~ResonatingFilter(){
@@ -180,8 +174,6 @@ BandRejectFilter::BandRejectFilter(dspCreationStruct data):
 	get_biquad_right().set_BAND_REJECT(440,1);
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -226,8 +218,6 @@ BandPassFilter::BandPassFilter(dspCreationStruct data):
 	get_biquad_right().set_BPF(440,1);
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -275,9 +265,6 @@ CombFilter::CombFilter(dspCreationStruct data):
 	get_parameter("Feedforward")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
 	
-	for(int i = 0; i < get_parameter_list().size(); i++){
-	    get_arrange_list().push_back(i);
-	}
 }
 
 CombFilter::~CombFilter(){}
@@ -328,8 +315,6 @@ AllPassFilter::AllPassFilter(dspCreationStruct data):
 	get_biquad_right().set_ALL(440,1);
 	set_implementation();
 	
-	get_arrange_list().push_back(1);
-	get_arrange_list().push_back(0);
 } 	
 	
 
@@ -398,10 +383,6 @@ MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biqu
     one_shot(0);
     
     set_implementation();
-
-     for(int i = 0; i < get_parameter_list().size(); i++){
-    	get_arrange_list().push_back(i);
-     }
 }
 
 void MultiBandFilter::process(float** input, float** output, int frameSize, int channels){
