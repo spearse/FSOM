@@ -28,7 +28,7 @@ Reverb::Reverb(dspCreationStruct data):
   add_parameter("Roomsize",0,1,0.5);
   add_parameter("Damping",0,1,0.5);
   add_parameter("Dry/Wet",0,1,0.8);
-  add_parameter("Mode",0,1,0.1);
+  add_parameter("Freeze Amount",0,1,0.1);
   set_implementation();
 
   data.attatchedRegion->set_extension(44100*10);
@@ -46,7 +46,7 @@ void Reverb::process(float** input, float** output, int frameSize, int channels)
     m_revUnit.setdry(1.0f -  get_parameter("Dry/Wet")->get_value());
     m_revUnit.setwet(get_parameter("Dry/Wet")->get_value());
     m_revUnit.setroomsize(get_parameter("Roomsize")->get_value());
-    m_revUnit.setmode(get_parameter("Mode")->get_value());
+    m_revUnit.setmode(get_parameter("Freeze Amount")->get_value());
     
     m_revUnit.processreplace(input[0],input[1],output[0],output[1],frameSize,1);
 }
