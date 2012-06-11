@@ -19,6 +19,8 @@
 
 
 #include "../../include/fsom/EffectClasses/Flanger.hpp"
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 namespace fsom{
 Flanger::Flanger(dspCreationStruct data):
@@ -48,15 +50,33 @@ Flanger::~Flanger()
 
 }
 void Flanger::process(float** input, float** output, int frameSize, int channels) {
+  
+      SamplePosition samplesRead;
+    
+      Session& sess = fsom::Engine::get_instance().get_active_session();
+      
+      if(sess.get_preview_state() == false){
+	  samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	  
+      }else{
+	  samplesRead = sess.get_previed_playhead_value(); 
+      } 
+  
     if(!bypass_active()){
 	  static const double offset = 882.0;
 	  double S = m_table.get_size();
-	  m_phasor.set_frequency(get_parameter("Frequency")->get_value());
-	  double depth = get_parameter("Depth")->get_value() * offset-10;
-	  double feedback = get_parameter("Feedback")->get_value();
-	  double dry = get_parameter("DryMix")->get_value();
-	  double wet = 1.0f - dry;
+	  double depth;
+	  double feedback;
+	  double dry;
+	  double wet;
+	  
 	  for (int n = 0; n < frameSize; ++n){
+		  m_phasor.set_frequency(get_parameter("Frequency")->get_value());
+		  depth = get_parameter("Depth")->get_value() * offset-10;
+		  feedback = get_parameter("Feedback")->get_value();
+		  dry = get_parameter("DryMix")->get_value();
+		  wet = 1.0f - dry;
+	    
 		  double dt = offset+ m_table.linear_lookup(m_phasor.get_phase()*S) * depth;
 		  output[0][n] = m_delayUnitL.read_sample(dt) * wet + (input[0][n]*dry);	
 		  output[1][n] = m_delayUnitR.read_sample(dt) * wet + (input[1][n]*dry);
@@ -65,6 +85,12 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
 		  m_phasor.tick();
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
+		  
+		  for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+		      (*it).second->tick(samplesRead);
+		  }
+		  
+		  samplesRead++;
 	  }
     }else{
 	    output[0] = input[0];

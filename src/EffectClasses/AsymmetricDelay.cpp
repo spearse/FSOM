@@ -20,6 +20,8 @@
 
 #include "../../include/fsom/EffectClasses/AsymmetricDelay.hpp"
 #include <fsom/Region.hpp>
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 namespace fsom{
   
@@ -47,6 +49,19 @@ AsymmetricDelay::~AsymmetricDelay(){
 }
  
 void AsymmetricDelay::process(float** input, float** output, int frameSize, int channels) {
+  
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+    
+  
  if(!bypass_active()){
   
 	  float a,b;
@@ -68,6 +83,12 @@ void AsymmetricDelay::process(float** input, float** output, int frameSize, int 
 		  m_delayUnitR.write_sample(a*0.9);
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
+		  
+		    for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+			(*it).second->tick(samplesRead);
+		    }
+		    
+		    samplesRead++;
 	  }
 	}else{
 	    output[0] = input[0];

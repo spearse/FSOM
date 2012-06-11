@@ -22,6 +22,8 @@
 #include <cmath>
 #include "fsom/Utilities.hpp"
 #include <iostream>
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
 
 namespace fsom{
 
@@ -41,15 +43,32 @@ Pan::~Pan()
 {
 }
 void Pan::process(float** input, float** output, int frameSize, int channels) {
+  
+    SamplePosition samplesRead;
+      
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+      
+    if(sess.get_preview_state() == false){
+	  samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+    }else{
+	  samplesRead = sess.get_previed_playhead_value(); 
+    }
+  
     if(!bypass_active()){
-	float val = get_parameter("Pan")->get_value() ;
-	float g1 = sin( val * PI/2.0f); 
-	float g0 = cos( val * PI/2.0f);
+	
+
 	assert(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
-		output[0][n] = input[0][n] * g0;
-		output[1][n] = input[1][n] * g1;
+		float val = get_parameter("Pan")->get_value() ;
+		output[0][n] = input[0][n] * cos( val * PI/2.0f);
+		output[1][n] = input[1][n] * sin( val * PI/2.0f);
+		
+		for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+			    (*it).second->tick(samplesRead);
+		}
+		      
+		samplesRead++;
 	}
     }else{
 	    output[0] = input[0];

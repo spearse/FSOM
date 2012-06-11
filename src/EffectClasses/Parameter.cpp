@@ -19,15 +19,20 @@
 
 
 #include "../include/fsom/EffectClasses/Parameter.hpp"
+#include "../include/fsom/Utilities.hpp"
+#include "../include/fsom/Region.hpp"
 #include <iostream>
 
 using namespace fsom;
 
-Parameter::Parameter(std::string IDName, float lowerBound, float upperBound, float value ) : 
+bool Parameter::s_inDynamicMode = false;
+
+Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
 	m_lowerBound(lowerBound),
-	m_upperBound(upperBound)
+	m_upperBound(upperBound),
+	m_duration(duration)
 	{
 	register_meta("GuiHint");
 	register_meta("LowerBound");
@@ -35,11 +40,15 @@ Parameter::Parameter(std::string IDName, float lowerBound, float upperBound, flo
 	register_meta("UpperBound");
 	set_meta_as_float("UpperBound",upperBound);
 	register_meta("Tip");
+	
+	m_bpUnit = new BreakPointUnit();
+	
+	//TODO temporary test breakpoints
+	m_bpUnit->add_breakpoint(TVPair(0, lowerBound));
+	m_bpUnit->add_breakpoint(TVPair(m_duration, lowerBound));
 }
 
-Parameter::~Parameter(){
-
-}
+Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){
 	m_currentValue = value; 
@@ -56,9 +65,10 @@ std::string Parameter::get_name(){
     return m_IDName;
 }
 
-void Parameter::tick(){
-
-
+void Parameter::tick(SampleLength& samplesRead){
+    if(s_inDynamicMode){
+	  m_currentValue = m_bpUnit->get_value(samplesRead);
+    }
 }
 
 float Parameter::get_lowerBound(){
@@ -71,5 +81,9 @@ float Parameter::get_range(){
     return m_upperBound - m_lowerBound;
 }
 
+BreakPointUnit* Parameter::get_breakpoints(){
+  
+  return m_bpUnit;
+}
 
 

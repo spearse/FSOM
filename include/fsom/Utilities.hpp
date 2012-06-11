@@ -224,7 +224,7 @@ struct TVPair{
     v_(v)
     {};
    bool operator < (const TVPair& op) const {
-     return t_ < op.t_ && v_ < op.v_;
+     return t_ < op.t_;// && v_ < op.v_;
    }
    
 };
@@ -269,7 +269,43 @@ class BreakPointUnit{
     }
     
     const TVPair& get_pair(int index) const {return bpList_.at(index);}
-    TVPair& get_pair(int index) {return bpList_.at(index);}
+    
+    TVPair& get_pair(int index) {
+      return bpList_.at(index);
+    }
+    
+    void remove_pair(int index){
+	bpList_.erase(bpList_.begin()+index);
+	sort();
+    }
+      
+    int get_list_size(){ return bpList_.size();}
+    
+  /*  TVPair get_closest_pair(float Time){
+	    assert( bpList_.size() > 0 );
+	//    if(  Time <= bpList_.begin()->t_ ) return bpList_.begin();
+	//    if(  Time >= bpList_.rbegin()->t_ ) return bpList_.rbegin();
+	    
+	  BPList::iterator itB = std::upper_bound(bpList_.begin(), bpList_.end(), Time);
+	  BPList::iterator itA = itB-1;
+	  
+	 std::cout << "time = " << Time << std::endl;
+	 std::cout << "itB->t_ = " << itB->t_ << " : itA->t_ = " << itA->t_ << std::endl;
+	 std::cout << "itB index = " << itB - bpList_.begin() << std::endl;	  
+	 
+	 if((itB->t_ - Time) < (Time - itA->t_)){
+	    return (*itB);
+	 }else{
+	    return (*itA);  
+	 }
+    }*/
+    
+    void print_breakpoints(){
+      
+       for( BPList::iterator it = bpList_.begin();it != bpList_.end();	++it){
+		std::cout << " : time = " << it->t_ << " : val ="  << it->v_ << std::endl;
+       } 
+    }
     
     void sort(){ std::sort(bpList_.begin(), bpList_.end());}
 };

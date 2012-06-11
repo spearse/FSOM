@@ -16,8 +16,6 @@
 **  along with FSOM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
 #include "fsom/Engine.hpp"
 #include "fsom/Session.hpp"
 #include "fsom/RegionManager.hpp"
