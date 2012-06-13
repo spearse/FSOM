@@ -20,6 +20,9 @@
 
 #include "../include/fsom/EffectClasses/Filters.hpp"
 
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
+
 namespace fsom{
 
   
@@ -60,6 +63,18 @@ void LowPassFilter::one_shot(){
 
 
 void LowPassFilter::process(float** input, float** output, int frameSize, int channels) {
+      SamplePosition samplesRead;
+    
+      Session& sess = fsom::Engine::get_instance().get_active_session();
+      
+      if(sess.get_preview_state() == false){
+	  samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	  
+      }else{
+	  samplesRead = sess.get_previed_playhead_value(); 
+      }  
+  
+  
 	if(!bypass_active()){
 	    assert(channels == 2);
 	    float f = get_parameter("Frequency")->get_value();
@@ -72,6 +87,12 @@ void LowPassFilter::process(float** input, float** output, int frameSize, int ch
 	    output[0] = input[0];
 	    output[1] = input[1];
 	}
+	
+      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	  (*it).second->tick(samplesRead);
+      }
+      
+      samplesRead++;
 }
 
 HighPassFilter::HighPassFilter(dspCreationStruct data):
@@ -102,6 +123,18 @@ void HighPassFilter::one_shot(){
 }
 
 void HighPassFilter::process(float** input, float** output, int frameSize, int channels) {
+  
+        SamplePosition samplesRead;
+    
+	Session& sess = fsom::Engine::get_instance().get_active_session();
+	
+	if(sess.get_preview_state() == false){
+	    samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	    
+	}else{
+	    samplesRead = sess.get_previed_playhead_value(); 
+	}  
+  
 	if(!bypass_active()){
 	assert(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
@@ -114,6 +147,12 @@ void HighPassFilter::process(float** input, float** output, int frameSize, int c
 	    output[0] = input[0];
 	    output[1] = input[1];
 	}
+	
+	for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	  (*it).second->tick(samplesRead);
+	}
+	
+	samplesRead++;
 
 }
 		
@@ -189,18 +228,36 @@ void BandRejectFilter::one_shot(){
 	get_biquad_right().set_BAND_REJECT(f,q);
 }
 void BandRejectFilter::process(float** input, float** output, int frameSize, int channels) {
-    if(!bypass_active()){
-	assert(channels == 2);
-	float f = get_parameter("Frequency")->get_value();
-	float b = get_parameter("Quality of Filter")->get_value();
-	get_biquad_left().set_BAND_REJECT(f,b);
-	get_biquad_right().set_BAND_REJECT(f,b);
- 	get_biquad_left().process(input[0],output[0],frameSize);
- 	get_biquad_right().process(input[1],output[1],frameSize);
-    }else{
+  
+	SamplePosition samplesRead;
+    
+	Session& sess = fsom::Engine::get_instance().get_active_session();
+	
+	if(sess.get_preview_state() == false){
+	    samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	    
+	}else{
+	    samplesRead = sess.get_previed_playhead_value(); 
+	}
+  
+	if(!bypass_active()){
+	    assert(channels == 2);
+	    float f = get_parameter("Frequency")->get_value();
+	    float b = get_parameter("Quality of Filter")->get_value();
+	    get_biquad_left().set_BAND_REJECT(f,b);
+	    get_biquad_right().set_BAND_REJECT(f,b);
+	    get_biquad_left().process(input[0],output[0],frameSize);
+	    get_biquad_right().process(input[1],output[1],frameSize);
+	}else{
 	    output[0] = input[0];
 	    output[1] = input[1];
 	}
+	
+	for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	  (*it).second->tick(samplesRead);
+	}
+	
+	samplesRead++;
 	
 }	
 	
@@ -234,6 +291,18 @@ void BandPassFilter::one_shot(){
 
 
 void BandPassFilter::process(float** input, float** output, int frameSize, int channels) {
+  
+    SamplePosition samplesRead;
+
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }
+  
     if(!bypass_active()){
 	assert(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
@@ -245,7 +314,13 @@ void BandPassFilter::process(float** input, float** output, int frameSize, int c
     }else{
 	    output[0] = input[0];
 	    output[1] = input[1];
-	}
+    }
+    
+    for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	  (*it).second->tick(samplesRead);
+    }
+	
+    samplesRead++;
 	
 }	
 	

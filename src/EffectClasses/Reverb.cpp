@@ -20,6 +20,10 @@
 
 #include "../../include/fsom/EffectClasses/Reverb.hpp"
 #include <fsom/Region.hpp>
+
+#include <fsom/Session.hpp>
+#include <fsom/Engine.hpp>
+
 namespace fsom{
 Reverb::Reverb(dspCreationStruct data):
 	DSPEffect(data)
@@ -42,6 +46,19 @@ Reverb::~Reverb()
 
 void Reverb::process(float** input, float** output, int frameSize, int channels) {
 // 	    m_revUnit.
+
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+
+  if(!bypass_active()){
     m_revUnit.setdamp(get_parameter("Damping")->get_value());
     m_revUnit.setdry(1.0f -  get_parameter("Dry/Wet")->get_value());
     m_revUnit.setwet(get_parameter("Dry/Wet")->get_value());
@@ -49,6 +66,18 @@ void Reverb::process(float** input, float** output, int frameSize, int channels)
     m_revUnit.setmode(get_parameter("Freeze Amount")->get_value());
     
     m_revUnit.processreplace(input[0],input[1],output[0],output[1],frameSize,1);
+    
+      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	      (*it).second->tick(samplesRead);
+      }
+	  
+      samplesRead++;
+    
+  }else{
+    output[0] = input[0];
+    output[1] = input[1];
+  }
+    
 }
 
 }
