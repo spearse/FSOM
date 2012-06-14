@@ -35,11 +35,11 @@ std::string m_IDName;
 float m_currentValue,m_lowerBound,m_upperBound;
 BreakPointUnit* m_bpUnit;
 SampleLength m_duration;
-
+bool m_inDynamicMode;  
 
 public:
 
-static bool s_inDynamicMode;  
+
   
 Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value);
 ~Parameter();
@@ -52,6 +52,8 @@ float get_lowerBound();
 float get_upperBound();
 float get_range();
 BreakPointUnit* get_breakpoints();
+void set_automated_mode(bool isDynamic);
+bool get_automated_mode();
 };
 
 }

@@ -25,14 +25,13 @@
 
 using namespace fsom;
 
-bool Parameter::s_inDynamicMode = false;
-
 Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
 	m_lowerBound(lowerBound),
 	m_upperBound(upperBound),
-	m_duration(duration)
+	m_duration(duration),
+	m_inDynamicMode(false)
 	{
 	register_meta("GuiHint");
 	register_meta("LowerBound");
@@ -52,7 +51,7 @@ Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){
 	m_currentValue = value; 
-// 	std::cout <<"Paramter class is Setting parameter value to " << m_currentValue <<std::endl;
+// 	//std::cout <<"Paramter class is Setting parameter value to " << m_currentValue <<std::endl;
 }
 
 float Parameter::get_value(){
@@ -66,7 +65,7 @@ std::string Parameter::get_name(){
 }
 
 void Parameter::tick(SampleLength& samplesRead){
-    if(s_inDynamicMode){
+    if(m_inDynamicMode){
 	  m_currentValue = m_bpUnit->get_value(samplesRead);
     }
 }
@@ -82,8 +81,16 @@ float Parameter::get_range(){
 }
 
 BreakPointUnit* Parameter::get_breakpoints(){
-  
   return m_bpUnit;
 }
+
+void Parameter::set_automated_mode(bool isDynamic){
+    m_inDynamicMode = isDynamic;
+}
+
+bool Parameter::get_automated_mode(){
+    return m_inDynamicMode;
+}
+
 
 
