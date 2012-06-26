@@ -29,11 +29,15 @@ namespace fsom{
 
   class BreakPointUnit;
   
+typedef boost::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
+  
 class Parameter : public MetaDataStore {
 
+
+  
 std::string m_IDName;
 float m_currentValue,m_lowerBound,m_upperBound;
-BreakPointUnit* m_bpUnit;
+boost::shared_ptr<BreakPointUnit> m_bpUnit;
 SampleLength m_duration;
 bool m_inDynamicMode;  
 
@@ -41,7 +45,7 @@ public:
 
 
   
-Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value);
+Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value, BreakPointUnitPtr bpUnit);
 ~Parameter();
 void set_value(float value);
 //void set_value(float value, double timeCode);
@@ -51,7 +55,8 @@ void tick(SampleLength& samplesRead);
 float get_lowerBound();
 float get_upperBound();
 float get_range();
-BreakPointUnit* get_breakpoints();
+BreakPointUnitPtr get_breakpoints();
+void set_breakpoints(BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);
 bool get_automated_mode();
 };

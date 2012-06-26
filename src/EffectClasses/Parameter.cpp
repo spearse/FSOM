@@ -25,7 +25,7 @@
 
 using namespace fsom;
 
-Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value ) : 
+Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value, BreakPointUnitPtr bpUnit ) : 
 	m_IDName(IDName),
 	m_currentValue(value),
 	m_lowerBound(lowerBound),
@@ -40,11 +40,7 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	set_meta_as_float("UpperBound",upperBound);
 	register_meta("Tip");
 	
-	m_bpUnit = new BreakPointUnit();
-	
-	//TODO temporary test breakpoints
-	m_bpUnit->add_breakpoint(TVPair(0, lowerBound));
-	m_bpUnit->add_breakpoint(TVPair(m_duration, lowerBound));
+	m_bpUnit = bpUnit;
 }
 
 Parameter::~Parameter(){}
@@ -73,6 +69,7 @@ void Parameter::tick(SampleLength& samplesRead){
 float Parameter::get_lowerBound(){
     return m_lowerBound;
 }
+
 float Parameter::get_upperBound(){
     return m_upperBound;
 }
@@ -80,8 +77,12 @@ float Parameter::get_range(){
     return m_upperBound - m_lowerBound;
 }
 
-BreakPointUnit* Parameter::get_breakpoints(){
+BreakPointUnitPtr Parameter::get_breakpoints(){
   return m_bpUnit;
+}
+
+void Parameter::set_breakpoints(BreakPointUnitPtr bpUnit){
+  m_bpUnit = bpUnit;
 }
 
 void Parameter::set_automated_mode(bool isDynamic){

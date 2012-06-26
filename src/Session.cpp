@@ -72,8 +72,29 @@ ParameterPtr Session::create_parameter_from_node(TiXmlElement* element,Region* r
 // 	assert(value);
 	element->QueryFloatAttribute("UpperBound", &upperBound);
 // 	assert(value);
-	ParameterPtr t = ParameterPtr(new Parameter(region->get_duration(), id, lowerBound,upperBound,value));
-	std::cout  << "Loaded parameter:" << id << std::endl;
+	
+	
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());    
+	
+	TiXmlElement * bpChild = element->FirstChildElement("Breakpoint");
+	
+	double bpVal;
+	int bpPos;
+	
+	while(bpChild){  
+	      
+	      bpChild->QueryDoubleAttribute("Val", &bpVal);
+	      bpChild->QueryIntAttribute("Pos", &bpPos);
+	
+	      tempBPUnit->add_breakpoint(TVPair(bpPos,bpVal));
+	 	
+	      bpChild = bpChild->NextSiblingElement("Breakpoint");
+	}	
+	
+	tempBPUnit->sort();
+	
+	ParameterPtr t = ParameterPtr(new Parameter(region->get_duration(), id, lowerBound,upperBound,value, tempBPUnit));
+
 	return t;
 
 }
@@ -96,6 +117,7 @@ DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,Region* regi
   while(child){
     ParameterPtr p = create_parameter_from_node(child, region);
     t->get_parameter(p->get_name())->set_value(p->get_value());
+    t->get_parameter(p->get_name())->set_breakpoints(p->get_breakpoints());
     child = child->NextSiblingElement("Parameter");
   }
   std::cout  << "Loaded effect:" << typeName << std::endl;
@@ -206,13 +228,14 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->set_meta("managerId",managerId);
   std::cout << "Metadata read, image = " <<image<<std::endl;
   
-  TiXmlElement * child = element->FirstChildElement("Effect");
+  TiXmlElement * effectChild = element->FirstChildElement("Effect");
   
-  while(child){
+  while(effectChild){
     
-  DSPEffectPtr e = create_effect_from_node(child,pRegion.get());
-    pRegion->attach_effect(e);
-	child = child->NextSiblingElement("Effect");
+	DSPEffectPtr e = create_effect_from_node(effectChild,pRegion.get());
+	pRegion->attach_effect(e);
+	effectChild = effectChild->NextSiblingElement("Effect");
+	
   }
   
   std::cout  << "Loaded region:" << path << std::endl;
@@ -252,7 +275,6 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 
 
 void Session::load_session(const char* fileLocation){
-	std::vector<Parameter> temp_params;
 	std::vector<std::string> temp_effect_names;
 	TiXmlDocument doc(fileLocation);
 	std::cout << "Working dir in load session= "<<m_workingDirectory<<std::endl; 
@@ -265,7 +287,6 @@ void Session::load_session(const char* fileLocation){
 				RegionPtr t = create_region_from_node(regionElement);
 				add_region(t);
 				regionElement = regionElement->NextSiblingElement("Region");
-
 			}
 		} else {
 			throw XMLParseException();

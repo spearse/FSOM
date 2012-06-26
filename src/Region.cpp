@@ -131,6 +131,18 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
 		      Parameter->SetAttribute("Id", (*it).first.c_str());
 		      Parameter->SetDoubleAttribute("Value", (*it).second->get_value());
 		      
+		      //adding breakpoints into saved filePath
+			fsom::BreakPointUnitPtr tempUnit = (*it).second->get_breakpoints();
+			
+			for(int i = 0; i < tempUnit->get_list_size(); ++i){
+			  TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
+			  Parameter->LinkEndChild(Breakpoint);
+			  Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
+			  Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
+			}
+		      
+		      //------------------------------------
+		      
 		    }
 
 		}
@@ -224,7 +236,12 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 }
 
 void Region::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
-	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(get_duration(),IdName,lowerBound,upperBound,value))));
+	
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());  
+	tempBPUnit->add_breakpoint(TVPair(0,lowerBound));
+	tempBPUnit->add_breakpoint(TVPair(get_duration(),lowerBound));
+  
+	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(get_duration(),IdName,lowerBound,upperBound,value, tempBPUnit))));
 }
 
 ParameterPtr Region::get_parameter(std::string IdName){

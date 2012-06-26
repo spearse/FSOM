@@ -87,9 +87,16 @@ int DSPEffect::get_num_parameter() const {
 }
 
 void DSPEffect::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
+  
+	
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());  
+	tempBPUnit->add_breakpoint(TVPair(0,lowerBound));
+	tempBPUnit->add_breakpoint(TVPair(m_dataStruct.attatchedRegion->get_duration(),lowerBound));
+	
+  
 	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(
 								  new Parameter(m_dataStruct.attatchedRegion->get_duration()
-								,IdName,lowerBound,upperBound,value) )      ));
+								,IdName,lowerBound,upperBound,value,tempBPUnit))));
 }
 
 std::string& DSPEffect::get_effect_name(){
