@@ -31,7 +31,8 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	m_lowerBound(lowerBound),
 	m_upperBound(upperBound),
 	m_duration(duration),
-	m_inDynamicMode(false)
+	m_inDynamicMode(false),
+	m_lastStaticValue(value)
 	{
 	register_meta("GuiHint");
 	register_meta("LowerBound");
@@ -86,6 +87,12 @@ void Parameter::set_breakpoints(BreakPointUnitPtr bpUnit){
 }
 
 void Parameter::set_automated_mode(bool isDynamic){
+    if(isDynamic){
+      m_lastStaticValue = m_currentValue;
+    }else{
+      m_currentValue = m_lastStaticValue;
+    }
+  
     m_inDynamicMode = isDynamic;
 }
 

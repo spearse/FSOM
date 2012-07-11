@@ -34,9 +34,8 @@ typedef boost::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
 class Parameter : public MetaDataStore {
 
 
-  
 std::string m_IDName;
-float m_currentValue,m_lowerBound,m_upperBound;
+float m_currentValue,m_lowerBound,m_upperBound, m_lastStaticValue; //last static value takes the current value when set to dynamic so that it can return to it later 
 boost::shared_ptr<BreakPointUnit> m_bpUnit;
 SampleLength m_duration;
 bool m_inDynamicMode;  
