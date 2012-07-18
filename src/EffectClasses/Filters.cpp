@@ -330,8 +330,8 @@ CombFilter::CombFilter(dspCreationStruct data):
 	m_delayUnitR(2048)
 {
 	set_effect_name("CombFilter");
-	add_parameter("DryMix",0.0,1.0,0.9);
-	get_parameter("DryMix")->set_meta("GuiHint","soCustomFader");
+	add_parameter("Dry Amount",0.0,1.0,0.9);
+	get_parameter("Dry Amount")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Delay Time",10,800,10);
 	get_parameter("Delay Time")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Feedback",0.0,0.99,0.68);
@@ -353,7 +353,7 @@ void CombFilter::process(float** input, float** output, int frameSize, int chann
 	  if(!bypass_active()){
 	      double feedforward = get_parameter("Feedforward")->get_value();
 	      double feedback = get_parameter("Feedback")->get_value();
-	      double dry = get_parameter("DryMix")->get_value();
+	      double dry = get_parameter("Dry Amount")->get_value();
 	      double wet = 1.0 - dry;
 	      double dt = get_parameter("Delay Time")->get_value();
 	      for (int n = 0; n < frameSize; ++n){
