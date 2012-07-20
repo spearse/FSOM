@@ -33,7 +33,7 @@ Chorus::Chorus(dspCreationStruct data):
 {
     set_effect_name("Chorus");
     m_modTable.fill_sine();
-    add_parameter("Mix",0.0,1.0,0.5);
+    add_parameter("Dry Amount",0.0,1.0,0.5);
 //     get_parameter("Mix")->set_meta("GuiHint","soCustomFader");
     add_parameter("Depth",0.0,1.0,0.5);
 //     get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
@@ -74,15 +74,19 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
       for(int n = 0; n < frameSize; ++n){
 	
 	  depth = get_parameter("Depth")->get_value() * 100.0f;
-	  mix = get_parameter("Mix")->get_value();
+	  mix = get_parameter("Dry Amount")->get_value();
 	  invmix = 1.0f - mix;
 	  frequency = get_parameter("Frequency")->get_value() *0.8 ;
 	
 	  float dt = m_modTable.linear_lookup( m_modPhasor.get_phase()* m_modTable.get_size()) * depth + depth + 1.0f;
-	  m_delayUnitL.write_sample(input[0][n]);
-	  m_delayUnitR.write_sample(input[1][n]);
+
 	  output[0][n] = input[0][n] * invmix + m_delayUnitL.read_sample(dt) * mix;     
 	  output[1][n] = input[1][n] * invmix + m_delayUnitR.read_sample(dt) * mix;
+	  
+	  m_delayUnitL.write_sample(input[0][n]);
+	  m_delayUnitR.write_sample(input[1][n]);
+	  
+	  
 	  m_modPhasor.tick();
 	  m_delayUnitL.tick();
 	  m_delayUnitR.tick();
