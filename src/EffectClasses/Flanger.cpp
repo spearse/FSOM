@@ -32,8 +32,8 @@ Flanger::Flanger(dspCreationStruct data):
 {
     set_effect_name("Flanger");
 	m_table.fill_sine();
-	add_parameter("Dry Amount",0.0,1.0,0.5);
-	get_parameter("Dry Amount")->set_meta("GuiHint","soCustomFader");
+	add_parameter("Flanger Amount",0.0,1.0,0.5);
+	get_parameter("Flanger Amount")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Depth",0.0,1.0,0.5);
 	get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Frequency",0.01,8.0,1.0);
@@ -74,7 +74,7 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
 		  m_phasor.set_frequency(get_parameter("Frequency")->get_value());
 		  depth = get_parameter("Depth")->get_value() * offset-10;
 		  feedback = get_parameter("Feedback")->get_value();
-		  dry = get_parameter("Dry Amount")->get_value();
+		  dry = get_parameter("Flanger Amount")->get_value();
 		  wet = 1.0f - dry;
 	    
 		  double dt = offset+ m_table.linear_lookup(m_phasor.get_phase()*S) * depth;
