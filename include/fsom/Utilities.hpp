@@ -278,6 +278,17 @@ class BreakPointUnit{
 	bpList_.erase(bpList_.begin()+index);
 	sort();
     }
+    
+    void remove_pair(fsom::TVPair pair){
+      BPList::iterator it;
+      for(it = bpList_.begin(); it != bpList_.end(); ++it){
+	if((*it).t_ == pair.t_ && ((*it).v_ == pair.v_)){
+	  break;
+	}
+      }
+      bpList_.erase(it);
+      sort();  
+    }
       
     int get_list_size(){ return bpList_.size();}
     
