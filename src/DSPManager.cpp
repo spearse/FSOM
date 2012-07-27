@@ -72,8 +72,8 @@ DSPManager::get_instance().register_factory("Chorus",Chorus::create);
 DSPManager::get_instance().register_factory("Envelope",Envelope::create);
 DSPManager::get_instance().register_factory("Convolution",Convolution::create);
 
-DSPManager::get_instance().register_factory("LowAmpModulation",LowAmpMod::create);
-DSPManager::get_instance().register_factory("HighAmpModulation",HighAmpMod::create);
+DSPManager::get_instance().register_factory("LowAmpMod",LowAmpMod::create);
+DSPManager::get_instance().register_factory("HighAmpMod",HighAmpMod::create);
 DSPManager::get_instance().register_factory("LowFreqModulation",LowFreqMod::create);
 DSPManager::get_instance().register_factory("HighFreqModulation",HighFreqMod::create);
 DSPManager::get_instance().register_factory("Harmonizer",Harmonizer::create);
