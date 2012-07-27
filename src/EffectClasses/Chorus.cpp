@@ -33,7 +33,7 @@ Chorus::Chorus(dspCreationStruct data):
 {
     set_effect_name("Chorus");
     m_modTable.fill_sine();
-    add_parameter("Dry Amount",0.0,1.0,0.5);
+    add_parameter("Chorus Amount",0.0,1.0,0.5);
 //     get_parameter("Mix")->set_meta("GuiHint","soCustomFader");
     add_parameter("Depth",0.0,1.0,0.5);
 //     get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
@@ -74,7 +74,7 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
       for(int n = 0; n < frameSize; ++n){
 	
 	  depth = get_parameter("Depth")->get_value() * 100.0f;
-	  mix = get_parameter("Dry Amount")->get_value();
+	  mix = get_parameter("Chorus Amount")->get_value();
 	  invmix = 1.0f - mix;
 	  frequency = get_parameter("Frequency")->get_value() *0.8 ;
 	
