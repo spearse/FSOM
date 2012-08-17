@@ -41,5 +41,18 @@ public:
 	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Reverb(data)) ; }
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Reverb(*this) ); }
 };
+
+
+class SimpleReverb : public DSPEffect
+{
+  revmodel m_revUnit;
+public:
+    SimpleReverb(dspCreationStruct data);
+    virtual ~SimpleReverb();
+    void process(float** input, float** output, int frameSize, int channels) ;
+	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new SimpleReverb(data)) ; }
+	virtual DSPEffectPtr clone() { return DSPEffectPtr( new SimpleReverb(*this) ); }
+};
 }
+
 #endif // REVERB_HPP

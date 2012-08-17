@@ -28,7 +28,7 @@ namespace fsom{
 Reverb::Reverb(dspCreationStruct data):
 	DSPEffect(data)
 {
-  set_effect_name("Reverb");
+  set_effect_name("SimpleReverb");
   add_parameter("Roomsize",0,1,0.5);
   add_parameter("Damping",0,1,0.5);
   add_parameter("Reverb Amount",0,1,0.8);
@@ -78,7 +78,68 @@ void Reverb::process(float** input, float** output, int frameSize, int channels)
     output[0] = input[0];
     output[1] = input[1];
   }
+}
+
+
+
+//---------------SIMPLE REVERB---------------------------------------------//
+
+
+
+SimpleReverb::SimpleReverb(dspCreationStruct data):
+	DSPEffect(data)
+{
+  set_effect_name("Reverb");
+  add_parameter("Roomsize",0,1,0.5);
+
+  set_implementation();
+
+  data.attatchedRegion->set_extension(44100*10);
+  
+}
+
+SimpleReverb::~SimpleReverb()
+{
+
+}
+
+void SimpleReverb::process(float** input, float** output, int frameSize, int channels) {
+// 	    m_revUnit.
+
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_creation_struct().attatchedRegion->get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+
+  if(!bypass_active()){
+    m_revUnit.setdamp(1.0);
+    m_revUnit.setdry(0.0);
+    m_revUnit.setwet(1.0);
+    m_revUnit.setroomsize(get_parameter("Roomsize")->get_value());
+
+  //  m_revUnit.setmode(get_parameter("Freeze Amount")->get_value());
+    
+    m_revUnit.processreplace(input[0],input[1],output[0],output[1],frameSize,1);
+    
+      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	      (*it).second->tick(samplesRead);
+      }
+	  
+      samplesRead++;
+    
+  }else{
+    output[0] = input[0];
+    output[1] = input[1];
+  }
     
 }
+
+
 
 }
