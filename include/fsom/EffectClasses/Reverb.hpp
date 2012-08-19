@@ -53,6 +53,8 @@ public:
 	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new SimpleReverb(data)) ; }
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new SimpleReverb(*this) ); }
 };
+
+
 }
 
 #endif // REVERB_HPP

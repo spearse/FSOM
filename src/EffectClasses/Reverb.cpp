@@ -28,7 +28,7 @@ namespace fsom{
 Reverb::Reverb(dspCreationStruct data):
 	DSPEffect(data)
 {
-  set_effect_name("SimpleReverb");
+  set_effect_name("Reverb");
   add_parameter("Roomsize",0,1,0.5);
   add_parameter("Damping",0,1,0.5);
   add_parameter("Reverb Amount",0,1,0.8);
@@ -89,7 +89,7 @@ void Reverb::process(float** input, float** output, int frameSize, int channels)
 SimpleReverb::SimpleReverb(dspCreationStruct data):
 	DSPEffect(data)
 {
-  set_effect_name("Reverb");
+  set_effect_name("SimpleReverb");
   add_parameter("Roomsize",0,1,0.5);
 
   set_implementation();
