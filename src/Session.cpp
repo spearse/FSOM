@@ -49,7 +49,8 @@ Session::Session() :
 	m_playbackDuration( (60*5)*44100), ///This currently sets the duration of entire session,
 	m_loopPreviewState(true),
 	m_leftLocator(0),
-	m_rightLocator(44100)
+	m_rightLocator(44100),
+	m_loopState(false)
 {
 	DSPManager::get_instance();
 	assert(m_audioMutex && "Audio mutex not created");
@@ -472,7 +473,15 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	if(m_transportIsRolling && m_playHead < m_playbackDuration){
 		float sr = Engine::get_instance().get_sample_rate();
 		//std::cout << "Transport rolling: t="<< m_playHead << " " << float(m_playHead)/sr << std::endl;
+		//simple idea for looping
+		if(m_loopState &&  m_playHead >= m_rightLocator){
+		    /*
+		    m_playHead = m_leftLocator;
+		    seek(m_leftLocator);
+		    */
+		}
 		SamplePosition endOfBlockTime = m_playHead + frameCount;
+		
 		// enter the event processing loop, up until the end of the block or until
 		while(m_playHead < endOfBlockTime){
 			size_t offset = frameCount - (endOfBlockTime - m_playHead);
@@ -892,19 +901,25 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 
 void Session::set_left_locator(SamplePosition location){
   m_leftLocator = location;
+  std::cout << "Left locator set to "<< m_leftLocator<<std::endl;
 }
 SamplePosition Session::get_left_locator()const{
     return m_leftLocator;
 }
 void Session::set_right_locator(SamplePosition location){
     m_rightLocator = location;
+    std::cout << "Right locator set to "<< m_rightLocator<<std::endl;
 }
 SamplePosition Session::get_right_locator()const{
     return m_rightLocator;
 }
 
-
-
+void Session::set_loop_state(bool state){
+    m_loopState = state;
+}
+bool Session::get_loop_state(){
+    return m_loopState;
+}
 
 
 

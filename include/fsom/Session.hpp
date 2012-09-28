@@ -63,6 +63,8 @@ class Session : public MetaDataStore{
 	bool m_transportIsRolling;
 	
 	bool m_loopPreviewState;
+	
+	bool m_loopState;
 
 	/// playhead location
 	SamplePosition m_playHead;
@@ -201,7 +203,13 @@ public:
 	void set_right_locator(SamplePosition location);
 	///function to get right locator
 	SamplePosition get_right_locator()const;
+	///function to set the session loop state
+	void set_loop_state(bool state);
+	///function to return session loop state
+	bool get_loop_state();
 };
+
+
 
 }//fsom
 
