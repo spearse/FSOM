@@ -406,6 +406,12 @@ void Session::seek(SamplePosition seekTarget){
 			tempEvCache.push_back(ev);
 		}
 	}
+	
+	if(m_loopState){
+	  ev.type = SE_SESSION_LOOP;
+	  ev.time = m_rightLocator;
+	  tempEvCache.push_back(ev);
+	}
 	// now sort the event cache by time order ready for playback.
 	tempEvCache.sort(SessionEventSortPredicate());
 
@@ -500,24 +506,38 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 						// an region must be added to the active regions
 						add_active_region(m_nextEvent->region.get());
 						m_nextEvent->region.get()->set_extension_mode(false);
+						// jump to the next event in the cache
+						++m_nextEvent;
 						break;
 					case SE_REGION_END:
 						// a region should be removed from the active regions
 						remove_active_region(m_nextEvent->region.get());
+						// jump to the next event in the cache
+						++m_nextEvent;						
 						break;
 					case SE_REGION_EXTENSION:
 						//add region for extension mode sp
 						m_nextEvent->region.get()->set_extension_mode(true);
+						// jump to the next event in the cache
+						++m_nextEvent;						
 						break;
 					case SE_REGION_ACTIVE:
 						add_active_region(m_nextEvent->region.get());
 						m_nextEvent->region.get()->set_extension_mode(false);
+						// jump to the next event in the cache
+						++m_nextEvent;						
+						break;
+					case SE_SESSION_LOOP:
+						{
+						  int remaining = endOfBlockTime - m_playHead;
+						  m_activeRegions.clear();
+						  seek(m_leftLocator);
+						  endOfBlockTime = remaining + m_leftLocator;
+						}
 						break;
 					default: 
 						assert(false && "Unknown SessionEventType");
 				}
-				// jump to the next event in the cache
-				++m_nextEvent;
 			} else {
 				// process remaining block
 				internal_process(ins, outs, endOfBlockTime - m_playHead, channelCount, offset,m_playHead);

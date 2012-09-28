@@ -40,7 +40,8 @@ enum SessionEventType{
 	SE_REGION_START = 0,
 	SE_REGION_ACTIVE,
 	SE_REGION_EXTENSION,
-	SE_REGION_END
+	SE_REGION_END,
+	SE_SESSION_LOOP
 	// other events such as midi, and envelop breakpoints will extend this
 };
 /// A session event is used by the session events cache to manage the dsp loop during playback
