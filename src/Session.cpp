@@ -47,7 +47,9 @@ Session::Session() :
 	m_previewPlayHead(0),
 	m_previewState(false),
 	m_playbackDuration( (60*5)*44100), ///This currently sets the duration of entire session,
-	m_loopPreviewState(true)
+	m_loopPreviewState(true),
+	m_leftLocator(0),
+	m_rightLocator(44100)
 {
 	DSPManager::get_instance();
 	assert(m_audioMutex && "Audio mutex not created");
@@ -886,3 +888,23 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   
   
 }
+
+
+void Session::set_left_locator(SamplePosition location){
+  m_leftLocator = location;
+}
+SamplePosition Session::get_left_locator()const{
+    return m_leftLocator;
+}
+void Session::set_right_locator(SamplePosition location){
+    m_rightLocator = location;
+}
+SamplePosition Session::get_right_locator()const{
+    return m_rightLocator;
+}
+
+
+
+
+
+
