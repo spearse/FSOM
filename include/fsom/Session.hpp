@@ -63,6 +63,8 @@ class Session : public MetaDataStore{
 	bool m_transportIsRolling;
 	
 	bool m_loopPreviewState;
+	
+	bool m_loopState;
 
 	/// playhead location
 	SamplePosition m_playHead;
@@ -71,6 +73,11 @@ class Session : public MetaDataStore{
 	
 	SampleLength m_playbackDuration;
 
+	///Locators for looping
+	SamplePosition m_leftLocator;
+	
+	SamplePosition m_rightLocator;
+	
 	/// vector of all regions in the composition. This is maintained in a order of start time and duration.
 	RegionList m_regionPlaylist;
 
@@ -187,7 +194,22 @@ public:
 	std::string get_working_directory()const;
 	
 	std::string timestretch_region(RegionPtr region, double stretchAmount,std::string folderpath,std::string name);
+	
+	///function to set left locator
+	void set_left_locator(SamplePosition location);
+	///function to get left locator
+	SamplePosition get_left_locator()const;
+	///function to set right locator
+	void set_right_locator(SamplePosition location);
+	///function to get right locator
+	SamplePosition get_right_locator()const;
+	///function to set the session loop state
+	void set_loop_state(bool state);
+	///function to return session loop state
+	bool get_loop_state();
 };
+
+
 
 }//fsom
 
