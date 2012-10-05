@@ -32,7 +32,7 @@ Pan::Pan(dspCreationStruct data):
 	DSPEffect(data)
 {
 	set_effect_name("Pan");
-	add_parameter("Pan",0,1.0,0.5); 
+	add_parameter("Pan",-1.0f,1.0,0); 
 	set_meta(get_tutId(),"learning/pantree.xml");
 	get_parameter("Pan")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
@@ -60,7 +60,7 @@ void Pan::process(float** input, float** output, int frameSize, int channels) {
 	assert(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
-		float val = get_parameter("Pan")->get_value() ;
+		float val = (get_parameter("Pan")->get_value() +1)*0.5f ;
 		output[0][n] = input[0][n] * cos( val * PI/2.0f);
 		output[1][n] = input[1][n] * sin( val * PI/2.0f);
 		

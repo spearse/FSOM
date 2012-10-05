@@ -207,17 +207,21 @@ DSPStack& Region::get_DSPStack(){
 }
 
 void Region::process_region(float** input, float** output, int frameSize, int channels, SamplePosition globalPosition){
-  if(!m_muted){
+  
   
     if(!m_isInExtensionMode){
 	m_internalPos = globalPosition - m_dataStruct.m_startPos;
 	//std::cout << "pos "<< globalPosition;
-	process(input,output,frameSize,channels);
+	if(!m_muted){
+	  process(input,output,frameSize,channels);
+	}
     }else{
 	m_stackBufferB.clear();
-	process_dsp_stack(m_stackBufferB.get_buffers(),output,frameSize,channels);
+	if(!m_muted){
+	  process_dsp_stack(m_stackBufferB.get_buffers(),output,frameSize,channels);
+	}
     }
-  }
+  
 }
 
 void Region::process_dsp_stack(float** input, float** output, int frameSize, int channels){
