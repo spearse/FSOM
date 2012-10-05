@@ -24,8 +24,8 @@
 
 namespace fsom{
   
-Harmonizer::Harmonizer(dspCreationStruct data): DSPEffect(data){
-  set_effect_name("Harmonizer");
+Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
+  set_effect_name("Harmoniser");
   add_parameter("Pitch One Shift Amount",-12.0,12.0,0.0); 
   add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);  
   add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0); 
@@ -35,10 +35,10 @@ Harmonizer::Harmonizer(dspCreationStruct data): DSPEffect(data){
 }
 
 
-Harmonizer::~Harmonizer(){
+Harmoniser::~Harmoniser(){
 }
 
-void Harmonizer::process(float** input, float** output, int frameSize, int channels){
+void Harmoniser::process(float** input, float** output, int frameSize, int channels){
   
     SamplePosition samplesRead;
   
@@ -80,7 +80,7 @@ void Harmonizer::process(float** input, float** output, int frameSize, int chann
   
 }
   
-void Harmonizer::reset_effect(){
+void Harmoniser::reset_effect(){
     m_unit1.clear_delays();
     m_unit2.clear_delays();
     m_unit3.clear_delays();

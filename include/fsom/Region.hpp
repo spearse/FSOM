@@ -64,6 +64,7 @@ class Region : public MetaDataStore, private NonCopyable{
 	ParameterList m_parameterList; //array of parameters for Region
 	bool m_isInExtensionMode;
 	SamplePosition m_internalPos;
+	bool m_muted;
 public:
 	Region(regionCreationStruct creationStruct);
 	//copy constructor
@@ -126,6 +127,10 @@ public:
 	const SamplePosition& get_sample_position();
 	
 	void reset_all_effects();
+	
+	//functions for muting
+	void set_mute_state(bool state);
+	bool get_mute_state();
 	
 };
 } // fsom

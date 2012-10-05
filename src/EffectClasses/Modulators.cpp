@@ -186,7 +186,7 @@ RingMod::RingMod(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("RingMod");
-	add_parameter("Freq",10.0,15000.0,500.0); //add parameter for phasor frequency
+	add_parameter("Freq",1.0,15000.0,500.0); //add parameter for phasor frequency
 
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");

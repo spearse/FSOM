@@ -30,7 +30,8 @@ Region::Region(regionCreationStruct creationStruct) :
 	m_stackBufferB(2,4096),
 	m_dataStruct(creationStruct),
 	m_isInExtensionMode(false),
-	m_internalPos(0)
+	m_internalPos(0),
+	m_muted(true)
 	{
 	register_meta("RegionType");
 	register_meta("Tip");
@@ -205,6 +206,8 @@ DSPStack& Region::get_DSPStack(){
 }
 
 void Region::process_region(float** input, float** output, int frameSize, int channels, SamplePosition globalPosition){
+  if(!m_muted){
+  
     if(!m_isInExtensionMode){
 	m_internalPos = globalPosition - m_dataStruct.m_startPos;
 	//std::cout << "pos "<< globalPosition;
@@ -213,6 +216,7 @@ void Region::process_region(float** input, float** output, int frameSize, int ch
 	m_stackBufferB.clear();
 	process_dsp_stack(m_stackBufferB.get_buffers(),output,frameSize,channels);
     }
+  }
 }
 
 void Region::process_dsp_stack(float** input, float** output, int frameSize, int channels){
@@ -305,4 +309,12 @@ void Region::reset_all_effects(){
    (*it)->reset_effect(); 
   }
   
+}
+
+void Region::set_mute_state(bool state){
+    m_muted = state;
+}
+
+bool Region::get_mute_state(){
+    return m_muted;
 }

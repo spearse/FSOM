@@ -26,17 +26,17 @@
 
 namespace fsom{
 
-class Harmonizer : public DSPEffect
+class Harmoniser : public DSPEffect
 {
 	
 	TransposeUnit m_unit1,m_unit2,m_unit3,m_unit4;
 	
 public:
-	Harmonizer(dspCreationStruct data);
-	virtual ~Harmonizer();
+	Harmoniser(dspCreationStruct data);
+	virtual ~Harmoniser();
 	void process(float** input, float** output, int frameSize, int channels) ;
-	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Harmonizer(data)) ; } 
-	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Harmonizer(*this) ); }
+	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Harmoniser(data)) ; } 
+	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Harmoniser(*this) ); }
 	virtual void reset_effect();
 };
 }
