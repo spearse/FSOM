@@ -206,6 +206,9 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
  
   int reverseState =0;
   basicInfoElement->QueryIntAttribute("reversestate",&reverseState);
+  
+  int muteState = 0;
+  basicInfoElement->QueryIntAttribute("mutestate",&muteState);
 
   std::string path = basicInfoElement->Attribute("path");
   std::cout << "Loading, working directory = "<< m_workingDirectory<<std::endl;
@@ -214,7 +217,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   TiXmlElement * meta = element->FirstChildElement("MetaData");
 
   RegionPtr pRegion = RegionManager::get_instance().create(meta->Attribute("RegionType"),cs);
-
+  pRegion->set_mute_state(muteState);
   assert(pRegion);
   
   pRegion->register_meta("RegionType");

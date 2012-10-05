@@ -31,7 +31,7 @@ Region::Region(regionCreationStruct creationStruct) :
 	m_dataStruct(creationStruct),
 	m_isInExtensionMode(false),
 	m_internalPos(0),
-	m_muted(true)
+	m_muted(false)
 	{
 	register_meta("RegionType");
 	register_meta("Tip");
@@ -118,6 +118,7 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
 		BasicInfo->SetAttribute("extension",m_dataStruct.m_extension);
 		BasicInfo->SetAttribute("path", m_dataStruct.m_filepath.c_str());
 		BasicInfo->SetAttribute("reversestate",m_dataStruct.m_reverseState);
+		BasicInfo->SetAttribute("mutestate",m_muted);
 		save_meta_to_xml(node);
 
 		for(int n = 0; n < m_DSPStack.size(); ++n){
