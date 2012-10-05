@@ -614,41 +614,58 @@ RegionList& Session::get_region_list(){
 	return m_regionPlaylist;
 }
 
-void Session::bounce_session(std::string filepath){
-	std::cout << "Bouncing Session" <<std::endl;
-	SNDFILE* outfile;
-	SF_INFO m_info;
-	m_info.channels = 2;
-	m_info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16 | SF_ENDIAN_LITTLE;
-	m_info.samplerate = 44100;
-	outfile = sf_open(filepath.c_str(),SFM_WRITE,&m_info);
-	assert(outfile);
-	//size_t frames = m_info.samplerate * 20; //TODO make arbitrary numbers in bouncedown and session playback the same.//FIXME Stopping through regions causes serious glitching on playback or exporting
-	size_t frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
-	std::cout << "Filesize = " << m_info.frames << " frames" <<std::endl;
-	int blocksize = 512;
-// 	SamplePosition bouncePosition = 0; 
-	int frameSize = 512;
-	MultiChannelBuffer deint(m_info.channels,frameSize);
-	
-	float* output = new float[frameSize*m_info.channels];
-	Engine::get_instance().stop();
-	seek(0);
-	play();
-	m_previewState = false;
-	
-	for (int n = 0; n < frames; n += frameSize){
-		process(0,deint.get_buffers(),frameSize,m_info.channels);
-		interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
-		sf_writef_float(outfile,output,frameSize);
-		std::cout << " Export frame " << n << " : frames = "<< frames << std::endl;
+void Session::bounce_session(std::string filepath, Session::FileType type){
+
+	if(!m_regionPlaylist.empty()){
+      
+	    std::cout << "Bouncing Session" <<std::endl;
+	    SNDFILE* outfile;
+	    SF_INFO m_info;
+	    m_info.channels = 2;
+	    switch(type){
+	      case(FT_WAV):
+		  m_info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16 | SF_ENDIAN_LITTLE;
+		  break;
+	      case(FT_OGG):
+		  m_info.format = SF_FORMAT_OGG | SF_FORMAT_PCM_16 | SF_ENDIAN_LITTLE;
+		  break;
+	      case(FT_AIFF):
+		  m_info.format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16 | SF_ENDIAN_LITTLE;
+		  break;
+	      case(FT_FLAC):
+		  m_info.format = SF_FORMAT_FLAC | SF_FORMAT_PCM_16 | SF_ENDIAN_LITTLE;
+		  break;
+	    };
+	    m_info.samplerate = 44100;
+	    outfile = sf_open(filepath.c_str(),SFM_WRITE,&m_info);
+	    assert(outfile);
+	    //size_t frames = m_info.samplerate * 20; //TODO make arbitrary numbers in bouncedown and session playback the same.//FIXME Stopping through regions causes serious glitching on playback or exporting
+	    size_t frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
+	    std::cout << "Filesize = " << m_info.frames << " frames" <<std::endl;
+	    int blocksize = 512;
+    // 	SamplePosition bouncePosition = 0; 
+	    int frameSize = 512;
+	    MultiChannelBuffer deint(m_info.channels,frameSize);
+	    
+	    float* output = new float[frameSize*m_info.channels];
+	    Engine::get_instance().stop();
+	    seek(0);
+	    play();
+	    m_previewState = false;
+	    
+	    for (int n = 0; n < frames; n += frameSize){
+		    process(0,deint.get_buffers(),frameSize,m_info.channels);
+		    interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
+		    sf_writef_float(outfile,output,frameSize);
+		    std::cout << " Export frame " << n << " : frames = "<< frames << std::endl;
+	    }
+	    delete [] output;
+    // 	
+	    sf_close(outfile);
+	    stop();
+	    seek(0);
+	    Engine::get_instance().start();	
 	}
-	delete [] output;
-// 	
- 	sf_close(outfile);
-	stop();
-	seek(0);
-	Engine::get_instance().start();	
 }
 void Session::set_preview_region(fsom::RegionPtr region){
 	m_previewRegion = region;
@@ -676,7 +693,7 @@ const SampleLength& Session::get_playback_duration() const{
 }
 
 
-void Session::bounce_region(fsom::RegionPtr region, std::string filename){
+void Session::bounce_region(RegionPtr region, std::string filename, Session::FileType type){
   
 	//use the bounce session to create file
 	//e.g Session temp;
@@ -690,7 +707,7 @@ void Session::bounce_region(fsom::RegionPtr region, std::string filename){
 	temp.set_playback_duration(region->get_duration() + region->get_extension());
 	region->set_start_pos(0);
 	temp.add_region(region);
-	temp.bounce_session(filename);
+	temp.bounce_session(filename,type);
 	region->set_start_pos(storedPosition);
 }
 

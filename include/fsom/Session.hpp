@@ -56,6 +56,15 @@ struct SessionEvent{
 typedef std::list<SessionEvent> SessionEventList;
 
 class Session : public MetaDataStore{
+public:
+	enum FileType{
+	    FT_WAV=0,
+	    FT_AIFF,
+	    FT_OGG,
+	    FT_FLAC
+	};
+private:
+  
 	Mutex* m_audioMutex;
   ///Currently active session name
 	const char* m_sessionName;
@@ -160,7 +169,7 @@ public:
 	RegionList& get_region_list();
 
 	///Function to bounce session down to (initially) stereo wav
-	void bounce_session(std::string filepath);
+	void bounce_session(std::string filepath,FileType type = FT_WAV);
 	
 	void set_preview_region(fsom::RegionPtr region);
 	
@@ -178,7 +187,7 @@ public:
 	
 	SamplePosition& get_previed_playhead_value();
 	
-	void bounce_region(fsom::RegionPtr region, std::string filename);
+	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
 	
 	const SampleLength& get_playback_duration() const; ///returns the length of playback time in session
 	
