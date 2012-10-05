@@ -36,7 +36,7 @@ class Parameter : public MetaDataStore {
 
 std::string m_IDName;
 float m_currentValue,m_lowerBound,m_upperBound, m_lastStaticValue; //last static value takes the current value when set to dynamic so that it can return to it later 
-boost::shared_ptr<BreakPointUnit> m_bpUnit;
+BreakPointUnitPtr m_bpUnit;
 SampleLength m_duration;
 bool m_inDynamicMode;  
 
@@ -44,7 +44,7 @@ public:
 
 
   
-Parameter(SampleLength duration,std::string IDName,float lowerBound,float upperBound,float value, BreakPointUnitPtr bpUnit);
+Parameter(fsom::SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value, fsom::BreakPointUnitPtr bpUnit);
 ~Parameter();
 void set_value(float value);
 //void set_value(float value, double timeCode);
@@ -55,7 +55,7 @@ float get_lowerBound();
 float get_upperBound();
 float get_range();
 BreakPointUnitPtr get_breakpoints();
-void set_breakpoints(BreakPointUnitPtr bpUnit);
+void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);
 bool get_automated_mode();
 };

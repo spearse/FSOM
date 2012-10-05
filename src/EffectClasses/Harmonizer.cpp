@@ -30,7 +30,7 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);  
   add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0); 
   add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0); 
-  
+  add_parameter("Original",0,1,1);
   set_implementation();
 }
 
@@ -53,18 +53,20 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
     
   
    if(!bypass_active()){
-	
 	for (int n = 0; n < frameSize; ++n){
 	      m_unit1.set_frequency(get_parameter("Pitch One Shift Amount")->get_value());
 	      m_unit2.set_frequency(get_parameter("Pitch Two Shift Amount")->get_value());
 	      m_unit3.set_frequency(get_parameter("Pitch Three Shift Amount")->get_value());
 	      m_unit4.set_frequency(get_parameter("Pitch Four Shift Amount")->get_value());
-	  
+// 	      t = input[0][n];
+// 	      t1 = input[1][n];
+	      
 	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit2.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit3.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
 	      m_unit4.process(input[0][n],input[1][n],output[0][n],output[1][n],0.25);
-	      
+// 	      output[0][n]+=t;
+// 	      output[1][n]+=t1;
 	      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
 		  (*it).second->tick(samplesRead);
 	      }

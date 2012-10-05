@@ -32,7 +32,8 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	m_upperBound(upperBound),
 	m_duration(duration),
 	m_inDynamicMode(false),
-	m_lastStaticValue(value)
+	m_lastStaticValue(value),
+	m_bpUnit(bpUnit)
 	{
 	register_meta("GuiHint");
 	register_meta("LowerBound");
@@ -41,7 +42,6 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	set_meta_as_float("UpperBound",upperBound);
 	register_meta("Tip");
 	
-	m_bpUnit = bpUnit;
 }
 
 Parameter::~Parameter(){}

@@ -30,6 +30,8 @@ double m_timeCode;
     Breakpoint(): m_value(0), m_timeCode(0){}
     Breakpoint(float value, double timeCode): m_value(value), m_timeCode(timeCode){}
     
+    Breakpoint(const Breakpoint& op):m_timeCode(op.get_timeCode()),m_value(op.get_value()) {}
+    
     void set_value(float value){ m_value = value ;}
     void set_timeCode(double timeCode){ m_timeCode = timeCode ;}
     void set_breakpoint(float value, double timeCode){m_value = value; m_timeCode = timeCode;}

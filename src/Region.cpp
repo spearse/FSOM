@@ -246,9 +246,9 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 
 void Region::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
 	
-	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());  
-	tempBPUnit->add_breakpoint(TVPair(0,lowerBound));
-	tempBPUnit->add_breakpoint(TVPair(get_duration(),lowerBound));
+	BreakPointUnitPtr tempBPUnit;  
+	tempBPUnit->add_breakpoint(TVPair(0,value));
+	tempBPUnit->add_breakpoint(TVPair(get_duration(),value));
   
 	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(get_duration(),IdName,lowerBound,upperBound,value, tempBPUnit))));
 }
