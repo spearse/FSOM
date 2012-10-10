@@ -614,10 +614,12 @@ RegionList& Session::get_region_list(){
 	return m_regionPlaylist;
 }
 
-void Session::bounce_session(std::string filepath, Session::FileType type){
+void Session::bounce_session(std::string filepath, Session::FileType type, bool useLocators){
 
 	if(!m_regionPlaylist.empty()){
-      
+	    
+	  
+	  
 	    std::cout << "Bouncing Session" <<std::endl;
 	    SNDFILE* outfile;
 	    SF_INFO m_info;
@@ -639,29 +641,48 @@ void Session::bounce_session(std::string filepath, Session::FileType type){
 	    m_info.samplerate = 44100;
 	    outfile = sf_open(filepath.c_str(),SFM_WRITE,&m_info);
 	    assert(outfile);
-	    //size_t frames = m_info.samplerate * 20; //TODO make arbitrary numbers in bouncedown and session playback the same.//FIXME Stopping through regions causes serious glitching on playback or exporting
-	    size_t frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
-	    std::cout << "Filesize = " << m_info.frames << " frames" <<std::endl;
-	    int blocksize = 512;
+	    size_t frames;
+	    size_t start;
+	    if(!useLocators){
+		//size_t frames = m_info.samplerate * 20; //TODO make arbitrary numbers in bouncedown and session playback the same.//FIXME Stopping through regions causes serious glitching on playback or exporting
+		frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
+		start = 0;
+	    }else{
+		frames = m_rightLocator - m_leftLocator;
+		start = m_leftLocator;
+		
+	    }
+	    std::cout << "Filesize = " << frames << " frames\t Start = " << start <<std::endl;
+// 	    int blocksize = 512;
     // 	SamplePosition bouncePosition = 0; 
 	    int frameSize = 512;
 	    MultiChannelBuffer deint(m_info.channels,frameSize);
 	    
 	    float* output = new float[frameSize*m_info.channels];
 	    Engine::get_instance().stop();
-	    seek(0);
+	    seek(start);
 	    play();
 	    m_previewState = false;
+	    bool prevLoopState = get_loop_state(); 
+	    set_loop_state(false);
 	    
-	    for (int n = 0; n < frames; n += frameSize){
+	    for (int n = start; n < frames; n += frameSize){
 		    process(0,deint.get_buffers(),frameSize,m_info.channels);
 		    interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
 		    sf_writef_float(outfile,output,frameSize);
 		    std::cout << " Export frame " << n << " : frames = "<< frames << std::endl;
 	    }
+	    //FIXME this looses data if the num frames isnt perfectly divisible by the framesize.
+	    size_t remainingblock = frames % frameSize;
+	    std::cout << "Remainder = " << remainingblock<<"\n\n\n\n"<<std::endl;
+	    process(0,deint.get_buffers(),remainingblock,m_info.channels);
+	    interleave((const float**)deint.get_buffers(),output,m_info.channels,remainingblock);
+	    sf_writef_float(outfile,output,remainingblock);
+	    
 	    delete [] output;
     // 	
 	    sf_close(outfile);
+	    set_loop_state(prevLoopState);
 	    stop();
 	    seek(0);
 	    Engine::get_instance().start();	
@@ -710,6 +731,7 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	temp.bounce_session(filename,type);
 	region->set_start_pos(storedPosition);
 }
+
 
 RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition position, std::string factoryName, int laneId){
 	//copy region from existing

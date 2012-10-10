@@ -82,6 +82,8 @@ private:
 	SamplePosition m_previewPlayHead;
 	
 	SampleLength m_playbackDuration;
+	
+	SamplePosition m_startPos;
 
 	///Locators for looping
 	SamplePosition m_leftLocator;
@@ -133,6 +135,8 @@ private:
 	Session(const Session&);
 	Session& operator = (const Session&);
 	MultiTableBuffer load_file_to_table(std::string path);
+	
+	
 public:
 // 	Session(std::string preset_path);
 	void load_session(const char* fileLocation);
@@ -168,9 +172,9 @@ public:
 	///Return reference to the list; 
 	RegionList& get_region_list();
 
-	///Function to bounce session down to (initially) stereo wav
-	void bounce_session(std::string filepath,FileType type = FT_WAV);
-	
+	///Function to bounce session down to (initially) stereo wav.  Boolean allows you to toggle whether you wish to bounce between locators.
+	void bounce_session(std::string filepath,FileType type = FT_WAV,bool useLocators=false);
+		
 	void set_preview_region(fsom::RegionPtr region);
 	
 	void set_preview_state(bool state);
