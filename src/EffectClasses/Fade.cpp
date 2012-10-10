@@ -32,13 +32,13 @@ Fade::Fade(dspCreationStruct data):
   set_effect_name("Fade");
 
   set_meta(get_tutId(),"link to html");
-  add_parameter("Fade In Time",0.1,m_duration/44100.0,1.0);
+  add_parameter("Fade In Time(ms)",10,m_duration/44.1,1000.0);
   
-  add_parameter("Fade Out Time",0.1,m_duration/44100.0,2.0);
+  add_parameter("Fade Out Time(ms)",10,m_duration/44.1,1000.0);
     
    m_fadeUnit.add_breakpoint(TVPair(0, 0));
-   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time")->get_value()*44100.0, 1.0));
-   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time")->get_value()*44100.0, 1.0));
+   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time(ms)")->get_value()*44.1, 1.0));
+   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time(ms)")->get_value()*44.10, 1.0));
    m_fadeUnit.add_breakpoint(TVPair(m_duration, 0));
    
    set_implementation();
@@ -62,8 +62,8 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
   }
  // std::cout << samplesRead <<std::endl;
   if(!bypass_active()){
-       m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time")->get_value()*44100.0;
-       m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time")->get_value()*44100.0);
+       m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*44.1;
+       m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time(ms)")->get_value()*44.1);
       for(int n = 0; n < frameSize; ++n){ 
 	
 	    m_currentAmp = m_fadeUnit.get_value(samplesRead);
@@ -82,8 +82,8 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
 }
 
 void Fade::reset_effect(){
-    m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time")->get_value()*44100.0;
-    m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time")->get_value()*44100.0;
+    m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*44.1;
+    m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time(ms)")->get_value()*44.1;
     m_fadeUnit.sort();
 }
 

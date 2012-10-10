@@ -33,17 +33,17 @@ Envelope::Envelope(dspCreationStruct data) :
 	
 	  set_meta(get_tutId(),"link to html");
 	  
-	  add_parameter("Attack Time",0.1,regionDuration/44100.0,0.1);
-	  add_parameter("Decay Time",0.1,regionDuration/44100.0,(regionDuration/44100.0)*0.25);
+	  add_parameter("Attack Time(ms)",10,regionDuration/44.1,10);
+	  add_parameter("Decay Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.25);
 	  
-	  add_parameter("Release Time",0.1,regionDuration/44100.0,(regionDuration/44100.0)*0.80);
+	  add_parameter("Release Time",10,regionDuration/44.1,(regionDuration/44.1)*0.8);
 	  add_parameter("Sustain Amplitude",0.1,1.0,1.0);
       
 	  m_fadeUnit.add_breakpoint(TVPair(0, 0));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time")->get_value()*44100, 1.0));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Decay Time")->get_value()*44100, 
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time(ms)")->get_value()*44.1, 1.0));
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1, 
 					   get_parameter("Sustain Amplitude")->get_value()));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time")->get_value()*44100,
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time")->get_value()*44.1,
 					   get_parameter("Sustain Amplitude")->get_value()));
 	  m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
 	  
@@ -88,10 +88,10 @@ void  Envelope::process(float** input, float** output, int frameSize, int channe
 }
 
 void Envelope::reset_effect(){
-    m_fadeUnit.get_pair(1).t_ = get_parameter("Attack Time")->get_value()*44100.0;
-    m_fadeUnit.get_pair(2) = TVPair(get_parameter("Decay Time")->get_value()*44100.0,
+    m_fadeUnit.get_pair(1).t_ = get_parameter("Attack Time(ms)")->get_value()*44.1;
+    m_fadeUnit.get_pair(2) = TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1,
 			     get_parameter("Sustain Amplitude")->get_value());
-    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time")->get_value()*44100.0,
+    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time")->get_value()*44.1,
 			     get_parameter("Sustain Amplitude")->get_value());
     m_fadeUnit.sort();
 }
