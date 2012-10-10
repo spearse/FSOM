@@ -648,23 +648,24 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 		frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
 		start = 0;
 	    }else{
-		frames = m_rightLocator - m_leftLocator;
+		frames = m_rightLocator;
 		start = m_leftLocator;
 		
 	    }
 	    std::cout << "Filesize = " << frames << " frames\t Start = " << start <<std::endl;
 // 	    int blocksize = 512;
     // 	SamplePosition bouncePosition = 0; 
-	    int frameSize = 512;
+	    const int frameSize = 512;
 	    MultiChannelBuffer deint(m_info.channels,frameSize);
 	    
 	    float* output = new float[frameSize*m_info.channels];
 	    Engine::get_instance().stop();
+	    bool prevLoopState = get_loop_state(); 
+	    set_loop_state(false);
+	  
 	    seek(start);
 	    play();
 	    m_previewState = false;
-	    bool prevLoopState = get_loop_state(); 
-	    set_loop_state(false);
 	    
 	    for (int n = start; n < frames; n += frameSize){
 		    process(0,deint.get_buffers(),frameSize,m_info.channels);
@@ -674,11 +675,12 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 	    }
 	    //FIXME this looses data if the num frames isnt perfectly divisible by the framesize.
 	    size_t remainingblock = frames % frameSize;
-	    std::cout << "Remainder = " << remainingblock<<"\n\n\n\n"<<std::endl;
-	    process(0,deint.get_buffers(),remainingblock,m_info.channels);
-	    interleave((const float**)deint.get_buffers(),output,m_info.channels,remainingblock);
-	    sf_writef_float(outfile,output,remainingblock);
-	    
+	    if(remainingblock > 0){
+		std::cout << "Remainder = " << remainingblock<<"\n\n\n\n"<<std::endl;
+		process(0,deint.get_buffers(),remainingblock,m_info.channels);
+		interleave((const float**)deint.get_buffers(),output,m_info.channels,remainingblock);
+		sf_writef_float(outfile,output,remainingblock);
+	    }
 	    delete [] output;
     // 	
 	    sf_close(outfile);
