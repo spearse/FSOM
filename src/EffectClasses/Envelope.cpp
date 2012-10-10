@@ -36,14 +36,14 @@ Envelope::Envelope(dspCreationStruct data) :
 	  add_parameter("Attack Time(ms)",10,regionDuration/44.1,10);
 	  add_parameter("Decay Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.25);
 	  
-	  add_parameter("Release Time",10,regionDuration/44.1,(regionDuration/44.1)*0.8);
+	  add_parameter("Release Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.8);
 	  add_parameter("Sustain Amplitude",0.1,1.0,1.0);
       
 	  m_fadeUnit.add_breakpoint(TVPair(0, 0));
 	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time(ms)")->get_value()*44.1, 1.0));
 	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1, 
 					   get_parameter("Sustain Amplitude")->get_value()));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time")->get_value()*44.1,
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time(ms)")->get_value()*44.1,
 					   get_parameter("Sustain Amplitude")->get_value()));
 	  m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
 	  
@@ -91,7 +91,7 @@ void Envelope::reset_effect(){
     m_fadeUnit.get_pair(1).t_ = get_parameter("Attack Time(ms)")->get_value()*44.1;
     m_fadeUnit.get_pair(2) = TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1,
 			     get_parameter("Sustain Amplitude")->get_value());
-    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time")->get_value()*44.1,
+    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time(ms)")->get_value()*44.1,
 			     get_parameter("Sustain Amplitude")->get_value());
     m_fadeUnit.sort();
 }
