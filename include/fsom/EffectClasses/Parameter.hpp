@@ -45,7 +45,14 @@ public:
 
   
 Parameter(fsom::SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value, fsom::BreakPointUnitPtr bpUnit);
+///Copy constructor
+Parameter(const Parameter& old);
+
 ~Parameter();
+
+
+
+
 void set_value(float value);
 //void set_value(float value, double timeCode);
 float get_value();

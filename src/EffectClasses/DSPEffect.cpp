@@ -35,7 +35,7 @@ DSPEffect::DSPEffect(dspCreationStruct creationStruct) :
 	register_meta("Tip");
 	
 }
-
+//this is troublesome, need to look closely into the copying of parameters
 DSPEffect::DSPEffect(const DSPEffect& op) :
   	m_IdName(op.m_IdName),
 	m_tutId(op.m_tutId),
@@ -45,6 +45,7 @@ DSPEffect::DSPEffect(const DSPEffect& op) :
 {
 	register_meta(m_tutId);
 	register_meta("Tip");
+	
 	///Register Metadata not required since MetadataStore should copy automatically
 	for(ParameterList::const_iterator it = op.m_parameterList.begin();
 		it != op.m_parameterList.end();
@@ -52,6 +53,7 @@ DSPEffect::DSPEffect(const DSPEffect& op) :
 		std::pair<ParameterList::iterator,bool> ret = m_parameterList.insert( std::make_pair(it->first, ParameterPtr(new Parameter(*(it->second) ) ) ) );
 		assert(ret.second == true && "could not insert into the map");
 	}
+	
 	
 }
 

@@ -44,6 +44,28 @@ Parameter::Parameter(SampleLength duration, std::string IDName, float lowerBound
 	
 }
 
+Parameter::Parameter(const Parameter& old):  
+      m_IDName(old.m_IDName),
+      m_currentValue(old.m_currentValue),
+      m_lowerBound(old.m_lowerBound),
+      m_upperBound(old.m_upperBound),
+      m_duration(old.m_duration),
+      m_inDynamicMode(old.m_inDynamicMode),
+      m_lastStaticValue(old.m_lastStaticValue),
+      m_bpUnit(BreakPointUnitPtr(new BreakPointUnit(  *old.m_bpUnit)))
+{
+  
+	register_meta("GuiHint");
+	register_meta("LowerBound");
+	set_meta_as_float("LowerBound",old.get_meta_as_float("LowerBound"));
+	register_meta("UpperBound");
+	set_meta_as_float("UpperBound",old.get_meta_as_float("UpperBound"));
+	register_meta("Tip");
+  
+}
+
+
+
 Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){

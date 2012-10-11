@@ -223,6 +223,8 @@ struct TVPair{
     t_(t),
     v_(v)
     {};
+    ///copy constructor
+   TVPair(const TVPair& old):t_(old.t_),v_(old.v_){}
    bool operator < (const TVPair& op) const {
      return t_ < op.t_;// && v_ < op.v_;
    }
@@ -243,7 +245,13 @@ class BreakPointUnit{
     BPList bpList_;
   public:
     BreakPointUnit() {}
-    
+    ///Copy constructor
+    BreakPointUnit(const BreakPointUnit& old){
+	for(int n = 0; n < old.bpList_.size();++n){
+	    bpList_.push_back(old.bpList_.at(n));
+	}
+      
+    }
     void add_breakpoint( const TVPair& tvPair){
       bpList_.push_back(tvPair);
       std::sort( bpList_.begin(), bpList_.end() );
