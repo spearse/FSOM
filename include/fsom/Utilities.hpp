@@ -99,6 +99,16 @@ inline void clear_multichannel_buffers(float** buffers, const int channels, cons
 	}
 }
 
+inline float remap(float r1_a, float r1_b, float r2_a, float r2_b, float in){
+  
+  float d1 = r1_b - r1_a;
+  float d2 = r2_b - r2_a;
+  
+ // float x = in / d1;
+  
+  return (in - r1_a) * d2 / d1 + r2_a;
+}
+
 /// a simple dsp phasor class for use in oscilator and control objects.
 /// it provides a tick function that should be called once per sample of playback.
 /// a get phase function returns the current phase of the phasor in the range 0.0f to 1.0f.
