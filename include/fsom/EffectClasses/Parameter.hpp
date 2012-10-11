@@ -40,6 +40,8 @@ BreakPointUnitPtr m_bpUnit;
 SampleLength m_duration;
 bool m_inDynamicMode;  
 
+Parameter& operator = (const Parameter& op);
+
 public:
 
 

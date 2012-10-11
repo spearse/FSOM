@@ -916,7 +916,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   
   float pos = 0.0;
   
-  float rate = 0.5f;
+  float rate = 1.0f/stretchAmount;
   
   float headPos[HEADCOUNT];
   for(int n = 0; n < HEADCOUNT; ++n){
@@ -933,15 +933,15 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 	
 	for(int n = 0; n < HEADCOUNT; ++n){
 	    float phase = phase_wrap(  tapeHead.get_phase() + float(n)/float(HEADCOUNT)    );      
-	    float gain = t_han.linear_lookup(phase*float(WINDOWSIZE));
+	    float gain = t_han.linear_lookup(phase*float(WINDOWSIZE))      ;
 	    
 	    
 	    if( phase < 0.001 ){
 	      headPos[n] = pos;
 	    }
 	      
-	    s[0] += t_tables.at(0)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain;
-	    s[1] += t_tables.at(1)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain;
+	    s[0] += ( t_tables.at(0)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain) * 1.0f/float(HEADCOUNT);
+	    s[1] += ( t_tables.at(1)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain )* 1.0f/float(HEADCOUNT);
 	}
 	
 	tapeHead.tick();
