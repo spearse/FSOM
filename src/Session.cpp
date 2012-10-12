@@ -910,7 +910,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   const int HEADCOUNT = 16;
   const int WINDOWSIZE = 1024;
   const float FREQ = 44100.0f/float(WINDOWSIZE);
-   Phasor tapeHead(44100,FREQ);
+  Phasor tapeHead(44100,FREQ);
   Table<double> t_han(WINDOWSIZE);
   t_han.fill_hann();
   
@@ -940,8 +940,8 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 	      headPos[n] = pos;
 	    }
 	      
-	    s[0] += ( t_tables.at(0)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain) * 1.0f/float(HEADCOUNT);
-	    s[1] += ( t_tables.at(1)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain )* 1.0f/float(HEADCOUNT);
+	    s[0] += ( t_tables.at(0)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain) * (1.0f/float(HEADCOUNT));
+	    s[1] += ( t_tables.at(1)->linear_lookup( phase*float(WINDOWSIZE) + headPos[n]   ) * gain )* (1.0f/float(HEADCOUNT));
 	}
 	
 	tapeHead.tick();
