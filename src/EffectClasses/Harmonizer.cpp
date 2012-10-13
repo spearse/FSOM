@@ -30,7 +30,7 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);  
   add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0); 
   add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0); 
-  add_parameter("Original",0,1,1);
+ // add_parameter("Original",0,1,1);
   set_implementation();
 }
 
