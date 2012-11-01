@@ -48,7 +48,7 @@ private:
 	bool m_noiseState;
 	std::string m_filePath;
 public: 
-	Generator(GeneratorType type);
+	Generator(GeneratorType type,dspCreationStruct data);
 	virtual ~Generator();
 	virtual void process(float** input, float** output, int frameSize, int channels);
 	void set_generator_voice(GeneratorType type);

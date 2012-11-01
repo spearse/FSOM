@@ -28,7 +28,7 @@ SubtractiveSynthesisRegion::SubtractiveSynthesisRegion(regionCreationStruct _str
 	set_offset_amount(0);
 	set_meta("RegionType","SubtractiveSynthesis");	
 	add_module("FilterModule");
-	add_generator(GeneratorPtr(new Generator(Generator::GEN_Noise)));
+	add_generator(GeneratorPtr(new Generator(Generator::GEN_Noise,dspCreationStruct(this))));
 }
 
 SubtractiveSynthesisRegion::~SubtractiveSynthesisRegion()

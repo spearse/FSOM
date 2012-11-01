@@ -32,7 +32,7 @@ SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 	m_stackBufferB(2,4096),	
 	m_preferedFadeTime(44.0) //duration for prefered fading in and out if smaller make fades half duration
 {
-	
+	std::cout << "In synthesis region base class, region duration = "<< creationStruct.m_duration<< std::endl;
 	if(creationStruct.m_duration < (m_preferedFadeTime*2)){
 	      float fadeTime = creationStruct.m_duration/2.0;
 	  
