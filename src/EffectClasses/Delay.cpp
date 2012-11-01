@@ -33,7 +33,7 @@ Delay::Delay(dspCreationStruct data):
 	set_meta(get_tutId(),"link to html");
 	add_parameter("Delay Time",0.01,10.0,1.0);
 	get_parameter("Delay Time")->set_meta("GuiHint","soCustomFader");
-	add_parameter("Delay Volume",0.01,0.9,0.9);
+	add_parameter("Delay Volume",0.01,0.6,0.9);
 	get_parameter("Delay Volume")->set_meta("GuiHint","soCustomFader");
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_implementation();
