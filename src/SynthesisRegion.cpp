@@ -136,7 +136,7 @@ SynthesisModuleStack& SynthesisRegion::get_synth_module_stack(){
 }
 
 void SynthesisRegion::add_module(std::string id){
-	m_moduleStack.push_back( SynthesisModuleManager::get_instance().create(id,dspCreationStruct())  );
+	m_moduleStack.push_back( SynthesisModuleManager::get_instance().create(id,dspCreationStruct(this))  );
   
 }
 
