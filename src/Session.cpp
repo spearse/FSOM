@@ -130,7 +130,7 @@ DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,Region* regi
 
 GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, Region* region){
     std::cout << "Attempting to create generator"<<std::endl;
-    GeneratorPtr gen = GeneratorPtr(new Generator(Generator::GEN_Sine));
+    GeneratorPtr gen = GeneratorPtr(new Generator(Generator::GEN_Sine,dspCreationStruct(region)));
     
     TiXmlElement* basicInfoElement = element->FirstChildElement("BasicInfo");
     if(basicInfoElement){

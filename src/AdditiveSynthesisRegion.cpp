@@ -29,8 +29,9 @@ AdditiveSynthesisRegion::AdditiveSynthesisRegion(regionCreationStruct data):
 	set_offset_amount(0);
 	set_meta("RegionType","AdditiveSynthesis");
 	//for testing, limited 
+	std::cout << "In constructor for additive synthesis, duration =  " << data.m_duration<< std::endl;
 	 for(int n = 0; n < 4; ++n){
-		GeneratorPtr t = GeneratorPtr(new Generator(Generator::GEN_Sine));
+		GeneratorPtr t = GeneratorPtr(new Generator(Generator::GEN_Sine,dspCreationStruct(this)));
 		t->get_parameter("Freq")->set_value(440);
 		t->get_parameter("Amp")->set_value(0.2);
 		add_generator(t);

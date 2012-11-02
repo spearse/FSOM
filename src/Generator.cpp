@@ -24,8 +24,8 @@
 
 namespace fsom{
 	
-Generator::Generator(GeneratorType type):
-	DSPEffect(dspCreationStruct()),
+Generator::Generator(fsom::Generator::GeneratorType type, fsom::dspCreationStruct data):
+	DSPEffect(data),
 	m_genType(type),
 	m_shape(512),
 	m_pitchPhasor(44100.0f,440.0f), 
