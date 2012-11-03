@@ -66,10 +66,11 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
     
 	  
   if(!bypass_active()){
-      float depth;
-      float mix;
-      float invmix;
-      float frequency;
+      float depth(0);
+      float mix(0);
+      float invmix(0);
+      float frequency(0);
+
       m_modPhasor.set_frequency( frequency );
       for(int n = 0; n < frameSize; ++n){
 	

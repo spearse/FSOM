@@ -181,6 +181,7 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
    return module;
   }
   
+  ///WARNING POSSIBLE TO RETURN WITHOUT A VALUE 
   //   SynthesisModulePtr 
   
   
