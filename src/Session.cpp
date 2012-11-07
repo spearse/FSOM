@@ -484,11 +484,11 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 		float sr = Engine::get_instance().get_sample_rate();
 		//std::cout << "Transport rolling: t="<< m_playHead << " " << float(m_playHead)/sr << std::endl;
 		//simple idea for looping
-		if(m_loopState &&  m_playHead >= m_rightLocator){
-		    /*
+		if(m_loopState &&  m_playHead <= m_leftLocator){
+		    
 		    m_playHead = m_leftLocator;
 		    seek(m_leftLocator);
-		    */
+		    
 		}
 		SamplePosition endOfBlockTime = m_playHead + frameCount;
 		
