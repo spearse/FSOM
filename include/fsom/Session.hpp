@@ -67,7 +67,7 @@ private:
   
 	Mutex* m_audioMutex;
   ///Currently active session name
-	const char* m_sessionName;
+//	const char* m_sessionName;
 
 	/// boolean for state of play
 	bool m_transportIsRolling;

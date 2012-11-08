@@ -432,6 +432,7 @@ void Session::play(){
 }
 
 void Session::stop(){
+	ScopedMutexLock lock(m_audioMutex);
 	// set transport state to stoped
 	// playback will stop on the next process block.
 	clear_all_active_regions();//clear all active regions TODO needs to be more sophisticated to handle stop and continue
