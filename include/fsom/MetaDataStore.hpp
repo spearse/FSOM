@@ -29,6 +29,12 @@ class TiXmlElement;
 
 namespace fsom{
 
+class MetaDataStoreKeyException{
+	std::string m_keyString;
+public:
+	MetaDataStoreKeyException(const std::string& keyString) : m_keyString(keyString){}
+};
+
 class MetaDataStore
 {
 std::map<std::string,std::string> m_map;
