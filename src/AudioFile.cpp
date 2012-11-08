@@ -39,7 +39,8 @@ AudioFile::AudioFile(const std::string& filePath) :
 {
 	std::cout << "Attempting to spawn audiofile from"<< filePath<<std::endl;
 	m_pImpl->m_sndFile = sf_open(m_filePath.c_str(),SFM_READ,&m_pImpl->m_sfInfo); //set soundfile to open and read mode and set filepath and structure to contain info
-    if(!m_pImpl->m_sndFile) throw AudioFileException(); //if did not construct pImpl correctly throw exception
+//    if(!m_pImpl->m_sndFile) throw AudioFileException(); //if did not construct pImpl correctly throw exception
+	if(!m_pImpl->m_sndFile) throw "Could not open audio file";
 	if(m_pImpl->m_sfInfo.frames == 0) throw  AudioFileException(); //if the audiofile is damaged or contains no data throw exception
 	//m_peakImage.at(D16) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	//m_peakImage.at(D32) = multiRangeList(m_pImpl->m_sfInfo.channels);

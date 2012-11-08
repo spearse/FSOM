@@ -43,20 +43,20 @@ void generic_sleep(int t){
 
 #if _WIN32
 class WindowsMutex : public Mutex{
- // CRITICAL_SECTION cs;
+  CRITICAL_SECTION cs;
   public:
 	WindowsMutex(){};
 	virtual ~WindowsMutex(){
-	 // InitializeCriticalSection( &cs );
+	  InitializeCriticalSection( &cs );
 	};
 	virtual void lock(){
-	  // EnterCriticalSection( &cs );
+	   EnterCriticalSection( &cs );
 	}
 	virtual bool try_lock(){
 	  return true;
 	}
 	virtual void unlock(){
-	  //LeaveCriticalSection( &cs );
+	  LeaveCriticalSection( &cs );
 	}
 };
 

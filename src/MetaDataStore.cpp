@@ -75,10 +75,14 @@ void MetaDataStore::set_meta_as_float(const std::string& key, const float& value
 }
 
 const std::string& MetaDataStore::get_meta(const std::string& key) const{
+	assert(!key.empty());
+	
 	std::map<std::string,std::string >::const_iterator it;
 	it = m_map.find(key);
-	assert(it != m_map.end() && key.c_str());
-	return (*it).second; 
+	if(it != m_map.end()){
+		return it->second; 
+	}
+	throw MetaDataStoreKeyException(key);
 }
 
 int MetaDataStore::get_meta_as_int(const std::string& key) const{
