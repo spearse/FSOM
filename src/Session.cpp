@@ -467,9 +467,11 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	} else {
 		offsetOutputs = outs;
 	}
+	m_audioMutex->lock();
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
 		bind(&Region::process_region, _1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
+	m_audioMutex->unlock();
 	m_playHead += frameCount;
 }
 
