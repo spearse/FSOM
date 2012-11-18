@@ -168,7 +168,7 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
   if(basicInfoElement){
    std::cout << "Module basic info found"<<std::endl;
    std::string name = basicInfoElement->Attribute("Type");
-   module = SynthesisModuleManager::get_instance().create(name,dspCreationStruct()); 
+   module = SynthesisModuleManager::get_instance().create(name,dspCreationStruct(region)); 
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
       std::cout << "Parameter in module found"<<std::endl;
