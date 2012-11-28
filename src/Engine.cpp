@@ -37,7 +37,7 @@ Engine::Engine() :
 
 Engine::~Engine(){
 	close();
-
+	if(m_activeSession) delete m_activeSession;
 }
 
 Engine* Engine::s_instance = 0;
@@ -54,6 +54,7 @@ void Engine::destroy(){
 
 void Engine::attach_session(Session* s){
 	assert(s);
+	if(m_activeSession)detach_active_session();
 	m_activeSession = s;
 }
 
@@ -79,8 +80,10 @@ Session& Engine::get_active_session(){
 void Engine::detach_active_session(){
     stop();
     clear_multichannel_buffers(m_outputBuffers.get_buffers(),get_output_channels(),get_block_size());
-	delete m_activeSession;
-    m_activeSession=NULL;
+    if(m_activeSession){
+      delete m_activeSession;
+      m_activeSession=NULL;
+    }
     start();
 }
 
