@@ -45,9 +45,11 @@ void generic_sleep(int t){
 class WindowsMutex : public Mutex{
   CRITICAL_SECTION cs;
   public:
-	WindowsMutex(){};
+	WindowsMutex(){
+		InitializeCriticalSection( &cs );
+	};
 	virtual ~WindowsMutex(){
-	  InitializeCriticalSection( &cs );
+		DeleteCriticalSection(&cs);
 	};
 	virtual void lock(){
 	   EnterCriticalSection( &cs );
