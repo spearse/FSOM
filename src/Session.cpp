@@ -168,7 +168,7 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
   if(basicInfoElement){
    std::cout << "Module basic info found"<<std::endl;
    std::string name = basicInfoElement->Attribute("Type");
-   module = SynthesisModuleManager::get_instance().create(name,dspCreationStruct()); 
+   module = SynthesisModuleManager::get_instance().create(name,dspCreationStruct(region)); 
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
       std::cout << "Parameter in module found"<<std::endl;
@@ -467,9 +467,20 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	} else {
 		offsetOutputs = outs;
 	}
+	
+//locking mutex (critical sections) in windows during the running of internal process. 
+//This is to stop an increment error that pccurs whilst iterating through activeregion
+// list during the stopping and starting of the session process.
+//NOTE - Linux PosixMutexs cause software to freeze when this is implemented - ifdef blocks created for windows only until tested on MAC.
+#ifdef _WIN32
+	m_audioMutex->lock();
+#endif
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
 		bind(&Region::process_region, _1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
+#ifdef _WIN32
+	m_audioMutex->unlock();
+#endif
 	m_playHead += frameCount;
 }
 
