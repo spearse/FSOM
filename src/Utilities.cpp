@@ -64,12 +64,16 @@ class WindowsMutex : public Mutex{
 };
 
 #else
+
+class PosixMutexException{};
+
 #include <pthread.h>
 class PosixMutex : public Mutex{
   pthread_mutex_t m_mtx;
   public:
 	PosixMutex(){
-	  pthread_mutex_init (&m_mtx, NULL);
+	  int r = pthread_mutex_init (&m_mtx, NULL)   ;
+	  if(r!=0)throw PosixMutexException();
 	}
 	virtual ~PosixMutex(){
 	  pthread_mutex_destroy(&m_mtx);

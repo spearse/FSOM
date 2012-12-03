@@ -52,6 +52,7 @@ Session::Session() :
 	m_rightLocator(44100),
 	m_loopState(false)
 {
+  
 	DSPManager::get_instance();
 	assert(m_audioMutex && "Audio mutex not created");
 }
