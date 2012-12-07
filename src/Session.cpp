@@ -278,9 +278,20 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   return RegionPtr(pRegion);
 }
 
-
-
-
+void Session::load_metadata(fsom::Session* session, TiXmlElement* element ){
+	TiXmlElement * metaElement = element->FirstChildElement( "MetaData" );
+		if(metaElement){
+			TiXmlAttribute* attribute = metaElement->FirstAttribute();
+			  while(attribute){
+			      std::string name(attribute->Name());
+			      session->register_meta(name);
+			      session->set_meta(name,std::string(attribute->Value()));
+			      attribute = attribute->Next();
+			  }
+			  
+			  
+		}
+}
 
 void Session::load_session(const char* fileLocation){
 	std::vector<std::string> temp_effect_names;
@@ -290,6 +301,7 @@ void Session::load_session(const char* fileLocation){
 		TiXmlHandle docHandle( &doc );
 		TiXmlElement* sessionElement = docHandle.FirstChild( "Session" ).Element();
 		if(sessionElement){
+		       load_metadata(this,sessionElement);
 			TiXmlElement* regionElement = sessionElement->FirstChildElement("Region");
 			while(regionElement){
 				RegionPtr t = create_region_from_node(regionElement);
@@ -308,6 +320,7 @@ void Session::save_session(const char* fileLocation){
 	doc.LinkEndChild( decl );
 	TiXmlElement * root = new TiXmlElement( "Session" );  
 	doc.LinkEndChild( root );  
+	save_meta_to_xml(root);
 	//FIXME sort out upper and lower bound in parameter
 	for (std::list<RegionPtr>::iterator it=m_regionPlaylist.begin();it != m_regionPlaylist.end();++it){
 		(*it)->save_to_xml_node(root);

@@ -221,6 +221,9 @@ public:
 	void set_loop_state(bool state);
 	///function to return session loop state
 	bool get_loop_state();
+	
+	void load_metadata(fsom::Session* session, TiXmlElement* element );
+	void save_metadata();
 };
 
 
