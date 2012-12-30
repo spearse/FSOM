@@ -30,7 +30,7 @@ Transpose::Transpose(dspCreationStruct data):
 {
 	set_effect_name("Transpose");
 	add_parameter("Pitch Shift Amount",-12.0,12.0,1.0);
-// 	get_parameter("Pitch Shift Amount")->set_meta("GuiHint","soCustomFader");
+ 	get_parameter("Pitch Shift Amount")->set_meta("GuiHint","soCustomFader");
 	
 	set_implementation();
 	  	

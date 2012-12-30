@@ -32,13 +32,31 @@ AsymmetricDelay::AsymmetricDelay(dspCreationStruct data):
   m_delayUnitR(44100*10)
   {
     set_effect_name("AsymmetricDelay");
+    set_meta(get_tutId(),"link to html");
+    
     add_parameter("First Delay Time",0,10,1);
+    get_parameter("First Delay Time")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("First Delay Volume",0,1,0.5);
+    get_parameter("First Delay Volume")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Second Delay Time",0,10,3);
+    get_parameter("Second Delay Time")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Second Delay Volume",0,1,0.5);
+    get_parameter("Second Delay Volume")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Third Delay Time",0,10,5);
+    get_parameter("Third Delay Time")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Third Delay Volume",0,1,0.5);
+    get_parameter("Third Delay Volume")->set_meta("GuiHint","soCustomFader");
     data.attatchedRegion->set_extension(44100*15);
+    
+ 
+    
+  
+    set_implementation();
     set_implementation();
   
 }

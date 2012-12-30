@@ -32,9 +32,12 @@ Fade::Fade(dspCreationStruct data):
   set_effect_name("Fade");
 
   set_meta(get_tutId(),"link to html");
+  
   add_parameter("Fade In Time(ms)",10,m_duration/44.1,1000.0);
+  get_parameter("Fade In Time(ms)")->set_meta("GuiHint","soCustomFader");
   
   add_parameter("Fade Out Time(ms)",10,m_duration/44.1,1000.0);
+  get_parameter("Fade Out Time(ms)")->set_meta("GuiHint","soCustomFader");
     
    m_fadeUnit.add_breakpoint(TVPair(0, 0));
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time(ms)")->get_value()*44.1, 1.0));

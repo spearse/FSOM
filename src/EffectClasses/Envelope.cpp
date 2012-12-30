@@ -34,10 +34,16 @@ Envelope::Envelope(dspCreationStruct data) :
 	  set_meta(get_tutId(),"link to html");
 	  
 	  add_parameter("Attack Time(ms)",10,regionDuration/44.1,10);
+	  get_parameter("Attack Time(ms)")->set_meta("GuiHint","soCustomFader");
+	
 	  add_parameter("Decay Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.25);
+	  get_parameter("Decay Time(ms)")->set_meta("GuiHint","soCustomFader");
 	  
 	  add_parameter("Release Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.8);
+	  get_parameter("Release Time(ms)")->set_meta("GuiHint","soCustomFader");
+	
 	  add_parameter("Sustain Amplitude",0.1,1.0,1.0);
+	  get_parameter("Sustain Amplitude")->set_meta("GuiHint","soCustomFader");
       
 	  m_fadeUnit.add_breakpoint(TVPair(0, 0));
 	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time(ms)")->get_value()*44.1, 1.0));

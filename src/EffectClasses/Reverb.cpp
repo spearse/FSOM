@@ -29,9 +29,16 @@ Reverb::Reverb(dspCreationStruct data):
 	DSPEffect(data)
 {
   set_effect_name("Reverb");
+  
   add_parameter("Roomsize",0,1,0.5);
+  get_parameter("Roomsize")->set_meta("GuiHint","soCustomFader");
+  
   add_parameter("Damping",0,1,0.5);
+  get_parameter("Damping")->set_meta("GuiHint","soCustomFader");
+  
   add_parameter("Reverb Amount",0,1,0.8);
+  get_parameter("Reverb Amount")->set_meta("GuiHint","soCustomFader");
+  
 //  add_parameter("Freeze Amount",0,1,0.1);
   set_implementation();
 

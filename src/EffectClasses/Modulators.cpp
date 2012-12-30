@@ -33,8 +33,13 @@ HighAmpMod::HighAmpMod(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("HighAmpMod");
+	
 	add_parameter("Frequency",10.0,15000.0,500.0); //add parameter for phasor frequency
+	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
+	
 	add_parameter("Amplitude",0.0,1.0,0.5); //add parameter for phasor amplitude
+	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");
+	
 	set_meta(get_tutId(),"link to html");
 // 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 // 	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");
@@ -94,8 +99,13 @@ LowAmpMod::LowAmpMod(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("LowAmpMod");
+	
 	add_parameter("Frequency",0.01,20.0,1); //add parameter for phasor frequency
+	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
+	
 	add_parameter("Amplitude",0.0,1.0,0.5); //add parameter for phasor amplitude
+	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");
+	
 	set_meta(get_tutId(),"link to html");
 //  	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 // 	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");

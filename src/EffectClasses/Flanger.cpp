@@ -30,14 +30,17 @@ Flanger::Flanger(dspCreationStruct data):
 	m_table(512),
 	m_phasor(44100,2)
 {
-    set_effect_name("Flanger");
+	set_effect_name("Flanger");
 	m_table.fill_sine();
 	add_parameter("Flanger Amount",0.0,1.0,0.5);
 	get_parameter("Flanger Amount")->set_meta("GuiHint","soCustomFader");
+	
 	add_parameter("Depth",0.0,1.0,0.5);
 	get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
+	
 	add_parameter("Frequency",0.01,8.0,1.0);
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
+	
 	add_parameter("Feedback",0.0,1.0,0.2);
 	get_parameter("Feedback")->set_meta("GuiHint","soCustomFader");
 	

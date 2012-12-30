@@ -32,11 +32,15 @@ Chorus::Chorus(dspCreationStruct data):
 	m_modPhasor(44100,1)
 {
     set_effect_name("Chorus");
+    set_meta(get_tutId(),"link to html");
+    
     m_modTable.fill_sine();
     add_parameter("Chorus Amount",0.0,1.0,0.5);
-//     get_parameter("Mix")->set_meta("GuiHint","soCustomFader");
+    get_parameter("Chorus Amount")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Depth",0.0,1.0,0.5);
-//     get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
+    get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
+    
     add_parameter("Frequency",0.01,5.0,1.0);
     get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 
