@@ -92,6 +92,9 @@ SimpleReverb::SimpleReverb(dspCreationStruct data):
   set_effect_name("SimpleReverb");
   add_parameter("Roomsize",0,1,0.5);
 
+  set_meta(get_tutId(),"link to html");
+  get_parameter("Roomsize")->set_meta("GuiHint","soCustomFader");
+  
   set_implementation();
 
   data.attatchedRegion->set_extension(44100*10);
