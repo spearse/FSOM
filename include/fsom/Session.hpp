@@ -107,7 +107,10 @@ private:
 	bool m_previewState;
 	///pointer to region to preview
 	RegionPtr m_previewRegion;
-
+	
+	///double for master volume control
+	double m_masterVolume;
+	
 	/// internal function to activate a region
 	void add_active_region(Region* p);
 
@@ -224,6 +227,11 @@ public:
 	
 	void load_metadata(fsom::Session* session, TiXmlElement* element );
 	void save_metadata();
+	///return master level
+	double get_master_level();
+	///set master level, ideally between 0 - 1
+	void set_master_level(double level);
+	
 };
 
 

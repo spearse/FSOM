@@ -31,6 +31,7 @@
 #include <cassert>
 #include <sstream>
 #include "fsom/SynthesisRegion.hpp"
+#include <math.h>
 
 using namespace fsom;
 
@@ -50,7 +51,8 @@ Session::Session() :
 	m_loopPreviewState(true),
 	m_leftLocator(0),
 	m_rightLocator(44100),
-	m_loopState(false)
+	m_loopState(false),
+	m_masterVolume(1.0)
 {
   
 	DSPManager::get_instance();
@@ -486,7 +488,12 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
 		bind(&Region::process_region, _1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
-
+	for (int chan=0; chan < channelCount;++chan){
+	  for(int n = 0; n < frameCount; ++n){
+	      offsetOutputs[chan][n] *=m_masterVolume;
+	  }
+	}
+	
 	m_playHead += frameCount;
 }
 
@@ -1004,5 +1011,12 @@ bool Session::get_loop_state(){
     return m_loopState;
 }
 
-
-
+double Session::get_master_level(){
+    return m_masterVolume;
+}
+void Session::set_master_level(double level){
+  
+    if(level>=1.2)level = 1.2;
+    if(level<=0)level = 0;
+    m_masterVolume = pow(level,4);
+}
