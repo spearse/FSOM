@@ -38,7 +38,7 @@ void WhiteNoise::process(float** input, float** output, int frameSize, int chann
     
     float** t = m_audioBuffer.get_buffers();
     for (int n = 0; n < frameSize;++n) {
-        val = 0.6 * ((rand()%100)/50)-1.0f;
+        val = 0.3 * ((rand()%100)/50)-1.0f;
         t[0][n] = val;
         t[1][n] = val;
     }
