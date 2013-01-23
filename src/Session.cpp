@@ -303,6 +303,14 @@ void Session::load_session(const char* fileLocation){
 		TiXmlHandle docHandle( &doc );
 		TiXmlElement* sessionElement = docHandle.FirstChild( "Session" ).Element();
 		if(sessionElement){
+			double masterLevel = 1;
+			if(sessionElement->QueryDoubleAttribute("MasterVolume",&masterLevel)){
+			set_master_level(masterLevel);
+			}else{
+			  set_master_level(1);
+			}
+			
+			
 		       load_metadata(this,sessionElement);
 			TiXmlElement* regionElement = sessionElement->FirstChildElement("Region");
 			while(regionElement){
@@ -322,6 +330,8 @@ void Session::save_session(const char* fileLocation){
 	doc.LinkEndChild( decl );
 	TiXmlElement * root = new TiXmlElement( "Session" );  
 	doc.LinkEndChild( root );  
+	root->SetDoubleAttribute("MasterVolume",m_masterVolume);
+	
 	save_meta_to_xml(root);
 	//FIXME sort out upper and lower bound in parameter
 	for (std::list<RegionPtr>::iterator it=m_regionPlaylist.begin();it != m_regionPlaylist.end();++it){
