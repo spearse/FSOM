@@ -42,6 +42,8 @@ AudioFile::AudioFile(const std::string& filePath) :
 	if(!m_pImpl->m_sndFile) throw AudioFileException(); //if did not construct pImpl correctly throw exception
 	//if(!m_pImpl->m_sndFile) throw "Could not open audio file";
 	if(m_pImpl->m_sfInfo.frames == 0) throw  AudioFileException(); //if the audiofile is damaged or contains no data throw exception
+	if(!m_pImpl->m_sfInfo.format & SF_FORMAT_WAV & SF_FORMAT_OGG & SF_FORMAT_AIFF & SF_FORMAT_FLAC)throw  AudioFileException();
+ 	if(m_pImpl->m_sfInfo.samplerate != 44100) throw  AudioFileException();
 	//m_peakImage.at(D16) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	//m_peakImage.at(D32) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	//m_peakImage.at(D64) = multiRangeList(m_pImpl->m_sfInfo.channels);
