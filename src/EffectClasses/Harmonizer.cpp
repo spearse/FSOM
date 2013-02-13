@@ -30,16 +30,9 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   set_meta(get_tutId(),"link to html");
   
   add_parameter("Pitch One Shift Amount",-12.0,12.0,0.0);
-  get_parameter("Pitch One Shift Amount")->set_meta("GuiHint","soCustomFader");
-	
-  add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);  
-  get_parameter("Pitch Two Shift Amount")->set_meta("GuiHint","soCustomFader");
-  
-  add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0); 
-  get_parameter("Pitch Three Shift Amount")->set_meta("GuiHint","soCustomFader");
-  
+  add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);
+  add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0);
   add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0); 
-  get_parameter("Pitch Four Shift Amount")->set_meta("GuiHint","soCustomFader");
 //  add_parameter("Original Amplitude",0,1,0.2); 
  // add_parameter("Original",0,1,1);
   set_implementation();
