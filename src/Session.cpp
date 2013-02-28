@@ -47,7 +47,7 @@ Session::Session() :
 	m_playHead(0),
 	m_previewPlayHead(0),
 	m_previewState(false),
-	m_playbackDuration( (60*5)*44100), ///This currently sets the duration of entire session,
+	m_playbackDuration( (60*10)*44100), ///This currently sets the duration of entire session,
 	m_loopPreviewState(true),
 	m_leftLocator(0),
 	m_rightLocator(44100),
