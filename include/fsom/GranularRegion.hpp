@@ -47,6 +47,7 @@ namespace fsom{
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }
     
   };
-  
+  typedef boost::shared_ptr<GranularRegion> GranularSynthesisRegionPtr;
+
 }
 #endif // GRANULARREGION_HPP
