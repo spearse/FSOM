@@ -20,9 +20,9 @@
 #ifndef __PARAMETER_HPP__
 #define __PARAMETER_HPP__
 
-#include "../MetaDataStore.hpp"
+#include "MetaDataStore.hpp"
 #include <boost/shared_ptr.hpp>
-#include "../Utilities.hpp"
+#include "Utilities.hpp"
 
 
 namespace fsom{

@@ -18,7 +18,7 @@
 
 
 
-#include "../include/fsom/EffectClasses/Parameter.hpp"
+#include "../include/fsom/Parameter.hpp"
 #include "../include/fsom/Utilities.hpp"
 #include "../include/fsom/Region.hpp"
 #include <iostream>

@@ -20,7 +20,7 @@
 #ifndef DSPEFFECT_HPP
 #define DSPEFFECT_HPP
 
-#include "Parameter.hpp"
+#include "../Parameter.hpp"
 #include "../MetaDataStore.hpp"
 
 #include <boost/shared_ptr.hpp>
