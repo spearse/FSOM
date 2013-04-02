@@ -27,7 +27,7 @@ GranularRegion::GranularRegion(regionCreationStruct data):
 Region(data), 
 // m_file(data.m_filepath),
 m_diskStreamBuffers(2,4096),
-m_table(0)
+m_table(512)
 {
   
   
