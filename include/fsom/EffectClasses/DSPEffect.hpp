@@ -34,9 +34,6 @@ namespace fsom{
 
 class Region;
   
-typedef boost::shared_ptr<Parameter> ParameterPtr;
-typedef std::map<std::string,ParameterPtr> ParameterList;
-
 
 
 struct dspCreationStruct{

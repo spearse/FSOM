@@ -68,6 +68,9 @@ void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);
 bool get_automated_mode();
 };
+typedef boost::shared_ptr<Parameter> ParameterPtr;
+typedef std::map<std::string,ParameterPtr> ParameterList;
+
 
 }
 #endif
