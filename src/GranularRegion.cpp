@@ -25,7 +25,7 @@ using namespace fsom;
 
 GranularRegion::GranularRegion(regionCreationStruct data):
 Region(data), 
-m_file(data.m_filepath),
+// m_file(data.m_filepath),
 m_diskStreamBuffers(2,4096),
 m_table(0)
 {
@@ -37,25 +37,27 @@ GranularRegion::~GranularRegion(){}
 
 
 void GranularRegion::process(float** input, float** output, int frameSize, int channels){
-	assert(channels == m_file.get_channels() && channels == 2);
+// 	assert(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
-	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
+// 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
 	// copy from the disk stream buffers through the DSP onto the output buffers.
 	float** t=m_diskStreamBuffers.get_buffers();	
 	// process the fx stack from the disk buffer to the output
 	process_dsp_stack(t,output,frameSize,channels);
 }
-
+/*
 AudioFile& GranularRegion::get_audiofile(){
 	return m_file;
 }
-
+*/
 std::string GranularRegion::get_file_path(){
-	return m_file.get_file_path();	
+	 return get_file_path(); 
+//     return m_file.get_file_path();	
 }
 
 SampleLength GranularRegion::get_file_length(){
-	return m_file.get_file_length();
+// 	return m_file.get_file_length();
+      return get_duration();
 }
 
 void GranularRegion::save_to_xml_node(TiXmlElement* node){
@@ -67,5 +69,5 @@ void GranularRegion::save_to_xml_node(TiXmlElement* node){
 }
 
 void GranularRegion::on_region_start(SamplePosition seekTime){
-	m_file.seek(seekTime); // this would seek to region file offset
+// 	m_file.seek(seekTime); // this would seek to region file offset
 }

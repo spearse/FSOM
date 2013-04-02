@@ -28,7 +28,7 @@ namespace fsom{
   
   class GranularRegion : public Region
   {	
-    AudioFile m_file;
+//     AudioFile m_file;
     Phasor m_phasor;
     Table<double> m_table;
     MultiChannelBuffer m_diskStreamBuffers;
@@ -43,7 +43,7 @@ namespace fsom{
       virtual void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
       std::string get_file_path();
-      AudioFile& get_audiofile();
+//       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }
     
   };
