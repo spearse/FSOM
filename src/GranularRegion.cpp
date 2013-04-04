@@ -27,13 +27,18 @@ GranularRegion::GranularRegion(regionCreationStruct data):
 Region(data), 
 // m_file(data.m_filepath),
 m_diskStreamBuffers(2,4096),
-m_table(512)
+m_table(512),
+m_sinTable(512)
+
 {
   add_parameter("GrainSize",10,2000,100);
   add_parameter("GrainPitch",0,2,1);
   add_parameter("GrainPosition",0,1,0);
   add_parameter("GrainDensity",1,20,4);
-  
+
+  //for testing
+  m_sinTable.fill_triangle();
+  m_phasor.set_frequency(120);
 }
 
 GranularRegion::~GranularRegion(){}
@@ -45,6 +50,16 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
 // 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
 	// copy from the disk stream buffers through the DSP onto the output buffers.
 	float** t=m_diskStreamBuffers.get_buffers();	
+	float v=0;
+	//for testing only
+	for(int n =0; n < frameSize;++n){
+	    v = m_sinTable.linear_lookup( m_phasor.get_phase()*m_sinTable.get_size()  );
+	    t[0][n] = v;
+	    t[1][n] = v;
+	    m_phasor.tick();
+	}
+	
+	
 	// process the fx stack from the disk buffer to the output
 	process_dsp_stack(t,output,frameSize,channels);
 }

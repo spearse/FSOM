@@ -33,7 +33,8 @@ namespace fsom{
     Table<double> m_table;
     MultiChannelBuffer m_diskStreamBuffers;
     ParameterList m_parameters;
-    
+    //for testing only
+    Table<double> m_sinTable;
     
     public:
       GranularRegion(regionCreationStruct data);
