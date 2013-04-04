@@ -246,7 +246,7 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 
 void Region::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
 	
-	BreakPointUnitPtr tempBPUnit;  
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
 	tempBPUnit->add_breakpoint(TVPair(0,value));
 	tempBPUnit->add_breakpoint(TVPair(get_duration(),value));
   
@@ -259,6 +259,16 @@ ParameterPtr Region::get_parameter(std::string IdName){
 	assert(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
+
+
+ParameterPtr Region::get_parameter(int ID) {
+	std::map<std::string, ParameterPtr>::iterator it;
+	it =  m_parameterList.begin();
+	advance(it,ID);
+	//assert(it != m_parameterList.end() && "Could not find Param Name");
+	return  (*it).second;
+}
+
 
 ParameterList& Region::get_parameter_list(){
   return m_parameterList;

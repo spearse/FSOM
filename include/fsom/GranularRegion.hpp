@@ -32,6 +32,8 @@ namespace fsom{
     Phasor m_phasor;
     Table<double> m_table;
     MultiChannelBuffer m_diskStreamBuffers;
+    ParameterList m_parameters;
+    
     
     public:
       GranularRegion(regionCreationStruct data);
@@ -42,7 +44,9 @@ namespace fsom{
       virtual void save_to_xml_node(TiXmlElement* node);
       virtual void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
-      std::string get_file_path();
+      
+      
+      
 //       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }
     

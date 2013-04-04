@@ -115,6 +115,7 @@ public:
 	regionCreationStruct get_creation_struct();
 	void add_parameter(std::string IdName, float lowerBound, float upperBound, float value);
 	ParameterPtr get_parameter(std::string IdName);
+	ParameterPtr get_parameter(int id);
 	ParameterList& get_parameter_list();
 	int get_num_parameter() const;
 	

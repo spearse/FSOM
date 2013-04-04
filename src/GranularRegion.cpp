@@ -29,7 +29,10 @@ Region(data),
 m_diskStreamBuffers(2,4096),
 m_table(512)
 {
-  
+  add_parameter("GrainSize",10,2000,100);
+  add_parameter("GrainPitch",0,2,1);
+  add_parameter("GrainPosition",0,1,0);
+  add_parameter("GrainDensity",1,20,4);
   
 }
 
@@ -50,10 +53,8 @@ AudioFile& GranularRegion::get_audiofile(){
 	return m_file;
 }
 */
-std::string GranularRegion::get_file_path(){
-	 return get_file_path(); 
-//     return m_file.get_file_path();	
-}
+
+
 
 SampleLength GranularRegion::get_file_length(){
 // 	return m_file.get_file_length();
@@ -71,3 +72,19 @@ void GranularRegion::save_to_xml_node(TiXmlElement* node){
 void GranularRegion::on_region_start(SamplePosition seekTime){
 // 	m_file.seek(seekTime); // this would seek to region file offset
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
