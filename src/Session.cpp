@@ -250,7 +250,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   
   std::cout  << "Loaded region:" << path << std::endl;
   
-  if(pRegion->get_meta("RegionType") != "Audio" && pRegion->get_meta("RegionType") != "WhiteNoise"){
+  if(pRegion->get_meta("RegionType") == std::string("AdditiveSynthesis")){
       std::cout << "Synthesis region found"<<std::endl;
       SynthesisRegionPtr synthregion = boost::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
       //Remove the automatic generators
