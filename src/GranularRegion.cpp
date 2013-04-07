@@ -97,7 +97,7 @@ void GranularRegion::load_soundfile(std::string filepath){
   
   try{
    m_tables =  Engine::get_instance().get_active_session().load_file_to_table(filepath);
-   m_tables.front()->print_table();
+//    m_tables.front()->print_table();
   }catch(...){
     
   }
