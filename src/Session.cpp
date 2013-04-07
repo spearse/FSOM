@@ -272,6 +272,9 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	moduleElement = moduleElement->NextSiblingElement("Module");
       }
 //       pRegion = synthregion;
+  }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
+    
+    
   }
   
   
