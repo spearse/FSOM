@@ -31,6 +31,7 @@ namespace fsom{
 //     AudioFile m_file;
     Phasor m_phasor;
     Table<double> m_table;
+    MultiTableBuffer m_tables;
     MultiChannelBuffer m_diskStreamBuffers;
     ParameterList m_parameters;
     //for testing only
@@ -46,7 +47,7 @@ namespace fsom{
       virtual void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
       
-      
+      void load_soundfile(std::string filepath);
       
 //       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }

@@ -24,6 +24,8 @@
 #include <iostream>
 #include "Utilities.hpp"
 #include <stdlib.h>
+#include <boost/shared_ptr.hpp>
+#include <sndfile.hh>
 
 namespace fsom{
 
@@ -151,6 +153,8 @@ public:
 
 };
 
+typedef boost::shared_ptr<Table<double> > TablePtr;
+typedef std::vector<TablePtr> MultiTableBuffer;
 
 
 }

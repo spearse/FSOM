@@ -190,6 +190,18 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
   
 }
 
+void Session::load_region_parameters(TiXmlElement* element,Region* region){
+      TiXmlElement * child = element->FirstChildElement("Parameter");
+   
+      while(child){
+  
+	    ParameterPtr p = create_parameter_from_node(child, region);
+	    region->get_parameter(p->get_name())->set_value(p->get_value());
+	    region->get_parameter(p->get_name())->set_breakpoints(p->get_breakpoints());
+	    child = child->NextSiblingElement("Parameter");
+      }
+  
+}
 
 RegionPtr Session::create_region_from_node(TiXmlElement* element){
   assert(element);
@@ -224,6 +236,8 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->set_mute_state(muteState);
   assert(pRegion);
   
+  load_region_parameters(element,pRegion.get());
+  
   pRegion->register_meta("RegionType");
   pRegion->register_meta("Tip");
 
@@ -237,6 +251,8 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
   std::cout << "Metadata read, image = " <<image<<std::endl;
+  
+  
   
   TiXmlElement * effectChild = element->FirstChildElement("Effect");
   
@@ -325,6 +341,7 @@ void Session::load_session(const char* fileLocation){
 			throw XMLParseException();
 		}
 	}
+	print_region_playlist();
 }
 
 void Session::save_session(const char* fileLocation){

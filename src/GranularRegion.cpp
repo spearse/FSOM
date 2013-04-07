@@ -20,6 +20,8 @@
 
 #include "fsom/GranularRegion.hpp"
 #include "tinyxml/tinyxml.h"
+#include "fsom/Engine.hpp"
+#include "fsom/Session.hpp"
 
 using namespace fsom;
 
@@ -79,6 +81,7 @@ SampleLength GranularRegion::get_file_length(){
 void GranularRegion::save_to_xml_node(TiXmlElement* node){
 	TiXmlElement * element = new TiXmlElement( "GranularRegion" );	
 	save_to_region_specifics_to_existing_xml_node(element);
+	save_meta_to_xml(element);
 	element->SetAttribute("path",get_file_path().c_str());
 	node->LinkEndChild( element );	
 
@@ -90,7 +93,15 @@ void GranularRegion::on_region_start(SamplePosition seekTime){
 
 
 
-
+void GranularRegion::load_soundfile(std::string filepath){
+  
+  try{
+   m_tables =  Engine::get_instance().get_active_session().load_file_to_table(filepath);
+   m_tables.front()->print_table();
+  }catch(...){
+    
+  }
+}
 
 
 

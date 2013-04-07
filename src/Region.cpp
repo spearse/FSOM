@@ -116,7 +116,7 @@ void Region::save_region_parameters(TiXmlElement* node){
 	    Parameter->SetAttribute("Id", (*it).first.c_str());
 	    Parameter->SetDoubleAttribute("Value", (*it).second->get_value());
 		
-	    /*
+	    
 	    //adding breakpoints into saved filePath
 	    fsom::BreakPointUnitPtr tempUnit = (*it).second->get_breakpoints();
 	    for(int i = 0; i < tempUnit->get_list_size(); ++i){
@@ -125,7 +125,7 @@ void Region::save_region_parameters(TiXmlElement* node){
 	      Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
 	      Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
 	    }
-	*/
+	
 	}
 	
 

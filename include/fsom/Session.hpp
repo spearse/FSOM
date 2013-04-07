@@ -33,8 +33,6 @@ namespace fsom{
 typedef boost::shared_ptr<Region> RegionPtr;
 typedef std::list<RegionPtr> RegionList;
 typedef std::list<Region*> ActiveRegionList;
-typedef boost::shared_ptr<Table<double> > TablePtr;
-typedef std::vector<TablePtr> MultiTableBuffer;
 
 enum SessionEventType{
 	SE_REGION_START = 0,
@@ -131,14 +129,14 @@ private:
 	DSPEffectPtr create_effect_from_node(TiXmlElement* element,Region* region);
 	GeneratorPtr create_generator_from_node(TiXmlElement* element, Region* region);
 	SynthesisModulePtr create_module_from_node(TiXmlElement* element, Region* region);
+	void load_region_parameters(TiXmlElement* element,Region* region);
 public:
 	Session();
 	~Session();
 private:
 	Session(const Session&);
 	Session& operator = (const Session&);
-	MultiTableBuffer load_file_to_table(std::string path);
-	
+		
 	
 public:
 // 	Session(std::string preset_path);
@@ -231,6 +229,10 @@ public:
 	double get_master_level();
 	///set master level, ideally between 0 - 1
 	void set_master_level(double level);
+	
+	
+	MultiTableBuffer load_file_to_table(std::string path);
+
 	
 };
 
