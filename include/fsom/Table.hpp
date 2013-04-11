@@ -155,6 +155,7 @@ public:
 
 typedef boost::shared_ptr<Table<double> > TablePtr;
 typedef std::vector<TablePtr> MultiTableBuffer;
+typedef boost::shared_ptr<MultiTableBuffer> MultiTablePtr;
 
 
 }

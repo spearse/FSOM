@@ -23,6 +23,9 @@
 #include "Region.hpp"
 #include "AudioFile.hpp"
 #include "Table.hpp"
+// //#include "GrainStream.hpp"
+#include "temp_granular/stereofilegrain.hpp"
+
 
 namespace fsom{
   
@@ -30,13 +33,16 @@ namespace fsom{
   {	
 //     AudioFile m_file;
     Phasor m_phasor;
-    Table<double> m_table;
-    MultiTableBuffer m_tables;
+//     Table<double> m_table;
+//     MultiTableBuffer m_tables;
     MultiChannelBuffer m_diskStreamBuffers;
     ParameterList m_parameters;
     //for testing only
     Table<double> m_sinTable;
-    
+//     GrainStream m_grainStream;  
+    usss::StereoFileGS m_fileStream;
+    int m_counter;
+    usss::MultiAVec m_avec;
     public:
       GranularRegion(regionCreationStruct data);
       virtual ~GranularRegion();
@@ -44,10 +50,11 @@ namespace fsom{
 
       virtual void process(float** input, float** output, int frameSize, int channels);
       virtual void save_to_xml_node(TiXmlElement* node);
-      virtual void on_region_start(SamplePosition seekTime);
+      void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
       
       void load_soundfile(std::string filepath);
+      
       
 //       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }

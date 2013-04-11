@@ -29,9 +29,10 @@ GranularRegion::GranularRegion(regionCreationStruct data):
 Region(data), 
 // m_file(data.m_filepath),
 m_diskStreamBuffers(2,4096),
-m_table(512),
-m_sinTable(512)
-
+// m_table(512),
+m_sinTable(512),
+m_counter(0),
+m_avec(usss::MultiAVec(2,usss::AVec(4096)))
 {
   add_parameter("GrainSize",10,2000,100);
   add_parameter("GrainPitch",0,2,1);
@@ -41,6 +42,8 @@ m_sinTable(512)
   //for testing
   m_sinTable.fill_triangle();
   m_phasor.set_frequency(120);
+  m_fileStream.set_next_spawn(0);
+  m_fileStream.spawn();
 }
 
 GranularRegion::~GranularRegion(){}
@@ -54,12 +57,25 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
 	float** t=m_diskStreamBuffers.get_buffers();	
 	float v=0;
 	//for testing only
+	m_avec.clear();
+	m_fileStream.process(m_avec,m_counter,frameSize);
+	
+	
+	
 	for(int n =0; n < frameSize;++n){
 	    v = m_sinTable.linear_lookup( m_phasor.get_phase()*m_sinTable.get_size()  );
-	    t[0][n] = v;
-	    t[1][n] = v;
+// 	    t[0][n] = m_avec[0][n];
+// 	    t[1][n] = m_avec[1][n];
+	    t[0][n]= t[1][n]= 0;
 	    m_phasor.tick();
 	}
+// 	
+	m_avec.clear();
+
+	m_counter += frameSize;
+	
+	
+	
 	
 	
 	// process the fx stack from the disk buffer to the output
@@ -89,18 +105,17 @@ void GranularRegion::save_to_xml_node(TiXmlElement* node){
 
 void GranularRegion::on_region_start(SamplePosition seekTime){
 // 	m_file.seek(seekTime); // this would seek to region file offset
+//   m_grainStream.reset();
+    m_counter = 0;
+    
 }
 
 
 
 void GranularRegion::load_soundfile(std::string filepath){
+//     m_grainStream.load_soundfile(filepath);
+    m_fileStream.load_file(filepath);
   
-  try{
-   m_tables =  Engine::get_instance().get_active_session().load_file_to_table(filepath);
-//    m_tables.front()->print_table();
-  }catch(...){
-    
-  }
 }
 
 

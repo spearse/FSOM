@@ -99,6 +99,12 @@ set(FSON_SOURCES
 	SynthesisModuleManager.cpp
 	AudioFilePool.cpp
 	../include/fsom/Table.hpp
+	#GrainStream.cpp
+	../include/fsom/temp_granular/grainstream.cpp	
+	../include/fsom/temp_granular/stereofilegrain.hpp
+	../include/fsom/temp_granular/afile.cpp
+	../include/fsom/temp_granular/avec.cpp
+
 )
 
 add_library(fsom ${FSON_SOURCES})
