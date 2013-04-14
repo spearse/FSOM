@@ -250,6 +250,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->register_meta("managerId");
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
+
   std::cout << "Metadata read, image = " <<image<<std::endl;
   
   
@@ -329,10 +330,10 @@ void Session::load_session(const char* fileLocation){
 			  set_master_level(1);
 			}
 			
-			
-		       load_metadata(this,sessionElement);
+		    load_metadata(this,sessionElement);
 			TiXmlElement* regionElement = sessionElement->FirstChildElement("Region");
 			while(regionElement){
+				
 				RegionPtr t = create_region_from_node(regionElement);
 				add_region(t);
 				regionElement = regionElement->NextSiblingElement("Region");

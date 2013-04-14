@@ -25,7 +25,7 @@
 #include "Utilities.hpp"
 #include <stdlib.h>
 #include <boost/shared_ptr.hpp>
-#include <sndfile.hh>
+//#include <sndfile.hh>
 
 namespace fsom{
 
