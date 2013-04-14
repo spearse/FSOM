@@ -18,8 +18,7 @@ Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float 
   m_basePitch(pitch),
   m_dur(dur),
   m_internalClock(0),
-  m_phasor(44100),
-  testTable(512)
+  m_phasor(44100)
 {  
   m_phasor.set_frequency(1.0f/dur);
 }
@@ -46,11 +45,8 @@ void Grain::process(float** outs, int start, int length){
 	float gain = m_window->linear_lookup(m_phasor.get_phase()* m_window->get_size());
 	//MONO for time being...
 	  float v = m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch ));//  *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  )   ;
-// 	  float v = testTable.linear_lookup( m_phasor.get_phase()* testTable.get_size() ) * gain  ;
 	  outs[0][n] += v;
 	  outs[1][n] += v;
-// 	  std::cout << " "<<v<<" ";
-	
 	  m_phasor.tick();
 	  m_internalClock +=1;
 	  if(m_internalClock > m_dur)kill();	  
@@ -109,7 +105,7 @@ void GrainStream::set_density(float in){
     m_density = in;
 }
 void GrainStream::set_basePosition(float in){
-    m_basePosition = in;
+    m_basePosition = in* m_table->at(0)->get_size();
 }
 void GrainStream::set_grainSize(float in){
     m_grainSize = in;

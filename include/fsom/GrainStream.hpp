@@ -33,7 +33,6 @@ class Grain {
 	int m_basePosition,m_grainSize,m_internalClock,m_dur;
 	float m_basePitch;
 	Phasor m_phasor;
-	Table<double> testTable;
 public:
 	/// Grain constructor
 	Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch );

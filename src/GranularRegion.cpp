@@ -33,10 +33,10 @@ m_diskStreamBuffers(2,4096),
 m_sinTable(512),
 m_counter(0)
 {
-  add_parameter("GrainSize",441,44100*2,44100);
+  add_parameter("GrainSize",441,44100,44100);
   add_parameter("GrainPitch",0,10,1);
   add_parameter("GrainPosition",0,1,0);
-  add_parameter("GrainRate",0.1,10,1);
+  add_parameter("GrainRate",0.1,20,1);
 
   //for testing
   m_sinTable.fill_triangle();
@@ -56,7 +56,7 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
 	m_diskStreamBuffers.clear();
 	
 	m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value()  );
-	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value());
+	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value()    );
 	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
 	m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
 	
