@@ -23,8 +23,7 @@
 #include "Region.hpp"
 #include "AudioFile.hpp"
 #include "Table.hpp"
-// //#include "GrainStream.hpp"
-#include "temp_granular/stereofilegrain.hpp"
+#include "GrainStream.hpp"
 
 
 namespace fsom{
@@ -39,10 +38,8 @@ namespace fsom{
     ParameterList m_parameters;
     //for testing only
     Table<double> m_sinTable;
-//     GrainStream m_grainStream;  
-    usss::StereoFileGS m_fileStream;
+    GrainStream m_grainStream;  
     int m_counter;
-    usss::MultiAVec m_avec;
     public:
       GranularRegion(regionCreationStruct data);
       virtual ~GranularRegion();

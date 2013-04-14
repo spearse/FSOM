@@ -22,18 +22,21 @@
 
 
 #include "Table.hpp"
-#include <list>
+#include <vector>
 
 namespace fsom{
 
 class Grain {
 	bool m_isDead;
-	MultiTablePtr m_table;  
-	int m_basePitch,m_density,m_basePosition,m_grainSize,m_internalClock;
-
+	MultiTablePtr m_table; 
+	TablePtr m_window;
+	int m_basePosition,m_grainSize,m_internalClock,m_dur;
+	float m_basePitch;
+	Phasor m_phasor;
+	Table<double> testTable;
 public:
 	/// Grain constructor
-	Grain(MultiTablePtr table);
+	Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch );
 	/// Grain destructor
 	virtual ~Grain();
 	
@@ -48,22 +51,27 @@ typedef boost::shared_ptr<Grain> GrainPtr;
 
 class GrainStream
 {
-  typedef std::list<GrainPtr> GrainList;
+  typedef std::vector<GrainPtr> GrainList;
   GrainList m_grains;
   MultiTablePtr m_table;
-  int m_basePitch,m_density,m_basePosition,m_grainSize,m_internalClock;
+  TablePtr m_window;
+  int m_density,m_basePosition,m_grainSize,m_internalClock,m_grainRate;
+  float m_basePitch;
   void kill_grains();
+  void spawn();
+  int m_nextSpawn;
 public:
 GrainStream();
 virtual ~GrainStream();
 void load_soundfile(std::string filepath);
-void process(float** input,float** output, int channel,int frames);
+void process(float** output, int channels,int frames);
 void reset();  
 void set_basePitch(float in);
 void set_density(float in);
 void set_basePosition(float in);
 void set_grainSize(float in);
-
+void set_nextSpawn(int nextSpawn);
+void set_grainRate(float rate);
 
 
 
