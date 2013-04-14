@@ -30,7 +30,6 @@
 #include <algorithm>
 #include <cassert>
 #include <sstream>
-#include <windows.h>
 #include "fsom/SynthesisRegion.hpp"
 #include <math.h>
 
