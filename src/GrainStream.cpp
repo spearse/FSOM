@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <boost/mem_fn.hpp>
 #include <boost/bind.hpp>
-#include <lo/lo_osc_types.h>
+//#include <lo/lo_osc_types.h>
 #include "../include/fsom/Table.hpp"
 namespace fsom{
 
@@ -65,7 +65,8 @@ GrainStream::GrainStream():
   m_grainSize(44100),
   m_nextSpawn(44100),
   m_grainRate(1),
-  m_window(TablePtr(new Table<double>(512)))
+  m_window(TablePtr(new Table<double>(512))),
+  m_filepath("")
 {
   m_window->fill_hann();
 //   spawn();
@@ -86,10 +87,15 @@ GrainStream::~GrainStream()
 void GrainStream::load_soundfile(std::string filepath){
     try{
 	m_table = MultiTablePtr(new MultiTableBuffer( Engine::get_instance().get_active_session().load_file_to_table(filepath))) ;
+	m_filepath = filepath;
 //    m_tables.front()->print_table();
     }catch(...){
     
     }
+}
+
+std::string GrainStream::get_soundfile(){
+	return m_filepath;
 }
 
 void GrainStream::reset(){

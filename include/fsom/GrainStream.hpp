@@ -59,10 +59,12 @@ class GrainStream
   void kill_grains();
   void spawn();
   int m_nextSpawn;
+  std::string m_filepath;
 public:
 GrainStream();
 virtual ~GrainStream();
 void load_soundfile(std::string filepath);
+std::string get_soundfile();
 void process(float** output, int channels,int frames);
 void reset();  
 void set_basePitch(float in);
