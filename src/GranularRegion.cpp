@@ -53,39 +53,40 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
 	// make a request to the audiofile object to fill the disk stream buffers. 
 // 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
 	// copy from the disk stream buffers through the DSP onto the output buffers.
-	m_diskStreamBuffers.clear();
-	
-	m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value()  );
-	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value()    );
-	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
-	m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
-	
-	
-	float** t=m_diskStreamBuffers.get_buffers();	
-	float v=0;
-	//for testing only
-	
-	m_grainStream.process(t,0,frameSize);
-	
-	
-	for(int n =0; n < frameSize;++n){
-// 	    v = m_sinTable.linear_lookup( m_phasor.get_phase()*m_sinTable.get_size()  );
-// 	    t[0][n] = m_avec[0][n];
-// 	    t[1][n] = m_avec[1][n];
-// 	    t[0][n]= t[1][n]= 0;
-	    m_phasor.tick();
-	}
-// 	
 
-	m_counter += frameSize;
-	
-	
-	
-	
-	
-	// process the fx stack from the disk buffer to the output
-	process_dsp_stack(t,output,frameSize,channels);
+	if(!m_grainStream.get_soundfile().empty()){
+
+		m_diskStreamBuffers.clear();
+		
+		m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value());
+		m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value());
+		m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
+		m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
+		
+		
+		float** t=m_diskStreamBuffers.get_buffers();	
+		float v=0;
+		//for testing only
+		
+		m_grainStream.process(t,0,frameSize);
+		
+		
+		for(int n =0; n < frameSize;++n){
+	// 	    v = m_sinTable.linear_lookup( m_phasor.get_phase()*m_sinTable.get_size()  );
+	// 	    t[0][n] = m_avec[0][n];
+	// 	    t[1][n] = m_avec[1][n];
+	// 	    t[0][n]= t[1][n]= 0;
+			m_phasor.tick();
+		}
+	// 	
+
+		m_counter += frameSize;
+			
+		// process the fx stack from the disk buffer to the output
+		process_dsp_stack(t,output,frameSize,channels);
+	}
 }
+
 /*
 AudioFile& GranularRegion::get_audiofile(){
 	return m_file;
@@ -120,9 +121,9 @@ void GranularRegion::on_region_start(SamplePosition seekTime){
 
 
 void GranularRegion::load_soundfile(std::string filepath){
-    m_grainStream.load_soundfile(filepath);
-    
+    m_grainStream.load_soundfile(filepath); 
 }
+
 
 
 
