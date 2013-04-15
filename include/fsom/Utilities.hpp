@@ -340,6 +340,16 @@ class BreakPointUnit{
     }
     
     void sort(){ std::sort(bpList_.begin(), bpList_.end());}
+    float get_last_breakpoint(){
+	return bpList_.back().t_;
+    }
+    void duplicate_last_at_time(float t){
+	float v = bpList_.back().v_;
+	TVPair pair(t,v);
+	add_breakpoint(pair);
+    }
+    
+    
 };
 
 

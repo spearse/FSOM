@@ -63,6 +63,8 @@ void tick(SampleLength& samplesRead);
 float get_lowerBound();
 float get_upperBound();
 float get_range();
+float get_last_breakpoint_position();
+void duplicate_last_breakpoint_at_time(float time);
 BreakPointUnitPtr get_breakpoints();
 void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);

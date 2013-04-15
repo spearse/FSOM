@@ -49,6 +49,19 @@ GranularRegion::~GranularRegion(){}
 
 
 void GranularRegion::process(float** input, float** output, int frameSize, int channels){
+  
+    SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+    
+  
 // 	assert(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
 // 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
@@ -66,15 +79,10 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
 	//for testing only
 	
 	m_grainStream.process(t,0,frameSize);
-	
-	
-	for(int n =0; n < frameSize;++n){
-// 	    v = m_sinTable.linear_lookup( m_phasor.get_phase()*m_sinTable.get_size()  );
-// 	    t[0][n] = m_avec[0][n];
-// 	    t[1][n] = m_avec[1][n];
-// 	    t[0][n]= t[1][n]= 0;
-	    m_phasor.tick();
-	}
+	samplesRead += frameSize;
+	 for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	    (*it).second->tick(samplesRead);
+	 }
 // 	
 
 	m_counter += frameSize;

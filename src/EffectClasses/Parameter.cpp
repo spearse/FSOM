@@ -122,5 +122,10 @@ bool Parameter::get_automated_mode(){
     return m_inDynamicMode;
 }
 
+float Parameter::get_last_breakpoint_position(){
+    return m_bpUnit->get_last_breakpoint(); 
+}
 
-
+void Parameter::duplicate_last_breakpoint_at_time(float time){
+    m_bpUnit->duplicate_last_at_time(time);
+}
