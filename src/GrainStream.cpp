@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <boost/mem_fn.hpp>
 #include <boost/bind.hpp>
-#include <lo/lo_osc_types.h>
+//#include <lo/lo_osc_types.h>
 #include "../include/fsom/Table.hpp"
 namespace fsom{
 
