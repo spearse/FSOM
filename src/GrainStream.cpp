@@ -20,7 +20,8 @@ Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float 
   m_internalClock(0),
   m_phasor(44100)
 {  
-  m_phasor.set_frequency(1.0f/dur);
+  //phasor freqency---- example ........ dur = 44100 .... 1... second  
+  m_phasor.set_frequency(dur/44100.0f);
 }
 
 Grain::~Grain(){
@@ -44,7 +45,7 @@ void Grain::process(float** outs, int start, int length){
 	float phase =  phase_wrap(  m_phasor.get_phase() + float(n));
 	float gain = m_window->linear_lookup(m_phasor.get_phase()* m_window->get_size());
 	//MONO for time being...
-	  float v = m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch ));//  *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  )   ;
+	  float v = m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch )) *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  )   ;
 	  outs[0][n] += v;
 	  outs[1][n] += v;
 	  m_phasor.tick();
