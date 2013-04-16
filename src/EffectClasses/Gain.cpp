@@ -28,7 +28,7 @@ Gain::Gain(dspCreationStruct data) :
 	DSPEffect(data)
 {
 	set_effect_name("Gain");
-	add_parameter("Gain",0.0,1.0,1.0); 
+	add_parameter("Gain",0.0,2.0,1.0); 
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_meta("Tip","Volume");
 	get_parameter("Gain")->set_meta("GuiHint","soCustomFader");
