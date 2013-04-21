@@ -365,7 +365,7 @@ public:
 };
 
 void Session::seek(SamplePosition seekTarget){
-  
+	
 	//Engine::get_instance().clear_buffers();
 	// set the current playback position and prepare to play
 	// sort out which regions should be setup in the active regions list
@@ -449,6 +449,8 @@ void Session::seek(SamplePosition seekTarget){
 	m_eventCache.swap(tempEvCache);
 	m_nextEvent = m_eventCache.begin();
 	m_playHead = seekTarget;
+	//reset effects called to ensure that all time based effects are reset
+	reset_all_effects();
 }
 
 void Session::play(){
@@ -1030,3 +1032,12 @@ void Session::set_master_level(double level){
     if(level<=0)level = 0;
     m_masterVolume = pow(level,4);
 }
+
+
+void Session::reset_all_effects(){
+    for(fsom::ActiveRegionList::iterator it = m_activeRegions.begin();it!=m_activeRegions.end();++it){
+	(*it)->reset_all_effects();
+    }
+}
+
+

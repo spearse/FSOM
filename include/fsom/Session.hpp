@@ -231,6 +231,8 @@ public:
 	double get_master_level();
 	///set master level, ideally between 0 - 1
 	void set_master_level(double level);
+	///Function to reset all effects on seek
+	void reset_all_effects();
 	
 };
 
