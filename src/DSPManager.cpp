@@ -39,6 +39,7 @@
 #include "fsom/EffectClasses/Chorus.hpp"
 #include "fsom/EffectClasses/Harmonizer.hpp"
 #include "fsom/EffectClasses/AsymmetricDelay.hpp"
+#include "fsom/EffectClasses/FrequencyModulation.hpp"
 
 using namespace fsom;
 
@@ -75,8 +76,8 @@ DSPManager::get_instance().register_factory("Convolution",Convolution::create);
 
 DSPManager::get_instance().register_factory("LowAmpMod",LowAmpMod::create);
 DSPManager::get_instance().register_factory("HighAmpMod",HighAmpMod::create);
-DSPManager::get_instance().register_factory("LowFreqModulation",LowFreqMod::create);
-DSPManager::get_instance().register_factory("HighFreqModulation",HighFreqMod::create);
+DSPManager::get_instance().register_factory("LowFrequencyModulation",LowFrequencyModulation::create);
+DSPManager::get_instance().register_factory("HighFrequencyModulation",HighFrequencyModulation::create);
 DSPManager::get_instance().register_factory("Harmoniser",Harmoniser::create);
 
 DSPManager::get_instance().register_factory("AsymmetricDelay",AsymmetricDelay::create);

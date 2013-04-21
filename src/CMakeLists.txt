@@ -98,6 +98,7 @@ set(FSON_SOURCES
 	SubtractiveSynthesisRegion.cpp
 	SynthesisModuleManager.cpp
 	AudioFilePool.cpp
+	EffectClasses/FrequencyModulation.cpp
 )
 
 add_library(fsom ${FSON_SOURCES})
