@@ -31,7 +31,8 @@ Region(data),
 m_diskStreamBuffers(2,4096),
 // m_table(512),
 m_sinTable(512),
-m_counter(0)
+m_counter(0),
+m_fileLoaded(false)
 {
   add_parameter("GrainSize",441,44100,44100);
   add_parameter("GrainPitch",0,10,1);
@@ -128,10 +129,18 @@ void GranularRegion::on_region_start(SamplePosition seekTime){
 
 
 void GranularRegion::load_soundfile(std::string filepath){
+  try{
     m_grainStream.load_soundfile(filepath);
+    m_fileLoaded = true;
+  }catch(...){
+      m_fileLoaded = false;
+  }
     
 }
 
+bool GranularRegion::get_load_state(){
+    return m_fileLoaded;
+}
 
 
 

@@ -40,6 +40,7 @@ namespace fsom{
     Table<double> m_sinTable;
     GrainStream m_grainStream;  
     int m_counter;
+    bool m_fileLoaded;
     public:
       GranularRegion(regionCreationStruct data);
       virtual ~GranularRegion();
@@ -51,7 +52,7 @@ namespace fsom{
       SampleLength get_file_length();
       
       void load_soundfile(std::string filepath);
-      
+      bool get_load_state();
       
 //       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }

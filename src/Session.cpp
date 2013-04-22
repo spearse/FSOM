@@ -31,6 +31,7 @@
 #include <cassert>
 #include <sstream>
 #include "fsom/SynthesisRegion.hpp"
+#include <fsom/GranularRegion.hpp>
 #include <math.h>
 
 using namespace fsom;
@@ -290,7 +291,8 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
       }
 //       pRegion = synthregion;
   }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
-    
+      boost::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
+      gran_region->load_soundfile( m_workingDirectory + path );
     
   }
   
