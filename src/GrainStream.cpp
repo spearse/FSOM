@@ -56,7 +56,7 @@ void Grain::process(float** outs, int start, int length){
     }
 }
   
-  
+  /*
   
 
 GrainStream::GrainStream():
@@ -71,12 +71,12 @@ GrainStream::GrainStream():
 {
   m_window->fill_hann();
 //   spawn();
-  /*
+  
   TablePtr t1 = TablePtr(new Table<double>(44100));
   TablePtr t2 = TablePtr(new Table<double>(44100));
   MultiTablePtr mt(new MultiChannelBuffer(TablePtr(new Table<double>(44100)));
   mt->push_back(t1);
-  mt->push_back(t2);*/
+  mt->push_back(t2);
   MultiTablePtr mt;
   TablePtr t1 = TablePtr(new Table<double>(44100*5));
   TablePtr t2 = TablePtr(new Table<double>(44100*5));
@@ -200,7 +200,7 @@ void GrainStream::kill_grains(){
     
 }
 
-
+*/
 
 
 }

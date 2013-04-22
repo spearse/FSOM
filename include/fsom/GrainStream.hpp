@@ -47,7 +47,7 @@ public:
 
 typedef boost::shared_ptr<Grain> GrainPtr;
 
-
+/*
 class GrainStream
 {
   typedef std::vector<GrainPtr> GrainList;
@@ -77,7 +77,7 @@ void set_grainRate(float rate);
 
 
 };
-
+*/
 
 
 }
