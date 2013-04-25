@@ -50,7 +50,7 @@ struct regionCreationStruct{
   bool m_reverseState;
   regionCreationStruct(SamplePosition start, SampleLength duration, SampleLength offset, int laneNum,SampleLength extension=0,std::string filepath="",std::string workingDirectory="",bool reverseState=false) : 
 	  m_startPos(start), m_duration(duration),m_offset(offset), m_laneNum(laneNum),m_filepath(filepath),m_workingDirectory(workingDirectory),m_extension(extension),m_reverseState(reverseState){
-	std::cout << "region creation struct complete"<<std::endl;
+	fsom::DebugStream << "region creation struct complete"<<std::endl;
   }
 };
 	

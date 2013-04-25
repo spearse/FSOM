@@ -35,7 +35,7 @@ public:
 		fill_sine();	
 	}	
 	void fill_sine(){
-		std::cout << "filling table with sine" <<std::endl;
+		fsom::DebugStream << "filling table with sine" <<std::endl;
 		T f = 2.0*PI/(m_table.size()-1);
 		for (int n = 0; n < m_table.size();++n){
 			m_table.at(n) = sin( T(n) * f );
@@ -43,7 +43,7 @@ public:
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
 	void fill_cos(){
-		std::cout << "filling table with cosine" <<std::endl;
+		fsom::DebugStream << "filling table with cosine" <<std::endl;
 		T f = 2.0*PI/(m_table.size()-1);
 		for (int n = 0; n < m_table.size();++n){
 			m_table.at(n) = cos( T(n) * f );
@@ -51,14 +51,14 @@ public:
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
 	void fill_hann(){
-		std::cout << "filling table with hanning" <<std::endl;	
+		fsom::DebugStream << "filling table with hanning" <<std::endl;	
 		T f = 2.0*PI/(m_table.size()-1);
 		for (int n = 0; n < m_table.size();++n){
 			m_table.at(n) =   0.5*(1.0-cos(T(n) * f ));
 		}
 	}
 	void fill_linear(){
-		std::cout << "filling table linearly" << std::endl;
+		fsom::DebugStream << "filling table linearly" << std::endl;
 		T f = 1.0/(m_table.size()-1);
 		for (int n = 0; n < m_table.size();++n){
 			m_table.at(n) =   n*f;
@@ -66,7 +66,7 @@ public:
 	}
 	
 	void fill_triangle(){
-		std::cout << "filling table with triangle" << std::endl;
+		fsom::DebugStream << "filling table with triangle" << std::endl;
 		T f = (1.0/(m_table.size()-1));
 		for (int n = 0; n < m_table.size();++n){
 		      if(n <= m_table.size()/2){
@@ -81,14 +81,14 @@ public:
 	
 	//for working with audio
 	void fill_linear_offset(){
-		std::cout << "filling table withg linear data offset between -1 to 1" <<std::endl;
+		fsom::DebugStream << "filling table withg linear data offset between -1 to 1" <<std::endl;
 		T f = 2.0/(m_table.size()-1);
 		for(int n = 0 ; n < m_table.size(); ++n){
 			m_table.at(n) = (n * f) - 1.0; 	
 		}
 	}
 	void fill_clipped(float threshold){
-		std::cout << "clipping table" <<std::endl;
+		fsom::DebugStream << "clipping table" <<std::endl;
 		T f = 2.0/(m_table.size()-1);
 		float t;
 		for(int n = 0 ; n < m_table.size(); ++n){
@@ -103,7 +103,7 @@ public:
 		}
 	}
 	void fill_noise(){
-	    std::cout << "filling table with noise"<<std::endl;
+	    fsom::DebugStream << "filling table with noise"<<std::endl;
 // 	    T f = 2.0*PI/(m_table.size()-1);
 	      for(int n = 0; n < m_table.size();++n){
 		      m_table.at(n) = (((rand()%1000)*0.001)*2.0f)-1.0f;
@@ -136,11 +136,11 @@ public:
 	
 	}	
 	void print_table(){
-		std::cout << "Table values  = " ;
+		fsom::DebugStream << "Table values  = " ;
 		for (int n = 0; n < m_table.size();++n){
-			std::cout << " " << m_table.at(n) << " "; 
+			fsom::DebugStream << " " << m_table.at(n) << " "; 
 		}
-		std::cout << " " << std::endl;
+		fsom::DebugStream << " " << std::endl;
 	}
 	double get_size(){
 		return m_table.size()-1;

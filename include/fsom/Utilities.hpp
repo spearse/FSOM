@@ -26,6 +26,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 namespace fsom{
  
@@ -37,6 +38,94 @@ const double PI = 3.14159;
 /// use the following typedefs for time references.
 typedef long int SamplePosition;
 typedef long int SampleLength;
+
+
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+
+
+#ifdef DEBUG
+  #define dbgStream std::cerr
+  #define DEBUG_ONLY(x) x
+#else
+  #define dbgStream g_debugLog
+  #define DEBUG_ONLY(x) 
+#endif
+
+
+#if _WIN32
+#define DEBUG_OUTPUT(x) OutputDebugString(x); 
+#else
+#define DEBUG_OUTPUT(x) std::cerr << x;
+#endif
+
+#if DEBUG
+#define DebugOut(fmt, ...) \
+    char buf[256]; \
+    sprintf(buf, fmt, __VA_ARGS__ ) ; \
+    DEBUG_OUTPUT(buf)
+    
+#else
+#define DebugOut(fmt, ...)
+  
+#endif
+
+
+
+// static std::ofstream g_debugLog("log.txt");
+
+
+
+
+class DebugStreamBuf : public std::streambuf
+{
+  static const int SIZE=8;
+  char m_buf[SIZE];
+  std::ofstream m_file;
+private:
+  void doflush(){
+      std::ptrdiff_t n = pptr() - pbase();
+      pbump(-n);
+      //fsom::DebugStream << "|";
+      #if DEBUG
+      std::cerr.write(pbase(), n);
+      m_file.write(pbase(), n);
+      #endif
+     // OutputDebugString()
+  }
+protected:
+  virtual int overflow(int ch)
+  {
+    if( ch != traits_type::eof() )
+    {
+      *pptr() = ch;
+      pbump(1);
+      doflush();
+      return ch;
+    }
+    return traits_type::eof();
+  }
+  virtual int sync(){
+    doflush();
+    return 0;
+    
+  }
+public:
+    DebugStreamBuf() :
+      m_file("log.txt")
+    {
+      setp(m_buf, m_buf+SIZE-1);
+    }
+  
+};
+static DebugStreamBuf debugBuf;
+static std::ostream DebugStream(&debugBuf);
+
+
+
+
 
 void generic_sleep(int t);
 
@@ -283,7 +372,7 @@ class BreakPointUnit{
      float t = absT - itA->t_;
      float dt = itB->t_ - itA->t_;
      float r = t/dt;
-   //  std::cout << "t = " << t << ": r=" << r << std::endl;
+   //  fsom::DebugStream << "t = " << t << ": r=" << r << std::endl;
      return (1.0f-r)*itA->v_ + r * itB->v_;
 
     }
@@ -320,9 +409,9 @@ class BreakPointUnit{
 	  BPList::iterator itB = std::upper_bound(bpList_.begin(), bpList_.end(), Time);
 	  BPList::iterator itA = itB-1;
 	  
-	 std::cout << "time = " << Time << std::endl;
-	 std::cout << "itB->t_ = " << itB->t_ << " : itA->t_ = " << itA->t_ << std::endl;
-	 std::cout << "itB index = " << itB - bpList_.begin() << std::endl;	  
+	 fsom::DebugStream << "time = " << Time << std::endl;
+	 fsom::DebugStream << "itB->t_ = " << itB->t_ << " : itA->t_ = " << itA->t_ << std::endl;
+	 fsom::DebugStream << "itB index = " << itB - bpList_.begin() << std::endl;	  
 	 
 	 if((itB->t_ - Time) < (Time - itA->t_)){
 	    return (*itB);
@@ -334,7 +423,7 @@ class BreakPointUnit{
     void print_breakpoints(){
      /* 
        for( BPList::iterator it = bpList_.begin();it != bpList_.end();	++it){
-		std::cout << " : time = " << it->t_ << " : val ="  << it->v_ << std::endl;
+		fsom::DebugStream << " : time = " << it->t_ << " : val ="  << it->v_ << std::endl;
        } 
        */
     }

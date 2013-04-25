@@ -115,7 +115,7 @@ void AsymmetricDelay::process(float** input, float** output, int frameSize, int 
 }
   
 void AsymmetricDelay::reset_effect(){
-  std::cout << "Resetting AsymmetricDelay's delay units"<<std::endl;
+  fsom::DebugStream << "Resetting AsymmetricDelay's delay units"<<std::endl;
     m_delayUnitL.clear_buffer();
     m_delayUnitR.clear_buffer();
 }

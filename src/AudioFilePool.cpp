@@ -37,17 +37,17 @@ void AudioFilePool::destroy(){
 }
 
 AudioFilePool::AudioFilePool(){
-    std::cout << "Audio file pool spawned "<<std::endl;
+    fsom::DebugStream << "Audio file pool spawned "<<std::endl;
 }
 
 AudioFilePtr AudioFilePool::get_audio_file_ptr(std::string filePath){
-     std::cout << "Requested "<<filePath << " audio file from audio pool"<<std::endl;  
+     fsom::DebugStream << "Requested "<<filePath << " audio file from audio pool"<<std::endl;  
   
     AudioFileMap::iterator it = m_map.find(filePath);
     
     if(it !=m_map.end())return (*it).second;
-    std::cout << "Audio file requested not found in pool"<<std::endl;
-    std::cout << "Audio file pool is now spawning a new audio file for "<< filePath<<std::endl;
+    fsom::DebugStream << "Audio file requested not found in pool"<<std::endl;
+    fsom::DebugStream << "Audio file pool is now spawning a new audio file for "<< filePath<<std::endl;
     //TODO check that the audiofile is created successfully!!!!!!
     m_map[filePath] = AudioFilePtr(new AudioFile(filePath));
     

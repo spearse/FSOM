@@ -32,7 +32,7 @@ SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 	m_stackBufferB(2,4096),	
 	m_preferedFadeTime(44.0) //duration for prefered fading in and out if smaller make fades half duration
 {
-	std::cout << "In synthesis region base class, region duration = "<< creationStruct.m_duration<< std::endl;
+	fsom::DebugStream << "In synthesis region base class, region duration = "<< creationStruct.m_duration<< std::endl;
 	if(creationStruct.m_duration < (m_preferedFadeTime*2)){
 	      float fadeTime = creationStruct.m_duration/2.0;
 	  
@@ -177,7 +177,7 @@ void SynthesisRegion::on_region_start(SamplePosition seekTime) {
 }
 void SynthesisRegion::remove_all_generators(){
     for (int n = 0; n <m_generatorStack.size();++n){
-		std::cout << "Removing generator " << m_generatorStack.at(n)->get_effect_name() << std::endl;
+		fsom::DebugStream << "Removing generator " << m_generatorStack.at(n)->get_effect_name() << std::endl;
 		m_generatorStack.at(n).reset();
 		m_generatorStack.erase(m_generatorStack.begin()+n);
       }
@@ -186,7 +186,7 @@ void SynthesisRegion::remove_all_generators(){
 	
 void SynthesisRegion::remove_all_modules(){
     for (int n = 0; n <m_moduleStack.size();++n){
-		std::cout << "Removing effect " << m_moduleStack.at(n)->get_effect_name() << std::endl;
+		fsom::DebugStream << "Removing effect " << m_moduleStack.at(n)->get_effect_name() << std::endl;
 		m_moduleStack.at(n).reset();
 		m_moduleStack.erase(m_moduleStack.begin()+n);
       }

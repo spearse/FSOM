@@ -61,11 +61,11 @@ public:
 	virtual ~DelayBase(){
 	}
 	void clear_buffer(){
-// 	  std::cout << "Clearing delay buffer"<<std::endl;
+// 	  fsom::DebugStream << "Clearing delay buffer"<<std::endl;
 	  for(int n = 0;n < m_buffer.size();++n){
 	      m_buffer[n]=0;
 	  }
-// 	  std::cout << m_buffer.size()<<std::endl;  
+// 	  fsom::DebugStream << m_buffer.size()<<std::endl;  
 	}
 }; 
 

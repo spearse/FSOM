@@ -43,9 +43,9 @@ AudioRegion::AudioRegion(regionCreationStruct data):
 	  if(data.m_duration == 0){
 		 set_duration(m_file->get_file_length()); //when duration is set to 0 set to full file length
 	  }
-	  std::cout << "Audio region spawned"<<std::endl;
-	  std::cout << "full path = " << data.m_filepath<<std::endl;
-	  std::cout << "working directory path = " << data.m_workingDirectory<<std::endl;
+	  fsom::DebugStream << "Audio region spawned"<<std::endl;
+	  fsom::DebugStream << "full path = " << data.m_filepath<<std::endl;
+	  fsom::DebugStream << "working directory path = " << data.m_workingDirectory<<std::endl;
 }
 
 AudioRegion::~AudioRegion(){
@@ -68,8 +68,8 @@ void AudioRegion::process(float** input, float** output, int frameSize, int chan
 	}else{
 	    //If the sample position is at the back, offset by the sample size
 	      if(m_samplePosition == get_duration())m_samplePosition = get_duration()-frameSize;
-// 	      std::cout <<"sp"  <<m_samplePosition<< std::endl;
-// 	      std::cout << "frmsz " << frameSize<<std::endl;
+// 	      fsom::DebugStream <<"sp"  <<m_samplePosition<< std::endl;
+// 	      fsom::DebugStream << "frmsz " << frameSize<<std::endl;
 	      m_file->seek(m_samplePosition);
 	      m_file->get_block(m_diskStreamBuffers.get_buffers(),frameSize);
 	      m_samplePosition-=frameSize;
@@ -80,7 +80,7 @@ void AudioRegion::process(float** input, float** output, int frameSize, int chan
 	      for(int chan = 0; chan<channels;++chan){
 		for(int n = 0;n <frameSize ;++n){
 		    rev[chan][n]=norm[chan][(frameSize-n)-1];
-// 		    std::cout << " "<< n <<" " << frameSize - n;
+// 		    fsom::DebugStream << " "<< n <<" " << frameSize - n;
 		}
 // 		++index;
 	    }
@@ -113,33 +113,33 @@ void AudioRegion::save_to_xml_node(TiXmlElement* node){
 }
 
 void AudioRegion::on_region_start(SamplePosition seekTime){
-	std::cout << "-------------------------------------------------------" << std::endl;
+	fsom::DebugStream << "-------------------------------------------------------" << std::endl;
 	if(!get_reverse_state()){
-	    std::cout << "------------------Normal audio region------------------------------"<<std::endl;
-	    std::cout << "seektime = " << seekTime << std::endl;
+	    fsom::DebugStream << "------------------Normal audio region------------------------------"<<std::endl;
+	    fsom::DebugStream << "seektime = " << seekTime << std::endl;
 	    SamplePosition seekPositionOffset = (seekTime - get_start_pos());
-	    std::cout << "seekPositionOffset = " << seekPositionOffset << std::endl;
+	    fsom::DebugStream << "seekPositionOffset = " << seekPositionOffset << std::endl;
 	    if(seekPositionOffset > 0){
-	      std::cout << "if" << std::endl;
+	      fsom::DebugStream << "if" << std::endl;
 	      m_samplePosition =seekPositionOffset + get_offset_amount(); 
     // 	  m_file->seek(); // add the audiofile offset to the seek offset in case of spliced region
 	    }else{
-	      std::cout << "else" << std::endl;
+	      fsom::DebugStream << "else" << std::endl;
 	      m_samplePosition =get_offset_amount();
     // 	  m_file->seek(0 + get_region_offset());
 	    }
 	}else{
-	  std::cout << "--------------------Reversed audio region --------------------------"<<std::endl;
-	  std::cout << "seektime = " << seekTime <<std::endl;
+	  fsom::DebugStream << "--------------------Reversed audio region --------------------------"<<std::endl;
+	  fsom::DebugStream << "seektime = " << seekTime <<std::endl;
 	  SamplePosition seekPositionOffset = (seekTime - get_start_pos());
-	  std::cout << "seekPositionOffset = " << seekPositionOffset << std::endl;
+	  fsom::DebugStream << "seekPositionOffset = " << seekPositionOffset << std::endl;
 	  if(seekPositionOffset > 0){
-	    std::cout << "if" << std::endl;
+	    fsom::DebugStream << "if" << std::endl;
 	    //TODO
 	    m_samplePosition =seekPositionOffset + get_offset_amount(); 
   // 	  m_file->seek(); // add the audiofile offset to the seek offset in case of spliced region
 	  }else{
-	    std::cout << "else" << std::endl;
+	    fsom::DebugStream << "else" << std::endl;
 	    ///If reversed an unheard set the sample position to be the duration of the region
 	    m_samplePosition =get_duration();
   // 	  m_file->seek(0 + get_region_offset());
@@ -150,7 +150,7 @@ void AudioRegion::on_region_start(SamplePosition seekTime){
 	  
 	}
 	reset_all_effects();
-	std::cout << "-------------------------------------------------------" << std::endl;
+	fsom::DebugStream << "-------------------------------------------------------" << std::endl;
 }
 
 

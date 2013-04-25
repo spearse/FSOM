@@ -191,19 +191,19 @@ using namespace fsom;
 	}
 
 	void Biquad::print_coef(){
-		//std::cout << "b0 = " << b0;
-		//std::cout << " b1 = " << b1;
-		//std::cout << " b2 = " << b2;
-		//std::cout << " a0 = " << a0;
-		//std::cout << " a1 = " << a1;
-		//std::cout << " a2 = " << a2 << std::endl;
+		//fsom::DebugStream << "b0 = " << b0;
+		//fsom::DebugStream << " b1 = " << b1;
+		//fsom::DebugStream << " b2 = " << b2;
+		//fsom::DebugStream << " a0 = " << a0;
+		//fsom::DebugStream << " a1 = " << a1;
+		//fsom::DebugStream << " a2 = " << a2 << std::endl;
 		Complex r[2];
 		solve_quadratic(b2,b1,b0,r);
-		//std::cout << "Zeros at  : " << r[0] << " " << r[1] << std::endl;
-		//std::cout << "Zeros args: " << arg(r[0]) << " " << arg(r[1]) << std::endl;
+		//fsom::DebugStream << "Zeros at  : " << r[0] << " " << r[1] << std::endl;
+		//fsom::DebugStream << "Zeros args: " << arg(r[0]) << " " << arg(r[1]) << std::endl;
 		solve_quadratic(a2,a1,a0,r);
-		//std::cout << "Poles at  : " << r[0] << " " << r[1] << std::endl;
-		//std::cout << "Poles args: " << arg(r[0])*(Fs/(2.0*PI)) << " " << arg(r[1])*(Fs/(2.0*PI)) << std::endl;
+		//fsom::DebugStream << "Poles at  : " << r[0] << " " << r[1] << std::endl;
+		//fsom::DebugStream << "Poles args: " << arg(r[0])*(Fs/(2.0*PI)) << " " << arg(r[1])*(Fs/(2.0*PI)) << std::endl;
 	}
 	
 

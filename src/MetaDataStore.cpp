@@ -25,7 +25,7 @@
 #include <sstream>
 
 #include "tinyxml/tinyxml.h"
-
+#include "fsom/Utilities.hpp"
 
 namespace fsom{
 
@@ -53,7 +53,7 @@ void MetaDataStore::register_meta(const std::string& key){
 }
 void MetaDataStore::set_meta(const std::string& key,const std::string& value){
 	if (m_map.find(key) == m_map.end()){
-		std::cout << "MetaData key " << key << " not registered" <<std::endl;
+		fsom::DebugStream << "MetaData key " << key << " not registered" <<std::endl;
 	} else{
 		m_map[key] = value;		
 	}
@@ -99,7 +99,7 @@ void MetaDataStore::save_meta_to_xml(TiXmlElement* node){
 	std::map<std::string,std::string>::iterator it;
 	for (it = m_map.begin();it != m_map.end();++it){
 		element->SetAttribute((*it).first.c_str(),(*it).second.c_str());
-		//std::cout << "meta saving attribute to......." << (*it).second.c_str() << std::endl;
+		//fsom::DebugStream << "meta saving attribute to......." << (*it).second.c_str() << std::endl;
 	}
 	
 	node->LinkEndChild( element );	

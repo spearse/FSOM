@@ -37,7 +37,7 @@ AudioFile::AudioFile(const std::string& filePath) :
 	m_filePath(filePath), //AudioFile file path set
 	m_peakImage(DMAX) //peak image draw depth set to maximum
 {
-	std::cout << "Attempting to spawn audiofile from"<< filePath<<std::endl;
+	fsom::DebugStream << "Attempting to spawn audiofile from"<< filePath<<std::endl;
 	m_pImpl->m_sndFile = sf_open(m_filePath.c_str(),SFM_READ,&m_pImpl->m_sfInfo); //set soundfile to open and read mode and set filepath and structure to contain info
 	if(!m_pImpl->m_sndFile) throw AudioFileException(); //if did not construct pImpl correctly throw exception
 	//if(!m_pImpl->m_sndFile) throw "Could not open audio file";
@@ -63,7 +63,7 @@ AudioFile::AudioFile(const std::string& filePath) :
 	fill_range_list(m_peakImage.at(D1024),1024);
 	fill_range_list(m_peakImage.at(D2048),2048);
 	fill_range_list(m_peakImage.at(D4096),4096);
-	//std::cout << "RangeList  size= " << m_peakImage.at(D128).at(0).size() <<std::endl;
+	//fsom::DebugStream << "RangeList  size= " << m_peakImage.at(D128).at(0).size() <<std::endl;
 	//show_info(); //display audio data on construction
 }
 
@@ -99,16 +99,16 @@ void AudioFile::get_block(float** out, int blockSize){
 
 //print sound file data to console
 void AudioFile::show_info() const{
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Sound Name = " << m_filePath << std::endl;
-	std::cout << "Samplerate = " << m_pImpl->m_sfInfo.samplerate << std::endl;
-	std::cout << "Channels = " << m_pImpl->m_sfInfo.channels << std::endl;
-	std::cout << "File Size (in samples) = " << m_pImpl->m_sfInfo.frames<<std::endl;
-	std::cout << "Format = " << m_pImpl->m_sfInfo.format << std::endl;
-	std::cout << "Sections = " << m_pImpl->m_sfInfo.sections << std::endl;
-	std::cout << "Seekable = " << m_pImpl->m_sfInfo.seekable << std::endl;
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Size of buffer loaded " << m_audioBuffer.size()<<std::endl;
+	fsom::DebugStream << "----------------------------" << std::endl;
+	fsom::DebugStream << "Sound Name = " << m_filePath << std::endl;
+	fsom::DebugStream << "Samplerate = " << m_pImpl->m_sfInfo.samplerate << std::endl;
+	fsom::DebugStream << "Channels = " << m_pImpl->m_sfInfo.channels << std::endl;
+	fsom::DebugStream << "File Size (in samples) = " << m_pImpl->m_sfInfo.frames<<std::endl;
+	fsom::DebugStream << "Format = " << m_pImpl->m_sfInfo.format << std::endl;
+	fsom::DebugStream << "Sections = " << m_pImpl->m_sfInfo.sections << std::endl;
+	fsom::DebugStream << "Seekable = " << m_pImpl->m_sfInfo.seekable << std::endl;
+	fsom::DebugStream << "----------------------------" << std::endl;
+	fsom::DebugStream << "Size of buffer loaded " << m_audioBuffer.size()<<std::endl;
 
 }
 
@@ -116,7 +116,7 @@ void AudioFile::show_info() const{
 void AudioFile::show_peaks(DrawDepth dd,int channel ) const{
 	const rangeList& rl = get_peak_image(dd,channel); //get a rangelist determined by the drawdepth
 	for (int n = 0; n< rl.size();++n){
-		std::cout << rl[n].fmin << " " << rl[n].fmax << " "; //couts the min and max value of each part of rangelist
+		fsom::DebugStream << rl[n].fmin << " " << rl[n].fmax << " "; //couts the min and max value of each part of rangelist
 	}
 }
 

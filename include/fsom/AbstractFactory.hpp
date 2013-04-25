@@ -56,14 +56,14 @@ public:
 		assert( fact != 0 && "Factory function given was null");
 		assert(m_factories.count(name) == 0);
 		m_factories[name] = fact;
-		std::cout << "AbstractFactory<"<<typeid(T).name() << ">::register_factory() name=" << name << " func=" << fact << std::endl;
+		fsom::DebugStream << "AbstractFactory<"<<typeid(T).name() << ">::register_factory() name=" << name << " func=" << fact << std::endl;
 		return true;
 	}
 	///run through the map and return the pointer to the name given in function
 	ptr create(const std::string& name, const Arg1& arg1) const {
 		typename FactoryMap::const_iterator it;
 		it = m_factories.find(name);
-		std::cout << name << std::endl;
+		fsom::DebugStream << name << std::endl;
 		assert( it != m_factories.end() && "Factory with given name not found .");
 		return (*it).second(arg1);
 	}

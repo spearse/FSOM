@@ -126,18 +126,18 @@ DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,Region* regi
     t->get_parameter(p->get_name())->set_breakpoints(p->get_breakpoints());
     child = child->NextSiblingElement("Parameter");
   }
-  std::cout  << "Loaded effect:" << typeName << std::endl;
+  fsom::DebugStream  << "Loaded effect:" << typeName << std::endl;
   return t;
   
 }
 
 GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, Region* region){
-    std::cout << "Attempting to create generator"<<std::endl;
+    fsom::DebugStream << "Attempting to create generator"<<std::endl;
     GeneratorPtr gen = GeneratorPtr(new Generator(Generator::GEN_Sine,dspCreationStruct(region)));
     
     TiXmlElement* basicInfoElement = element->FirstChildElement("BasicInfo");
     if(basicInfoElement){
-	std::cout << "Generator basic info found"<<std::endl;
+	fsom::DebugStream << "Generator basic info found"<<std::endl;
 	int genType,noiseState;
 	std::string path = basicInfoElement->Attribute("Path"); 
 	basicInfoElement->QueryIntAttribute("GenType",&genType);
@@ -146,8 +146,8 @@ GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, Region* 
 	gen->set_generator_voice(type);
 	gen->set_noise_state(noiseState);
 	gen->set_file_path(path);
-	std::cout << "noise state for gen set to "<<noiseState<<std::endl;
-	std::cout << "gen type = "<<genType<<std::endl;
+	fsom::DebugStream << "noise state for gen set to "<<noiseState<<std::endl;
+	fsom::DebugStream << "gen type = "<<genType<<std::endl;
 	
 	
 	
@@ -155,7 +155,7 @@ GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, Region* 
     
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
-      std::cout << "Parameter in generator found"<<std::endl;
+      fsom::DebugStream << "Parameter in generator found"<<std::endl;
       ParameterPtr p = create_parameter_from_node(child, region);
       gen->get_parameter(p->get_name())->set_value(p->get_value());
       child = child->NextSiblingElement("Parameter");
@@ -165,16 +165,16 @@ GeneratorPtr Session::create_generator_from_node(TiXmlElement* element, Region* 
 }
 
 SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Region* region){
-  std::cout << "Attempting to create module from node"<<std::endl;
+  fsom::DebugStream << "Attempting to create module from node"<<std::endl;
    TiXmlElement* basicInfoElement = element->FirstChildElement("BasicInfo");
    SynthesisModulePtr module;
   if(basicInfoElement){
-   std::cout << "Module basic info found"<<std::endl;
+   fsom::DebugStream << "Module basic info found"<<std::endl;
    std::string name = basicInfoElement->Attribute("Type");
    module = SynthesisModuleManager::get_instance().create(name,dspCreationStruct(region)); 
     TiXmlElement * child = element->FirstChildElement("Parameter");
     while(child){
-      std::cout << "Parameter in module found"<<std::endl;
+      fsom::DebugStream << "Parameter in module found"<<std::endl;
       ParameterPtr p = create_parameter_from_node(child, region);
       module->get_parameter(p->get_name())->set_value(p->get_value());
       child = child->NextSiblingElement("Parameter");
@@ -215,7 +215,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   basicInfoElement->QueryIntAttribute("mutestate",&muteState);
 
   std::string path = basicInfoElement->Attribute("path");
-  std::cout << "Loading, working directory = "<< m_workingDirectory<<std::endl;
+  fsom::DebugStream << "Loading, working directory = "<< m_workingDirectory<<std::endl;
   regionCreationStruct cs(start, duration,offset,lanenum,extension, path,m_workingDirectory,bool(reverseState));
   
   TiXmlElement * meta = element->FirstChildElement("MetaData");
@@ -236,7 +236,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->register_meta("managerId");
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
-  std::cout << "Metadata read, image = " <<image<<std::endl;
+  fsom::DebugStream << "Metadata read, image = " <<image<<std::endl;
   
   TiXmlElement * effectChild = element->FirstChildElement("Effect");
   
@@ -248,10 +248,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	
   }
   
-  std::cout  << "Loaded region:" << path << std::endl;
+  fsom::DebugStream  << "Loaded region:" << path << std::endl;
   
   if(pRegion->get_meta("RegionType") != "Audio" && pRegion->get_meta("RegionType") != "WhiteNoise"){
-      std::cout << "Synthesis region found"<<std::endl;
+      fsom::DebugStream << "Synthesis region found"<<std::endl;
       SynthesisRegionPtr synthregion = boost::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
       //Remove the automatic generators
       synthregion->remove_all_generators();
@@ -264,7 +264,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	synthregion->add_generatorPtr(gen);
 	generatorElement = generatorElement->NextSiblingElement("Generator");
       }
-      std::cout << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
+      fsom::DebugStream << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
       TiXmlElement* moduleElement = element->FirstChildElement("Module");
       while(moduleElement){
 	SynthesisModulePtr mod = create_module_from_node(moduleElement,pRegion.get());
@@ -298,7 +298,7 @@ void Session::load_metadata(fsom::Session* session, TiXmlElement* element ){
 void Session::load_session(const char* fileLocation){
 	std::vector<std::string> temp_effect_names;
 	TiXmlDocument doc(fileLocation);
-	std::cout << "Working dir in load session= "<<m_workingDirectory<<std::endl; 
+	fsom::DebugStream << "Working dir in load session= "<<m_workingDirectory<<std::endl; 
 	if(doc.LoadFile()){
 		TiXmlHandle docHandle( &doc );
 		TiXmlElement* sessionElement = docHandle.FirstChild( "Session" ).Element();
@@ -471,18 +471,18 @@ void Session::stop(){
 void Session::add_active_region(Region* p){
 	p->on_region_start(m_playHead);
 	m_activeRegions.push_back(p);
-	std::cout << "activated region" << std::endl;
+	fsom::DebugStream << "activated region" << std::endl;
 }
 
 void Session::remove_active_region(Region* p){
 	m_activeRegions.remove(p);
-	std::cout << "deactivated region" << std::endl;
+	fsom::DebugStream << "deactivated region" << std::endl;
 }
 
 
 void Session::clear_all_active_regions(){
 	m_activeRegions.clear(); 
-	std::cout << "clearing all active regions" << std::endl;
+	fsom::DebugStream << "clearing all active regions" << std::endl;
 }
 
 
@@ -490,7 +490,7 @@ void Session::clear_all_active_regions(){
 void Session::internal_process(float** ins, float** outs, int frameCount, int channelCount, size_t offset, SamplePosition globalTime){
 	float** offsetOutputs;
 	if(offset > 0){
-		std::cout << "handling offset process block due to event with offset=" << offset << std::endl;
+		fsom::DebugStream << "handling offset process block due to event with offset=" << offset << std::endl;
 		offsetOutputs = get_multichannel_offset_ptrs(outs,channelCount,offset);
 	} else {
 		offsetOutputs = outs;
@@ -519,7 +519,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	clear_multichannel_buffers(outs,channelCount,frameCount); 
 	if(m_transportIsRolling && m_playHead < m_playbackDuration){
 		float sr = Engine::get_instance().get_sample_rate();
-		//std::cout << "Transport rolling: t="<< m_playHead << " " << float(m_playHead)/sr << std::endl;
+		//fsom::DebugStream << "Transport rolling: t="<< m_playHead << " " << float(m_playHead)/sr << std::endl;
 		//simple idea for looping
 		if(m_loopState &&  m_playHead <= m_leftLocator){
 		    
@@ -533,7 +533,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 		while(m_playHead < endOfBlockTime){
 			size_t offset = frameCount - (endOfBlockTime - m_playHead);
 			
-// 			std::cout << "m_nextEvent->time = " << m_nextEvent->time << std::endl;
+// 			fsom::DebugStream << "m_nextEvent->time = " << m_nextEvent->time << std::endl;
 		
 			if(m_nextEvent != m_eventCache.end() && m_nextEvent->time < endOfBlockTime){
 				// process up until the event
@@ -658,7 +658,7 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 	    
 	  
 	  
-	    std::cout << "Bouncing Session" <<std::endl;
+	    fsom::DebugStream << "Bouncing Session" <<std::endl;
 	    SNDFILE* outfile;
 	    SF_INFO m_info;
 	    m_info.channels = 2;
@@ -690,7 +690,7 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 		start = m_leftLocator;
 		
 	    }
-	    std::cout << "Filesize = " << frames << " frames\t Start = " << start <<std::endl;
+	    fsom::DebugStream << "Filesize = " << frames << " frames\t Start = " << start <<std::endl;
 // 	    int blocksize = 512;
     // 	SamplePosition bouncePosition = 0; 
 	    const int frameSize = 512;
@@ -709,12 +709,12 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 		    process(0,deint.get_buffers(),frameSize,m_info.channels);
 		    interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
 		    sf_writef_float(outfile,output,frameSize);
-		    std::cout << " Export frame " << n << " : frames = "<< frames << std::endl;
+		    fsom::DebugStream << " Export frame " << n << " : frames = "<< frames << std::endl;
 	    }
 	    //FIXME this looses data if the num frames isnt perfectly divisible by the framesize.
 	    size_t remainingblock = frames % frameSize;
 	    if(remainingblock > 0){
-		std::cout << "Remainder = " << remainingblock<<"\n\n\n\n"<<std::endl;
+		fsom::DebugStream << "Remainder = " << remainingblock<<"\n\n\n\n"<<std::endl;
 		process(0,deint.get_buffers(),remainingblock,m_info.channels);
 		interleave((const float**)deint.get_buffers(),output,m_info.channels,remainingblock);
 		sf_writef_float(outfile,output,remainingblock);
@@ -738,7 +738,7 @@ void Session::set_preview_state(bool state){
 	if (m_previewRegion) m_previewRegion->on_region_start(0);
 	m_previewState = state;
 	m_previewPlayHead = 0;
-// 	std::cout << "Preview state set to " << m_previewState <<std::endl;
+// 	fsom::DebugStream << "Preview state set to " << m_previewState <<std::endl;
 }
 
 bool Session::get_preview_state(){
@@ -792,7 +792,7 @@ RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition pos
 	m_audioMutex->lock();
 	int size = region->get_DSPStack().size();
 	for( int n = 0; n < size; ++n){
-		std::cout << "cloning fx " << region->get_DSPStack()[n]->get_effect_name() << std::endl;
+		fsom::DebugStream << "cloning fx " << region->get_DSPStack()[n]->get_effect_name() << std::endl;
 		newRegion->attach_effect( region->get_DSPStack()[n]->clone() );
 	}
 	m_audioMutex->unlock();
@@ -841,7 +841,7 @@ void Session::set_playback_duration(SampleLength duration){
 void Session::set_working_directory(std::string directory){
   
     m_workingDirectory = directory;
-    std::cout << "working dir set in session "<<directory<<std::endl;
+    fsom::DebugStream << "working dir set in session "<<directory<<std::endl;
 }
 	
 std::string Session::get_working_directory()const{
@@ -868,9 +868,9 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
 	float* tempBuffer = new float[frames*channels];
 	size_t ret =  sf_readf_float(sndFile,tempBuffer,frames);
 // 	float size = float(frames)/float(channels);
-	std::cout << "Importing " << path<<std::endl;
-	std::cout << "framesize = "<< sfInfo.frames<<std::endl;
-	std::cout << "size per channel = "<< frames<<std::endl;
+	fsom::DebugStream << "Importing " << path<<std::endl;
+	fsom::DebugStream << "framesize = "<< sfInfo.frames<<std::endl;
+	fsom::DebugStream << "size per channel = "<< frames<<std::endl;
 	float** deInterleavedBuffer = new float*[channels] ;
 	for (int n = 0; n < channels;++n){
 	   deInterleavedBuffer[n] = new float[frames];
@@ -902,7 +902,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   //initially use the table lookup functionality
   
   
-  std::cout << "Entering Timestretch"<<std::endl;
+  fsom::DebugStream << "Entering Timestretch"<<std::endl;
   ///////////////////////////////////////////////////////
   ////////Create new session with the region/////////////
   SamplePosition storedPosition = region->get_start_pos();
@@ -913,11 +913,11 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   std::string filepath = folderpath + name+"bounce.wav";
   temp.bounce_session(filepath);
   region->set_start_pos(storedPosition);
-  std::cout << "Region Bounced"<<std::endl;
+  fsom::DebugStream << "Region Bounced"<<std::endl;
   ///////////////////////////////////////////////////////
   ///////
   MultiTableBuffer t_tables=load_file_to_table(filepath);
-  std::cout << "File loaded into table"<<std::endl;
+  fsom::DebugStream << "File loaded into table"<<std::endl;
   std::stringstream ssPath;
   ssPath<<  folderpath<< name<<stretchAmount*100<< "%TStretch.wav";
   SNDFILE* outfile;
@@ -927,7 +927,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   m_info.samplerate = 44100;
   outfile = sf_open(ssPath.str().c_str(),SFM_WRITE,&m_info);
   
-  std::cout << "Table size =  "<< t_tables.at(0)->get_size()+1  ;
+  fsom::DebugStream << "Table size =  "<< t_tables.at(0)->get_size()+1  ;
   
   
   //FIXME mixing logic here!!!!!!
@@ -1003,14 +1003,14 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 
 void Session::set_left_locator(SamplePosition location){
   m_leftLocator = location;
-  std::cout << "Left locator set to "<< m_leftLocator<<std::endl;
+  fsom::DebugStream << "Left locator set to "<< m_leftLocator<<std::endl;
 }
 SamplePosition Session::get_left_locator()const{
     return m_leftLocator;
 }
 void Session::set_right_locator(SamplePosition location){
     m_rightLocator = location;
-    std::cout << "Right locator set to "<< m_rightLocator<<std::endl;
+    fsom::DebugStream << "Right locator set to "<< m_rightLocator<<std::endl;
 }
 SamplePosition Session::get_right_locator()const{
     return m_rightLocator;

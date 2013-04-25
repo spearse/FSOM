@@ -70,7 +70,7 @@ Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){
 	m_currentValue = value; 
-// 	//std::cout <<"Paramter class is Setting parameter value to " << m_currentValue <<std::endl;
+// 	//fsom::DebugStream <<"Paramter class is Setting parameter value to " << m_currentValue <<std::endl;
 }
 
 float Parameter::get_value(){

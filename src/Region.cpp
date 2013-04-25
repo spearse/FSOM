@@ -104,7 +104,7 @@ std::string Region::get_working_directory()const {
 
 
 void Region::print_region_info() const{
-	std::cout << "Region: t=" << m_dataStruct.m_startPos << " d=" << m_dataStruct.m_duration << " l=" << m_dataStruct.m_laneNum << std::endl;
+	fsom::DebugStream << "Region: t=" << m_dataStruct.m_startPos << " d=" << m_dataStruct.m_duration << " l=" << m_dataStruct.m_laneNum << std::endl;
 }
 
 void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
@@ -175,9 +175,9 @@ void Region::attach_effect(DSPEffectPtr p){
 
 void Region::add_effect(std::string id){
 	m_DSPStack.push_back(fsom::DSPManager::get_instance().create(id,dspCreationStruct(this)));
-	std::cout << "***    Effect Stack  ***"<<std::endl;
+	fsom::DebugStream << "***    Effect Stack  ***"<<std::endl;
 	for(int n = 0; n < m_DSPStack.size();++n){
-	 std::cout << "***" <<  m_DSPStack.at(n)->get_effect_name()<< "***"<<std::endl;
+	 fsom::DebugStream << "***" <<  m_DSPStack.at(n)->get_effect_name()<< "***"<<std::endl;
 	}
 	
 }
@@ -186,7 +186,7 @@ void Region::remove_effect(std::string id){
     
 	for (int n = 0; n <m_DSPStack.size();++n){
 		if (id.compare(m_DSPStack.at(n)->get_effect_name()) == 0){
-			std::cout << "Removing effect " << m_DSPStack.at(n)->get_effect_name() << std::endl;
+			fsom::DebugStream << "Removing effect " << m_DSPStack.at(n)->get_effect_name() << std::endl;
 			m_DSPStack.at(n).reset();
 			m_DSPStack.erase(m_DSPStack.begin()+n);
 		}
@@ -211,7 +211,7 @@ void Region::process_region(float** input, float** output, int frameSize, int ch
   
     if(!m_isInExtensionMode){
 	m_internalPos = globalPosition - m_dataStruct.m_startPos;
-	//std::cout << "pos "<< globalPosition;
+	//fsom::DebugStream << "pos "<< globalPosition;
 	if(!m_muted){
 	  process(input,output,frameSize,channels);
 	}
@@ -309,7 +309,7 @@ const SamplePosition& Region::get_sample_position(){
 
 void Region::reset_all_effects(){
   DSPStack::iterator it;
-  std::cout << "RESETTING EFFECTS"<<std::endl;
+  fsom::DebugStream << "RESETTING EFFECTS"<<std::endl;
   for(it = m_DSPStack.begin(); it != m_DSPStack.end(); ++it){
    (*it)->reset_effect(); 
   }
