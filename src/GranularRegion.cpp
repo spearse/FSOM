@@ -43,7 +43,7 @@ m_window(TablePtr(new Table<double>(512))),
 m_filepath(""),
 m_internalClock(0)
 {
-  add_parameter("GrainSize",441,44100,44100);
+  add_parameter("GrainSize - ms",441,441000,44100);
   add_parameter("GrainPitch",0,10,1);
   add_parameter("GrainPosition",0,1,0);
   add_parameter("GrainRate",0.1,10,1);
@@ -164,8 +164,18 @@ std::string GranularRegion::get_soundfile(){
 void GranularRegion::reset(){
     m_internalClock = 0;
     m_nextSpawn = 0;
-    kill_grains();
+    kill_all_grains();
 }
+
+void GranularRegion::kill_all_grains(){
+    for(int n =0; n < m_grains.size();++n){
+	    m_grains.at(n).reset();
+	    m_grains.erase(m_grains.begin()+n);
+    }
+      
+}
+  
+
 
 
 void GranularRegion::grain_process(float** output, int channels,int frames){
@@ -190,7 +200,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
   
   while(remainder > 0){
 //       std::cout << m_nextSpawn<<std::endl;
-      kill_grains();
+	kill_grains();
 //       m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value()  );
 // 	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value()    );
 // 	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
@@ -198,7 +208,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 	m_basePitch = get_parameter("GrainPitch")->get_value();
 	m_basePosition = get_parameter("GrainPosition")->get_value()* m_table->at(0)->get_size() ;
 	m_grainRate = get_parameter("GrainRate")->get_value();
-	m_grainSize = get_parameter("GrainSize")->get_value();
+	m_grainSize = get_parameter("GrainSize - ms")->get_value();
 	
       while(m_nextSpawn <= 0){
 	  spawn();  
@@ -246,7 +256,7 @@ void GranularRegion::spawn(){
 }
 
 void GranularRegion::kill_grains(){
-    for(int n =0; n < m_grains.size();++n){
+  for(int n =0; n < m_grains.size();++n){
 	if(m_grains.at(n)->is_dead()){
 	    m_grains.at(n).reset();
 	    m_grains.erase(m_grains.begin()+n);

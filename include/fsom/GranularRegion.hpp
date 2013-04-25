@@ -51,7 +51,7 @@ namespace fsom{
     int m_nextSpawn;
     std::string m_filepath;
 
-  
+    void kill_all_grains();
   
   
   public:
