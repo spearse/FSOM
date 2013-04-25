@@ -28,6 +28,14 @@
 #include <algorithm>
 #include <fstream>
 
+#ifdef _WIN32
+	#define NOMINMAX
+	#include <windows.h>
+	
+#else
+	#include <unistd.h>
+#endif
+
 namespace fsom{
  
 const float SR = 44100.0;
@@ -38,13 +46,6 @@ const double PI = 3.14159;
 /// use the following typedefs for time references.
 typedef long int SamplePosition;
 typedef long int SampleLength;
-
-
-#ifdef _WIN32
-	#include <windows.h>
-#endif
-
-
 
 #ifdef DEBUG
   #define dbgStream std::cerr
@@ -57,6 +58,7 @@ typedef long int SampleLength;
 
 #if _WIN32
 #define DEBUG_OUTPUT(x) OutputDebugString(x); 
+//#define DEBUG_OUTPUT(x) std::cerr << x;
 #else
 #define DEBUG_OUTPUT(x) std::cerr << x;
 #endif
