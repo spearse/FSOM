@@ -20,9 +20,9 @@
 #ifndef __PARAMETER_HPP__
 #define __PARAMETER_HPP__
 
-#include "../MetaDataStore.hpp"
+#include "MetaDataStore.hpp"
 #include <boost/shared_ptr.hpp>
-#include "../Utilities.hpp"
+#include "Utilities.hpp"
 
 
 namespace fsom{
@@ -63,11 +63,16 @@ void tick(SampleLength& samplesRead);
 float get_lowerBound();
 float get_upperBound();
 float get_range();
+float get_last_breakpoint_position();
+void duplicate_last_breakpoint_at_time(float time);
 BreakPointUnitPtr get_breakpoints();
 void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);
 bool get_automated_mode();
 };
+typedef boost::shared_ptr<Parameter> ParameterPtr;
+typedef std::map<std::string,ParameterPtr> ParameterList;
+
 
 }
 #endif

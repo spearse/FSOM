@@ -20,7 +20,7 @@
 #ifndef DSPEFFECT_HPP
 #define DSPEFFECT_HPP
 
-#include "Parameter.hpp"
+#include "../Parameter.hpp"
 #include "../MetaDataStore.hpp"
 
 #include <boost/shared_ptr.hpp>
@@ -34,9 +34,6 @@ namespace fsom{
 
 class Region;
   
-typedef boost::shared_ptr<Parameter> ParameterPtr;
-typedef std::map<std::string,ParameterPtr> ParameterList;
-
 
 
 struct dspCreationStruct{

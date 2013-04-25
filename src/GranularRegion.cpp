@@ -20,46 +20,108 @@
 
 #include "fsom/GranularRegion.hpp"
 #include "tinyxml/tinyxml.h"
+#include "fsom/Engine.hpp"
+#include "fsom/Session.hpp"
+#include "boost/bind.hpp"
 
 using namespace fsom;
 
 GranularRegion::GranularRegion(regionCreationStruct data):
 Region(data), 
-m_file(data.m_filepath),
+// m_file(data.m_filepath),
 m_diskStreamBuffers(2,4096),
-m_table(0)
+// m_table(512),
+m_counter(0),
+m_fileLoaded(false),
+m_basePosition(0),
+m_basePitch(1),
+m_density(2),
+m_grainSize(44100),
+m_nextSpawn(44100),
+m_grainRate(1),
+m_window(TablePtr(new Table<double>(512))),
+m_filepath(""),
+m_internalClock(0)
 {
+  add_parameter("GrainSize",441,44100,44100);
+  add_parameter("GrainPitch",0,10,1);
+  add_parameter("GrainPosition",0,1,0);
+  add_parameter("GrainRate",0.1,10,1);
+
+  
+  m_window->fill_hann();
+  MultiTablePtr mt;
+  TablePtr t1 = TablePtr(new Table<double>(44100*5));
+  TablePtr t2 = TablePtr(new Table<double>(44100*5));
+  m_table = MultiTablePtr(new MultiTableBuffer());
+  m_table->push_back(t1);
+  m_table->push_back(t2);
   
   
+  
+  //for testing
+//   m_sinTable.fill_triangle();
+//   m_phasor.set_frequency(120);
+  m_diskStreamBuffers.clear();
+
 }
 
 GranularRegion::~GranularRegion(){}
 
 
 void GranularRegion::process(float** input, float** output, int frameSize, int channels){
-	assert(channels == m_file.get_channels() && channels == 2);
+  
+   
+  
+// 	assert(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
-	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
+// 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
 	// copy from the disk stream buffers through the DSP onto the output buffers.
+	m_diskStreamBuffers.clear();
+	
+// 	m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value()  );
+// 	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value()    );
+// 	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
+// 	m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
+	
+	
 	float** t=m_diskStreamBuffers.get_buffers();	
+	float v=0;
+	//for testing only
+	
+	grain_process(t,0,frameSize);
+	
+	
+	
+// 	samplesRead += frameSize;
+	
+// 	
+
+	m_counter += frameSize;
+	
+	
+	
+	
+	
 	// process the fx stack from the disk buffer to the output
 	process_dsp_stack(t,output,frameSize,channels);
 }
-
+/*
 AudioFile& GranularRegion::get_audiofile(){
 	return m_file;
 }
+*/
 
-std::string GranularRegion::get_file_path(){
-	return m_file.get_file_path();	
-}
+
 
 SampleLength GranularRegion::get_file_length(){
-	return m_file.get_file_length();
+// 	return m_file.get_file_length();
+      return get_duration();
 }
 
 void GranularRegion::save_to_xml_node(TiXmlElement* node){
-	TiXmlElement * element = new TiXmlElement( "GranularRegion" );	
+	TiXmlElement * element = new TiXmlElement( "Region" );	
+	save_meta_to_xml(element);
 	save_to_region_specifics_to_existing_xml_node(element);
 	element->SetAttribute("path",get_file_path().c_str());
 	node->LinkEndChild( element );	
@@ -67,5 +129,130 @@ void GranularRegion::save_to_xml_node(TiXmlElement* node){
 }
 
 void GranularRegion::on_region_start(SamplePosition seekTime){
-	m_file.seek(seekTime); // this would seek to region file offset
+// 	m_file.seek(seekTime); // this would seek to region file offset
+//   m_grainStream.reset();
+    m_counter = 0;
+    reset();
+    m_diskStreamBuffers.clear();
+    
 }
+
+
+
+void GranularRegion::load_soundfile(std::string filepath){
+  try{
+    m_table = MultiTablePtr(new MultiTableBuffer( Engine::get_instance().get_active_session().load_file_to_table(filepath))) ;
+    m_filepath = filepath;
+//     m_grainStream.load_soundfile(filepath);
+    m_fileLoaded = true;
+  }catch(...){
+      m_fileLoaded = false;
+  }
+    
+}
+
+bool GranularRegion::get_load_state(){
+    return m_fileLoaded;
+}
+
+
+
+std::string GranularRegion::get_soundfile(){
+    return m_filepath;
+}
+
+void GranularRegion::reset(){
+    m_internalClock = 0;
+    m_nextSpawn = 0;
+    kill_grains();
+}
+
+
+void GranularRegion::grain_process(float** output, int channels,int frames){
+    int remainder = frames;
+  int start = 0;
+
+  
+   SamplePosition samplesRead;
+    
+    Session& sess = fsom::Engine::get_instance().get_active_session();
+    
+    if(sess.get_preview_state() == false){
+	samplesRead = get_sample_position();
+	
+    }else{
+	samplesRead = sess.get_previed_playhead_value(); 
+    }  
+    
+  
+  
+  
+  
+  while(remainder > 0){
+//       std::cout << m_nextSpawn<<std::endl;
+      kill_grains();
+//       m_grainStream.set_basePitch( get_parameter("GrainPitch")->get_value()  );
+// 	m_grainStream.set_basePosition(get_parameter("GrainPosition")->get_value()    );
+// 	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
+// 	m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
+	m_basePitch = get_parameter("GrainPitch")->get_value();
+	m_basePosition = get_parameter("GrainPosition")->get_value()* m_table->at(0)->get_size() ;
+	m_grainRate = get_parameter("GrainRate")->get_value();
+	m_grainSize = get_parameter("GrainSize")->get_value();
+	
+      while(m_nextSpawn <= 0){
+	  spawn();  
+      }
+      
+      if (remainder > m_nextSpawn) {
+	
+	  
+			// partial process
+			
+			std::for_each(
+				m_grains.begin(),m_grains.end(),
+				boost::bind(&Grain::process,_1,output,start,m_nextSpawn)
+			);
+			
+			start += m_nextSpawn;
+			remainder -= m_nextSpawn;
+			m_nextSpawn = 0;
+      } else {
+			// remain process
+			
+			std::for_each(
+				m_grains.begin(),m_grains.end(),
+				boost::bind(&Grain::process,_1,output,start,remainder)
+			);
+			m_nextSpawn -= remainder;
+			remainder = 0;
+      }
+      samplesRead++;
+ 
+       for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
+	    (*it).second->tick(samplesRead);
+      }
+           
+  }
+  
+}
+
+void GranularRegion::spawn(){
+      float dur = 44100.0f/m_grainRate;
+      m_nextSpawn = dur;
+      m_grains.push_back(GrainPtr(new Grain(m_window,m_table,m_grainSize,m_basePosition,m_basePitch)));
+//     std::cout << "Spawned " << m_grains.size()<<std::endl; 
+    
+}
+
+void GranularRegion::kill_grains(){
+    for(int n =0; n < m_grains.size();++n){
+	if(m_grains.at(n)->is_dead()){
+	    m_grains.at(n).reset();
+	    m_grains.erase(m_grains.begin()+n);
+	}
+      
+    }
+ 
+}
+
