@@ -23,30 +23,60 @@
 #include "Region.hpp"
 #include "AudioFile.hpp"
 #include "Table.hpp"
+#include "GrainStream.hpp"
+
 
 namespace fsom{
   
   class GranularRegion : public Region
   {	
-    AudioFile m_file;
-    Phasor m_phasor;
-    Table<double> m_table;
+//     AudioFile m_file;
+//     Table<double> m_table;
+//     MultiTableBuffer m_tables;
     MultiChannelBuffer m_diskStreamBuffers;
-    
-    public:
+    ParameterList m_parameters;
+    //for testing only
+//     GrainStream m_grainStream;  
+    int m_counter;
+    bool m_fileLoaded;
+
+    typedef std::vector<GrainPtr> GrainList;
+    GrainList m_grains;
+    MultiTablePtr m_table;
+    TablePtr m_window;
+    int m_density,m_basePosition,m_grainSize,m_internalClock,m_grainRate;
+    float m_basePitch;
+    void kill_grains();
+    void spawn();
+    int m_nextSpawn;
+    std::string m_filepath;
+
+  
+  
+  
+  public:
       GranularRegion(regionCreationStruct data);
       virtual ~GranularRegion();
       void show_info();
 
       virtual void process(float** input, float** output, int frameSize, int channels);
+      void grain_process(float** output, int channels,int frames);
+      void reset();  
+
       virtual void save_to_xml_node(TiXmlElement* node);
-      virtual void on_region_start(SamplePosition seekTime);
+      void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
-      std::string get_file_path();
-      AudioFile& get_audiofile();
+      
+      void load_soundfile(std::string filepath);
+      std::string get_soundfile();
+
+      bool get_load_state();
+      
+//       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }
     
   };
-  
+  typedef boost::shared_ptr<GranularRegion> GranularSynthesisRegionPtr;
+
 }
 #endif // GRANULARREGION_HPP

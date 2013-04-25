@@ -82,6 +82,7 @@ public:
 	/// this is called automatically during the playback of a session prior to hearing the file for the first time.
 	virtual void on_region_start(SamplePosition seekTime) = 0;
 	void save_to_region_specifics_to_existing_xml_node(TiXmlElement* node);
+	void save_region_parameters(TiXmlElement* node);
 	void set_start_pos(SamplePosition startPos);
 	void set_lane_num(int laneNum);//not being used
 	void set_duration(SampleLength duration);
@@ -115,6 +116,7 @@ public:
 	regionCreationStruct get_creation_struct();
 	void add_parameter(std::string IdName, float lowerBound, float upperBound, float value);
 	ParameterPtr get_parameter(std::string IdName);
+	ParameterPtr get_parameter(int id);
 	ParameterList& get_parameter_list();
 	int get_num_parameter() const;
 	

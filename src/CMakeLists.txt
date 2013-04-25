@@ -98,6 +98,9 @@ set(FSON_SOURCES
 	SubtractiveSynthesisRegion.cpp
 	SynthesisModuleManager.cpp
 	AudioFilePool.cpp
+	../include/fsom/Table.hpp
+	GrainStream.cpp
+	GranularRegion.cpp
 	EffectClasses/FrequencyModulation.cpp
 )
 

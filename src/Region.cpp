@@ -107,6 +107,32 @@ void Region::print_region_info() const{
 	fsom::DebugStream << "Region: t=" << m_dataStruct.m_startPos << " d=" << m_dataStruct.m_duration << " l=" << m_dataStruct.m_laneNum << std::endl;
 }
 
+void Region::save_region_parameters(TiXmlElement* node){
+      std::map<std::string,ParameterPtr>::iterator it;
+		
+	for(it = m_parameterList.begin();it!=m_parameterList.end();++it){
+	    TiXmlElement * Parameter = new TiXmlElement( "Parameter" );
+	    node->LinkEndChild(Parameter);
+	    Parameter->SetAttribute("Id", (*it).first.c_str());
+	    Parameter->SetDoubleAttribute("Value", (*it).second->get_value());
+		
+	    
+	    //adding breakpoints into saved filePath
+	    fsom::BreakPointUnitPtr tempUnit = (*it).second->get_breakpoints();
+	    for(int i = 0; i < tempUnit->get_list_size(); ++i){
+	      TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
+	      Parameter->LinkEndChild(Breakpoint);
+	      Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
+	      Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
+	    }
+	
+	}
+	
+
+  
+};
+
+
 void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
 		TiXmlElement * BasicInfo = new TiXmlElement( "BasicInfo" );
 		node->LinkEndChild(BasicInfo );
@@ -119,34 +145,32 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
 		BasicInfo->SetAttribute("path", m_dataStruct.m_filepath.c_str());
 		BasicInfo->SetAttribute("reversestate",m_dataStruct.m_reverseState);
 		BasicInfo->SetAttribute("mutestate",m_muted);
+		save_region_parameters(node);
 		save_meta_to_xml(node);
 
 		for(int n = 0; n < m_DSPStack.size(); ++n){
-		    TiXmlElement * Effect = new TiXmlElement( "Effect" );
-		    node->LinkEndChild(Effect );
-		    Effect->SetAttribute("name", m_DSPStack[n]->get_effect_name().c_str());
-			m_DSPStack[n]->save_meta_to_xml(Effect);
-		    std::map<std::string,ParameterPtr>::iterator it;
-		    for(it = m_DSPStack.at(n)->get_parameter_list().begin(); it != m_DSPStack[n]->get_parameter_list().end(); ++it){
-		      TiXmlElement * Parameter = new TiXmlElement( "Parameter" );
-		      Effect->LinkEndChild(Parameter);
-		      Parameter->SetAttribute("Id", (*it).first.c_str());
-		      Parameter->SetDoubleAttribute("Value", (*it).second->get_value());
-		      
-		      //adding breakpoints into saved filePath
-			fsom::BreakPointUnitPtr tempUnit = (*it).second->get_breakpoints();
-			
-			for(int i = 0; i < tempUnit->get_list_size(); ++i){
-			  TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
-			  Parameter->LinkEndChild(Breakpoint);
-			  Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
-			  Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
-			}
-		      
-		      //------------------------------------
-		      
-		    }
+				TiXmlElement * Effect = new TiXmlElement( "Effect" );
+				node->LinkEndChild(Effect );
+				Effect->SetAttribute("name", m_DSPStack[n]->get_effect_name().c_str());
+				m_DSPStack[n]->save_meta_to_xml(Effect);
+				std::map<std::string,ParameterPtr>::iterator it;
+			    
+				for(it = m_DSPStack.at(n)->get_parameter_list().begin(); it != m_DSPStack[n]->get_parameter_list().end(); ++it){
+					TiXmlElement * Parameter = new TiXmlElement( "Parameter" );
+					Effect->LinkEndChild(Parameter);
+					Parameter->SetAttribute("Id", (*it).first.c_str());
+					Parameter->SetDoubleAttribute("Value", (*it).second->get_value());
 
+					//adding breakpoints into saved filePath
+					fsom::BreakPointUnitPtr tempUnit = (*it).second->get_breakpoints();
+				
+					for(int i = 0; i < tempUnit->get_list_size(); ++i){
+					  TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
+					  Parameter->LinkEndChild(Breakpoint);
+					  Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
+					  Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
+					}
+				}
 		}
 		/*
 		//run through the DSPStack map and pull each effect name from the list
@@ -246,7 +270,7 @@ void Region::process_dsp_stack(float** input, float** output, int frameSize, int
 
 void Region::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
 	
-	BreakPointUnitPtr tempBPUnit;  
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
 	tempBPUnit->add_breakpoint(TVPair(0,value));
 	tempBPUnit->add_breakpoint(TVPair(get_duration(),value));
   
@@ -259,6 +283,16 @@ ParameterPtr Region::get_parameter(std::string IdName){
 	assert(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
+
+
+ParameterPtr Region::get_parameter(int ID) {
+	std::map<std::string, ParameterPtr>::iterator it;
+	it =  m_parameterList.begin();
+	advance(it,ID);
+	//assert(it != m_parameterList.end() && "Could not find Param Name");
+	return  (*it).second;
+}
+
 
 ParameterList& Region::get_parameter_list(){
   return m_parameterList;

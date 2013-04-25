@@ -32,6 +32,7 @@
 #include <sstream>
 #include "fsom/SynthesisRegion.hpp"
 #include <math.h>
+#include "fsom/GranularRegion.hpp"
 
 using namespace fsom;
 
@@ -190,6 +191,18 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
   
 }
 
+void Session::load_region_parameters(TiXmlElement* element,Region* region){
+      TiXmlElement * child = element->FirstChildElement("Parameter");
+   
+      while(child){
+  
+	    ParameterPtr p = create_parameter_from_node(child, region);
+	    region->get_parameter(p->get_name())->set_value(p->get_value());
+	    region->get_parameter(p->get_name())->set_breakpoints(p->get_breakpoints());
+	    child = child->NextSiblingElement("Parameter");
+      }
+  
+}
 
 RegionPtr Session::create_region_from_node(TiXmlElement* element){
   assert(element);
@@ -215,7 +228,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   basicInfoElement->QueryIntAttribute("mutestate",&muteState);
 
   std::string path = basicInfoElement->Attribute("path");
-  fsom::DebugStream << "Loading, working directory = "<< m_workingDirectory<<std::endl;
+  std::cout << "Loading, working directory = "<< m_workingDirectory<<std::endl;
   regionCreationStruct cs(start, duration,offset,lanenum,extension, path,m_workingDirectory,bool(reverseState));
   
   TiXmlElement * meta = element->FirstChildElement("MetaData");
@@ -223,6 +236,8 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   RegionPtr pRegion = RegionManager::get_instance().create(meta->Attribute("RegionType"),cs);
   pRegion->set_mute_state(muteState);
   assert(pRegion);
+  
+  load_region_parameters(element,pRegion.get());
   
   pRegion->register_meta("RegionType");
   pRegion->register_meta("Tip");
@@ -236,7 +251,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->register_meta("managerId");
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
-  fsom::DebugStream << "Metadata read, image = " <<image<<std::endl;
+
+  std::cout << "Metadata read, image = " <<image<<std::endl;
+  
+  
   
   TiXmlElement * effectChild = element->FirstChildElement("Effect");
   
@@ -245,13 +263,13 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	DSPEffectPtr e = create_effect_from_node(effectChild,pRegion.get());
 	pRegion->attach_effect(e);
 	effectChild = effectChild->NextSiblingElement("Effect");
-	
+
   }
   
-  fsom::DebugStream  << "Loaded region:" << path << std::endl;
+  std::cout  << "Loaded region:" << path << std::endl;
   
-  if(pRegion->get_meta("RegionType") != "Audio" && pRegion->get_meta("RegionType") != "WhiteNoise"){
-      fsom::DebugStream << "Synthesis region found"<<std::endl;
+  if(pRegion->get_meta("RegionType") == std::string("AdditiveSynthesis")){
+      std::cout << "Synthesis region found"<<std::endl;
       SynthesisRegionPtr synthregion = boost::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
       //Remove the automatic generators
       synthregion->remove_all_generators();
@@ -264,7 +282,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	synthregion->add_generatorPtr(gen);
 	generatorElement = generatorElement->NextSiblingElement("Generator");
       }
-      fsom::DebugStream << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
+      std::cout << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
       TiXmlElement* moduleElement = element->FirstChildElement("Module");
       while(moduleElement){
 	SynthesisModulePtr mod = create_module_from_node(moduleElement,pRegion.get());
@@ -272,6 +290,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	moduleElement = moduleElement->NextSiblingElement("Module");
       }
 //       pRegion = synthregion;
+  }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
+      boost::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
+      gran_region->load_soundfile( m_workingDirectory + path );
+    
   }
   
   
@@ -279,7 +301,6 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   
   return RegionPtr(pRegion);
 }
-
 void Session::load_metadata(fsom::Session* session, TiXmlElement* element ){
 	TiXmlElement * metaElement = element->FirstChildElement( "MetaData" );
 		if(metaElement){
@@ -365,7 +386,7 @@ public:
 };
 
 void Session::seek(SamplePosition seekTarget){
-	
+  
 	//Engine::get_instance().clear_buffers();
 	// set the current playback position and prepare to play
 	// sort out which regions should be setup in the active regions list
@@ -1033,11 +1054,9 @@ void Session::set_master_level(double level){
     m_masterVolume = pow(level,4);
 }
 
-
 void Session::reset_all_effects(){
-    for(fsom::ActiveRegionList::iterator it = m_activeRegions.begin();it!=m_activeRegions.end();++it){
-	(*it)->reset_all_effects();
-    }
+  for(ActiveRegionList::iterator it = m_activeRegions.begin();it !=m_activeRegions.end();++it){
+      (*it)->reset_all_effects();
+  }
+  
 }
-
-
