@@ -16,18 +16,7 @@
 **  along with FSOM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
 #include "fsom/Utilities.hpp"
-
-#ifdef _WIN32
-	#define NOMINMAX
-	#include <windows.h>
-	
-#else
-	#include <unistd.h>
-#endif
-
 
 namespace fsom{
 
@@ -38,8 +27,6 @@ void generic_sleep(int t){
 	sleep(t);
 #endif
 }
-
-
 
 #if _WIN32
 class WindowsMutex : public Mutex{
