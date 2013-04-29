@@ -46,7 +46,10 @@ void Grain::process(float** outs, int start, int length){
 	float phase =  phase_wrap(  m_phasor.get_phase() + float(n));
 	float gain = m_window->linear_lookup(m_phasor.get_phase()* m_window->get_size());
 	//MONO for time being...
-	  float v = (m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch )) *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  ))  * m_amp  ;
+
+	//TODO causing bombing on windows need alternative to at() default bounds checking
+	float v = (m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch )) *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  ))  * m_amp  ;
+		
 	  outs[0][n] += v ;
 	  outs[1][n] += v;
 	  m_phasor.tick();
