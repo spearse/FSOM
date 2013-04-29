@@ -10,7 +10,7 @@ namespace fsom{
 
   
   
-Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch):
+Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch,float amp):
   m_isDead(false),
   m_table(table),
   m_window(window),
@@ -18,7 +18,8 @@ Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float 
   m_basePitch(pitch),
   m_dur(dur),
   m_internalClock(0),
-  m_phasor(44100)
+  m_phasor(44100),
+  m_amp(amp)
 {  
   //phasor freqency---- example ........ dur = 44100 .... 1... second  
   m_phasor.set_frequency(dur/44100.0f);
@@ -34,7 +35,7 @@ bool Grain::is_dead()const {
   
 void Grain::kill(){  
     m_isDead=true;
-//     std::cout << "Killed grain"<<std::endl;
+//      fsom::DebugStream << "Killed grain"<<std::endl;
 }
  
 void Grain::process(float** outs, int start, int length){
@@ -45,8 +46,8 @@ void Grain::process(float** outs, int start, int length){
 	float phase =  phase_wrap(  m_phasor.get_phase() + float(n));
 	float gain = m_window->linear_lookup(m_phasor.get_phase()* m_window->get_size());
 	//MONO for time being...
-	  float v = m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch )) *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  )   ;
-	  outs[0][n] += v;
+	  float v = (m_table->at(0)->linear_lookup( m_basePosition+(m_internalClock *m_basePitch )) *   m_window->linear_lookup(m_phasor.get_phase() * m_window->get_size()  ))  * m_amp  ;
+	  outs[0][n] += v ;
 	  outs[1][n] += v;
 	  m_phasor.tick();
 	  m_internalClock +=1;
@@ -137,7 +138,7 @@ void GrainStream::process(float** output, int channels, int frames){
   int start = 0;
   
   while(remainder > 0){
-//       std::cout << m_nextSpawn<<std::endl;
+//        fsom::DebugStream << m_nextSpawn<<std::endl;
       kill_grains();
       while(m_nextSpawn <= 0){
 	  spawn();  
@@ -177,12 +178,12 @@ void GrainStream::spawn(){
     m_nextSpawn = dur;
   
     m_grains.push_back(GrainPtr(new Grain(m_window,m_table,m_grainSize,m_basePosition,m_basePitch)));
-//     std::cout << "Spawned " << m_grains.size()<<std::endl; 
+//      fsom::DebugStream << "Spawned " << m_grains.size()<<std::endl; 
     
 }
 
 bool killPredicate(GrainPtr& grain){
-//   std::cout << "Pred "<< grain->is_dead()<<std::endl;
+//    fsom::DebugStream << "Pred "<< grain->is_dead()<<std::endl;
     return grain->is_dead();
 }
 
@@ -195,8 +196,8 @@ void GrainStream::kill_grains(){
 	}
       
     }
-//     std::cout << m_grains.size() << "grains size " << std::endl;
-//     std::cout << "KILLING"<<std::endl;
+//      fsom::DebugStream << m_grains.size() << "grains size " << std::endl;
+//      fsom::DebugStream << "KILLING"<<std::endl;
     
 }
 

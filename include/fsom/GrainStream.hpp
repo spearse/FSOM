@@ -31,11 +31,11 @@ class Grain {
 	MultiTablePtr m_table; 
 	TablePtr m_window;
 	int m_basePosition,m_grainSize,m_internalClock,m_dur;
-	float m_basePitch;
+	float m_basePitch,m_amp;
 	Phasor m_phasor;
 public:
 	/// Grain constructor
-	Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch );
+	Grain(fsom::TablePtr window, fsom::MultiTablePtr table, int dur, int position, float pitch, float amp );
 	/// Grain destructor
 	virtual ~Grain();
 	

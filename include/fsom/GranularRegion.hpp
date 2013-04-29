@@ -45,7 +45,7 @@ namespace fsom{
     MultiTablePtr m_table;
     TablePtr m_window;
     int m_density,m_basePosition,m_grainSize,m_internalClock,m_grainRate;
-    float m_basePitch;
+    float m_basePitch,m_grainAmp;
     void kill_grains();
     void spawn();
     int m_nextSpawn;

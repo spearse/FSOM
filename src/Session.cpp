@@ -228,7 +228,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   basicInfoElement->QueryIntAttribute("mutestate",&muteState);
 
   std::string path = basicInfoElement->Attribute("path");
-  std::cout << "Loading, working directory = "<< m_workingDirectory<<std::endl;
+   fsom::DebugStream << "Loading, working directory = "<< m_workingDirectory<<std::endl;
   regionCreationStruct cs(start, duration,offset,lanenum,extension, path,m_workingDirectory,bool(reverseState));
   
   TiXmlElement * meta = element->FirstChildElement("MetaData");
@@ -252,7 +252,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
 
-  std::cout << "Metadata read, image = " <<image<<std::endl;
+   fsom::DebugStream << "Metadata read, image = " <<image<<std::endl;
   
   
   
@@ -266,10 +266,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 
   }
   
-  std::cout  << "Loaded region:" << path << std::endl;
+   fsom::DebugStream  << "Loaded region:" << path << std::endl;
   
   if(pRegion->get_meta("RegionType") == std::string("AdditiveSynthesis")){
-      std::cout << "Synthesis region found"<<std::endl;
+       fsom::DebugStream << "Synthesis region found"<<std::endl;
       SynthesisRegionPtr synthregion = boost::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
       //Remove the automatic generators
       synthregion->remove_all_generators();
@@ -282,7 +282,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	synthregion->add_generatorPtr(gen);
 	generatorElement = generatorElement->NextSiblingElement("Generator");
       }
-      std::cout << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
+       fsom::DebugStream << "No of generators spawned =  "<< synthregion->get_generator_stack().size()<<std::endl;
       TiXmlElement* moduleElement = element->FirstChildElement("Module");
       while(moduleElement){
 	SynthesisModulePtr mod = create_module_from_node(moduleElement,pRegion.get());
