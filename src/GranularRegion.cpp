@@ -264,7 +264,7 @@ void GranularRegion::spawn(){
 void GranularRegion::kill_grains(){
   for(int n =0; n < m_grains.size();++n){
 	bool kill =false; 
-	if(m_grains.at(n)->is_dead())kill = true;
+	if(m_grains[n]->is_dead())kill = true;
 	if(kill){ 
 	  m_grains.at(n).reset();
 	  m_grains.erase(m_grains.begin()+n);
