@@ -48,7 +48,7 @@ m_grainAmp(1)
   add_parameter("GrainPitch",0,3,1);
   add_parameter("GrainPosition",0,1,0);
   add_parameter("GrainRate - grains per second",0.1,10,4);
-  add_parameter("GrainAmp",0.01,1.5,0.5);
+  add_parameter("GrainAmp",0.01,1.5,1);
 
   
   m_window->fill_hann();
