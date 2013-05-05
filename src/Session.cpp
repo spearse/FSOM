@@ -625,12 +625,13 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	//TEMPORARY usage for stereo envelope tracking
 	
 	double t_lTotal(0),t_rTotal(0);
+	int t = frameCount/channelCount;
 	for(int n = 0; n < frameCount;++n){
 	    t_lTotal +=  std::abs( outs[0][n]);
 	    t_rTotal += std::abs( outs[1][n]);
 	}
-	m_channelAmps[0] =    double( t_lTotal)/double(frameCount);
-	m_channelAmps[1] = double( t_rTotal)/double(frameCount);
+	m_channelAmps[0] =   (( double( t_lTotal)/double(t))*2.0f);
+	m_channelAmps[1] =   (double( t_rTotal)/double(t))*2.0f;
 	
 	// now unlock the mutex
 	m_audioMutex->unlock();
