@@ -87,6 +87,8 @@ private:
 	SamplePosition m_leftLocator;
 	
 	SamplePosition m_rightLocator;
+	///Storage for average amplitudes for multichannel data
+	ChannelAmplitudes m_channelAmps;
 	
 	/// vector of all regions in the composition. This is maintained in a order of start time and duration.
 	RegionList m_regionPlaylist;
@@ -232,6 +234,7 @@ public:
 	///Function to reset all effects on seek
 	void reset_all_effects();
 	
+	double get_amp_envelope(int chan);
 	
 	MultiTableBuffer load_file_to_table(std::string path);
 

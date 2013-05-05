@@ -47,6 +47,9 @@ const double PI = 3.14159;
 typedef long int SamplePosition;
 typedef long int SampleLength;
 
+
+typedef std::vector<double> ChannelAmplitudes;
+
 #ifdef DEBUG
   #define dbgStream std::cerr
   #define DEBUG_ONLY(x) x

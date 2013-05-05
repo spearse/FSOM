@@ -53,7 +53,8 @@ Session::Session() :
 	m_leftLocator(0),
 	m_rightLocator(44100),
 	m_loopState(false),
-	m_masterVolume(1.0)
+	m_masterVolume(1.0),
+	m_channelAmps(2,0)
 {
   
 	DSPManager::get_instance();
@@ -621,6 +622,15 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 		      }
 		  }
 	}
+	//TEMPORARY usage for stereo envelope tracking
+	
+	double t_lTotal(0),t_rTotal(0);
+	for(int n = 0; n < frameCount;++n){
+	    t_lTotal +=  std::abs( outs[0][n]);
+	    t_rTotal += std::abs( outs[1][n]);
+	}
+	m_channelAmps[0] =    double( t_lTotal)/double(frameCount);
+	m_channelAmps[1] = double( t_rTotal)/double(frameCount);
 	
 	// now unlock the mutex
 	m_audioMutex->unlock();
@@ -1060,3 +1070,9 @@ void Session::reset_all_effects(){
   }
   
 }
+
+double Session::get_amp_envelope(int chan){
+    return m_channelAmps.at(chan);
+}
+
+
