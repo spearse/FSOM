@@ -60,6 +60,20 @@ class LFOModule :public SynthesisModule{
 	virtual void save_specifics_to_xml_node(TiXmlElement* element);	
 };
 
+class VolModule :public SynthesisModule{
+	Table<double> m_sineTable;
+	Phasor m_phasor;
+	public:
+	VolModule(dspCreationStruct _struct);
+	virtual ~VolModule();
+	static SynthesisModulePtr create(dspCreationStruct data) { return SynthesisModulePtr(new VolModule(data)) ; }
+	
+	virtual DSPEffectPtr clone() { return DSPEffectPtr( new VolModule(*this) ); }
+
+	virtual void process(float** input, float** output, int frameSize, int channels);
+	virtual void save_specifics_to_xml_node(TiXmlElement* element);	
+};
+
 class FilterModule :public SynthesisModule{
 	public:
 	FilterModule(dspCreationStruct _struct);

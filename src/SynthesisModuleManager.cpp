@@ -27,6 +27,7 @@ using namespace fsom;
 void fsom::register_module_factories(){
   
 SynthesisModuleManager::get_instance().register_factory("LFOModule",LFOModule::create);
+SynthesisModuleManager::get_instance().register_factory("VolModule",VolModule::create);
 SynthesisModuleManager::get_instance().register_factory("FilterModule",FilterModule::create);  
   
   

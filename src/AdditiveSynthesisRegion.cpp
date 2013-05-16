@@ -38,7 +38,7 @@ AdditiveSynthesisRegion::AdditiveSynthesisRegion(regionCreationStruct data):
 	}
 	//add_synth_module(SynthesisModulePtr(new LFOModule(dspCreationStruct(this))));
 
-	add_module("LFOModule");
+	add_module("VolModule");
 
 }
 

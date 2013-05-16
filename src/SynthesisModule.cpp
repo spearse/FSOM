@@ -97,6 +97,29 @@ void LFOModule::save_specifics_to_xml_node(TiXmlElement* element){
 }
 
 
+VolModule::VolModule(dspCreationStruct _struct):	
+	SynthesisModule(_struct),
+	m_sineTable(512),
+	m_phasor(44100,1.0f)
+{
+	m_sineTable.fill_sine();
+	//add_parameter("Volume",0.0f,1.0f,1.0f);
+	set_effect_name("VolModule");
+}
+    
+VolModule::~VolModule(){}
+
+void VolModule::process(float** input, float** output, int frameSize, int channels){
+
+	for(int frame=0;frame<frameSize;++frame){
+		output[0][frame] =   input[0][frame]; 
+		output[1][frame] =   input[1][frame];
+		m_phasor.tick();
+	}
+}
+
+void VolModule::save_specifics_to_xml_node(TiXmlElement* element){}
+
 
 
 FilterModule::FilterModule(dspCreationStruct _struct):	
