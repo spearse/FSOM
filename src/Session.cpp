@@ -53,9 +53,13 @@ Session::Session() :
 	m_leftLocator(0),
 	m_rightLocator(44100),
 	m_loopState(false),
-	m_masterVolume(1.0),
-	m_channelAmps(2,0)
+	m_channelAmps(2,0),
+	m_peakData(new PeakData())
 {
+	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
+	tempBPUnit->add_breakpoint(TVPair(0,1));
+	tempBPUnit->add_breakpoint(TVPair(m_playbackDuration,1));    
+	m_masterVolume = ParameterPtr(new fsom::Parameter(m_playbackDuration,"MasterLevel",0,1.5,1,tempBPUnit));
   
 	DSPManager::get_instance();
 	assert(m_audioMutex && "Audio mutex not created");
@@ -63,6 +67,7 @@ Session::Session() :
 
 Session::~Session(){
   Mutex::destroy(m_audioMutex); 
+  delete m_peakData;
 }
 
 // Session::Session(std::string preset_path){
@@ -352,7 +357,7 @@ void Session::save_session(const char* fileLocation){
 	doc.LinkEndChild( decl );
 	TiXmlElement * root = new TiXmlElement( "Session" );  
 	doc.LinkEndChild( root );  
-	root->SetDoubleAttribute("MasterVolume",m_masterVolume);
+	root->SetDoubleAttribute("MasterVolume",m_masterVolume->get_value());
 	
 	save_meta_to_xml(root);
 	//FIXME sort out upper and lower bound in parameter
@@ -524,7 +529,7 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	);
 	for (int chan=0; chan < channelCount;++chan){
 	  for(int n = 0; n < frameCount; ++n){
-	      offsetOutputs[chan][n] *=m_masterVolume;
+	      offsetOutputs[chan][n] *=m_masterVolume->get_value();
 	  }
 	}
 	
@@ -537,6 +542,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	  clear_multichannel_buffers(outs,channelCount,frameCount); 
 	  return;
 	}
+	SamplePosition startSamp = m_playHead;
 	// write silence into the output buffers so that we can sum (mix) onto them with +=
 	clear_multichannel_buffers(outs,channelCount,frameCount); 
 	if(m_transportIsRolling && m_playHead < m_playbackDuration){
@@ -632,7 +638,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	}
 	m_channelAmps[0] =   (( double( t_lTotal)/double(t))*2.0f);
 	m_channelAmps[1] =   (double( t_rTotal)/double(t))*2.0f;
-	
+	m_peakData->analyse(outs,channelCount,frameCount,startSamp);
 	// now unlock the mutex
 	m_audioMutex->unlock();
 }
@@ -1055,14 +1061,14 @@ bool Session::get_loop_state(){
     return m_loopState;
 }
 
-double Session::get_master_level(){
+ParameterPtr Session::get_master_level(){
     return m_masterVolume;
 }
 void Session::set_master_level(double level){
   
     if(level>=1.2)level = 1.2;
     if(level<=0)level = 0;
-    m_masterVolume = pow(level,4);
+    m_masterVolume->set_value( pow(level,4));
 }
 
 void Session::reset_all_effects(){
@@ -1076,4 +1082,6 @@ double Session::get_amp_envelope(int chan){
     return m_channelAmps.at(chan);
 }
 
-
+PeakData* Session::get_peak_data(){
+    return m_peakData;
+}

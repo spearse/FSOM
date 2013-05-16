@@ -27,13 +27,14 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
-
+#include <cmath>
 #ifdef _WIN32
 	#define NOMINMAX
 	#include <windows.h>
 	
 #else
 	#include <unistd.h>
+#include "temp_granular/avec.hpp"
 #endif
 
 namespace fsom{
@@ -129,6 +130,42 @@ static DebugStreamBuf debugBuf;
 static std::ostream DebugStream(&debugBuf);
 
 
+
+//peak struct designed to store peak amp, the time of occurence and whether it has clipped..
+struct PeakData{
+  float amp;
+  fsom::SamplePosition position;
+  bool clipped;
+  PeakData():
+    amp(0.0f),
+    position(0),
+    clipped(false)
+  {
+      
+  }
+  void analyse(float** data,int chan,int blockSize,SamplePosition initialPos){
+    
+    for(int n = 0; n < blockSize;++n){
+	for(int c = 0; c < chan;++c){
+	  if( std::abs( data[c][n]) >= amp  ){
+	      amp = std::abs(data[c][n]);
+	      position = initialPos + n; 
+	      if(!clipped){
+		if(amp >= 1.0f){
+		clipped = true;
+		}
+	      }
+	  }
+	  
+	}
+    }
+    
+  }
+  void reset(){
+      amp = 0;
+      clipped = false;
+  }
+};
 
 
 

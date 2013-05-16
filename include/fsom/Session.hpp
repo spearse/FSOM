@@ -89,6 +89,8 @@ private:
 	SamplePosition m_rightLocator;
 	///Storage for average amplitudes for multichannel data
 	ChannelAmplitudes m_channelAmps;
+	///Storage for peak amplitude data
+	PeakData* m_peakData;
 	
 	/// vector of all regions in the composition. This is maintained in a order of start time and duration.
 	RegionList m_regionPlaylist;
@@ -108,8 +110,8 @@ private:
 	///pointer to region to preview
 	RegionPtr m_previewRegion;
 	
-	///double for master volume control
-	double m_masterVolume;
+	///parameter for master volume control
+	ParameterPtr m_masterVolume;
 	
 	/// internal function to activate a region
 	void add_active_region(Region* p);
@@ -228,7 +230,7 @@ public:
 	void load_metadata(fsom::Session* session, TiXmlElement* element );
 	void save_metadata();
 	///return master level
-	double get_master_level();
+	ParameterPtr get_master_level();
 	///set master level, ideally between 0 - 1
 	void set_master_level(double level);
 	///Function to reset all effects on seek
@@ -238,7 +240,7 @@ public:
 	
 	MultiTableBuffer load_file_to_table(std::string path);
 
-	
+	PeakData* get_peak_data();    
 };
 
 
