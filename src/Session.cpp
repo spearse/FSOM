@@ -298,8 +298,11 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 //       pRegion = synthregion;
   }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
       boost::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
-      gran_region->load_soundfile( m_workingDirectory + path );
-    
+      if(!path.empty()){
+	gran_region->load_soundfile( m_workingDirectory + path );
+      }else{
+	gran_region->fill_table_sin();  
+      }
   }
   
   
@@ -545,6 +548,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	SamplePosition startSamp = m_playHead;
 	// write silence into the output buffers so that we can sum (mix) onto them with +=
 	clear_multichannel_buffers(outs,channelCount,frameCount); 
+	
 	if(m_transportIsRolling && m_playHead < m_playbackDuration){
 		float sr = Engine::get_instance().get_sample_rate();
 		//fsom::DebugStream << "Transport rolling: t="<< m_playHead << " " << float(m_playHead)/sr << std::endl;

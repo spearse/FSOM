@@ -59,7 +59,7 @@ m_grainAmp(1)
   m_table->push_back(t1);
   m_table->push_back(t2);
   
-  
+  fill_table_sin();
   
   //for testing
 //   m_sinTable.fill_triangle();
@@ -151,6 +151,12 @@ void GranularRegion::load_soundfile(std::string filepath){
       m_fileLoaded = false;
   }
     
+}
+
+
+void GranularRegion::fill_table_sin(){
+    m_table->at(0)->fill_sine(4400);
+    m_table->at(1)->fill_sine(4400);
 }
 
 bool GranularRegion::get_load_state(){

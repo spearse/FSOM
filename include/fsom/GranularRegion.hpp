@@ -71,10 +71,10 @@ namespace fsom{
       std::string get_soundfile();
 
       bool get_load_state();
-      
+      void fill_table_sin();
 //       AudioFile& get_audiofile();
       static RegionPtr create(regionCreationStruct data) { return RegionPtr(new GranularRegion(data)) ; }
-    
+      
   };
   typedef boost::shared_ptr<GranularRegion> GranularSynthesisRegionPtr;
 

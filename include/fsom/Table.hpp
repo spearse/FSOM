@@ -44,6 +44,14 @@ public:
 		}
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
+	void fill_sine(float frequency){
+		fsom::DebugStream << "filling table with sine" <<std::endl;
+		 for( int n=0; n < m_table.size(); ++n)  {
+		      m_table[n] = sin( 2.0f * M_PI * (float)n * frequency / (float)m_table.size() );
+		}
+
+		m_table.at(m_table.size()-1) = m_table.at(0);
+	}
 	void fill_cos(){
 		fsom::DebugStream << "filling table with cosine" <<std::endl;
 		T f = 2.0*PI/(m_table.size()-1);
