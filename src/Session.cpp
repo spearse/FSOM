@@ -33,6 +33,7 @@
 #include "fsom/SynthesisRegion.hpp"
 #include <math.h>
 #include "fsom/GranularRegion.hpp"
+#include "fsom/TimeStretcher.hpp"
 
 using namespace fsom;
 
@@ -958,6 +959,13 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   fsom::DebugStream << "Region Bounced"<<std::endl;
   ///////////////////////////////////////////////////////
   ///////
+
+   std::stringstream ssPath;
+  ssPath<<  folderpath<< name<<stretchAmount*100<< "%TStretch.wav";
+  
+  TimeStretcher timeStretcher(0.5,2048,4,filepath,ssPath.str() );
+  timeStretcher.run();
+  /*
   MultiTableBuffer t_tables=load_file_to_table(filepath);
   fsom::DebugStream << "File loaded into table"<<std::endl;
   std::stringstream ssPath;
@@ -984,7 +992,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 	      t_phasor.tick();
   }
   delete []tempBuf;
-  */
+  
   
  
   const int HEADCOUNT = 16;
@@ -1031,7 +1039,7 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
 	pos += rate;
   }
   
-  
+  */
   
   
   
