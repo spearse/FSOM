@@ -80,6 +80,7 @@ public:
   }
   //function needs to be passed a block to work on
   void process(ScalarT* readData,int size,int globalPos=0){
+    /*
       //if each had internal speed you could read data here at different rates
       for(int n =0; n < size;++n ){
 	m_fftinput[n] = readData[n] * m_hann[n]; 
@@ -101,7 +102,7 @@ public:
 	m_output[n] = m_ifftOutput[n].real() * m_hann[n] ;//;
 // 	m_output[n] = float(n)/float(size) ;//* m_hann[n];
       }
-      
+      */
   }
   void sumtobuffer(ScalarT* out, int size, float gain = 1.0f/4.0f)
   {
