@@ -20,7 +20,7 @@
 
 #include <boost/bind.hpp>
 #include <sndfile.h>
-
+#include <cstdlib>
 #include "tinyxml/tinyxml.h"
 #include "fsom/Session.hpp"
 #include "fsom/Engine.hpp"
@@ -939,7 +939,7 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
   
 }
 
-std::string Session::timestretch_region(RegionPtr region, double stretchAmount, std::string folderpath, std::string name){
+std::string Session::timestretch_region(RegionPtr region, double speed, std::string folderpath, std::string name, int fftSize, int numOverlaps){
   //got here
   //need to take region,
   //call internal process on the region passing the output into a table,
@@ -965,9 +965,12 @@ std::string Session::timestretch_region(RegionPtr region, double stretchAmount, 
   ///////
 
    std::stringstream ssPath;
-  ssPath<<  folderpath<< name<<stretchAmount*100<< "%TStretch.wav";
+   char number[24]; // dummy size, you should take care of the size!
+//    sprintf(number, "%.2f", stretchAmount);
+   
+  ssPath<<  folderpath<<  "TS"  << name<< (1.0f/speed)*100<<"%.wav";
   
-  TimeStretcher timeStretcher(0.5,2048,4,filepath,ssPath.str() );
+  TimeStretcher timeStretcher(speed,fftSize,numOverlaps,filepath,ssPath.str() );
   timeStretcher.run();
   /*
   MultiTableBuffer t_tables=load_file_to_table(filepath);
