@@ -38,6 +38,7 @@ public:
     void process(float** input, float** output, int frameSize, int channels) ;
     static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Echo(data)) ; }
     virtual DSPEffectPtr clone() { return DSPEffectPtr( new Echo(*this) ); }
+virtual void reset_effect();
 };
 
 }

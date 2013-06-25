@@ -71,8 +71,8 @@ void Echo::process(float** input, float** output, int frameSize, int channels){
 		  b = input[1][n] + m_delayUnitR.read_sample(get_parameter("Echo Time")->get_value() * 44100);
 		  output[0][n]= a;
 		  output[1][n]= b;
-		  m_delayUnitL.write_sample((a * get_parameter("Echo Volume")->get_value() )  );
-		  m_delayUnitR.write_sample((b * get_parameter("Echo Volume")->get_value())   );
+		  m_delayUnitL.write_sample((b * get_parameter("Echo Volume")->get_value() )  );
+		  m_delayUnitR.write_sample((a * get_parameter("Echo Volume")->get_value())   );
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
 		  
@@ -87,6 +87,10 @@ void Echo::process(float** input, float** output, int frameSize, int channels){
 	    output[0] = input[0];
 	    output[1] = input[1];
 	}
+}
+void Echo::reset_effect(){
+    m_delayUnitL.clear_buffer();
+    m_delayUnitR.clear_buffer();
 }
 
 }
