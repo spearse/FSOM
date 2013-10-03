@@ -9,10 +9,10 @@
 #include <stdexcept>
 #include "kissfft.hh"
 #include <cstdlib>
-
+#include "utilities.hpp"
 typedef double ScalarT;
 typedef std::complex<ScalarT> ComplexT;
-const ScalarT TPI = 2.0 * M_PI;
+const ScalarT TPI = 2.0 * 3.14159;
 
 template<class T>
 struct FixedArray{

@@ -27,6 +27,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+
 #include <cmath>
 #ifdef _WIN32
 	#define NOMINMAX

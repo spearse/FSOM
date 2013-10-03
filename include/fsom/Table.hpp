@@ -20,6 +20,7 @@
 #ifndef __TABLE_HPP__
 #define __TABLE_HPP__
 #include <vector>
+
 #include <cmath>
 #include <iostream>
 #include "Utilities.hpp"
@@ -47,7 +48,7 @@ public:
 	void fill_sine(float frequency){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
 		 for( int n=0; n < m_table.size(); ++n)  {
-		      m_table[n] = sin( 2.0f * M_PI * (float)n * frequency / (float)m_table.size() );
+		      m_table[n] = sin( 2.0f * PI * (float)n * frequency / (float)m_table.size() );
 		}
 
 		m_table.at(m_table.size()-1) = m_table.at(0);
