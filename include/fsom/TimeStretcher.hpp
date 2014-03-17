@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include "kissfft.hh"
 #include <cstdlib>
-#include "utilities.hpp"
+#include "Utilities.hpp"
 typedef double ScalarT;
 typedef std::complex<ScalarT> ComplexT;
 const ScalarT TPI = 2.0 * 3.14159;
