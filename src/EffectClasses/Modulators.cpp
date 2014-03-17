@@ -193,16 +193,17 @@ void Tremelo::process(float** input, float** output, int frameSize, int channels
 
 //Ring Modulator Effect
 RingMod::RingMod(dspCreationStruct data) :
-	DSPEffect(data)
+	DSPEffect(data),
+	m_table(512)
 {
 	set_effect_name("RingMod");
 	add_parameter("Freq",1.0,15000.0,500.0); //add parameter for phasor frequency
-
+	add_parameter("Multiplier",0.01,2,1);
 	set_meta(get_tutId(),"link to html");
-	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");
+// 	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
 	m_phasor.set_frequency(get_parameter("Freq")->get_value());
-
+	m_table.fill_sine();
 }
 
 RingMod::~RingMod(){}
@@ -225,8 +226,8 @@ void RingMod::process(float** input, float** output, int frameSize, int channels
 	assert(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
-		m_phasor.set_frequency(get_parameter("Freq")->get_value());
-		float v = sin(TWOPI*m_phasor.get_phase());
+		m_phasor.set_frequency(get_parameter("Freq")->get_value() * get_parameter("Multiplier")->get_value());
+		float v = m_table.linear_lookup(m_phasor.get_phase() * m_table.get_size());
 		output[0][n] = v * input[0][n];
 		output[1][n] = v * input[1][n];
 		m_phasor.tick();

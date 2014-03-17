@@ -22,6 +22,8 @@
 
 #include "DSPEffect.hpp"
 #include "../Utilities.hpp"
+#include "../Table.hpp"
+    
     
 namespace fsom{
   
@@ -67,8 +69,8 @@ public:
 //Ring Modulator Effect
 class RingMod : public DSPEffect
 {
-  Phasor m_phasor;
-
+   Phasor m_phasor;
+   Table<double> m_table;
 public:
     RingMod(dspCreationStruct data);
     ~RingMod();
