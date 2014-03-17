@@ -39,6 +39,7 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   add_parameter("Pitch Two Amplitude",0,1,0.25);
   add_parameter("Pitch Three Amplitude",0,1,0.25);
   add_parameter("Pitch Four Amplitude",0,1,0.25);
+  add_parameter("Dry Amplitude",0,2,0.5);
   set_implementation();
 }
 
@@ -58,7 +59,7 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
     }else{
 	samplesRead = sess.get_previed_playhead_value(); 
     }  
-    
+    float** original = input;
   
    if(!bypass_active()){
 	double t(0),t1(0),origAmount(0.2);
@@ -75,7 +76,9 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
 	      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
 		  (*it).second->tick(samplesRead);
 	      }
-	      
+	      output[0][n] += (original[0][n])* get_parameter("Dry Amplitude")->get_value();
+      	      output[1][n] += (original[1][n])* get_parameter("Dry Amplitude")->get_value();
+
 	      samplesRead++;
 	}
     }else{
