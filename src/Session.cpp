@@ -73,6 +73,7 @@ Session::Session() :
 Session::~Session(){
   Mutex::destroy(m_audioMutex); 
   delete m_peakData;
+  
 }
 
 // Session::Session(std::string preset_path){
@@ -538,10 +539,11 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	for (int chan=0; chan < channelCount;++chan){
 	  for(int n = 0; n < frameCount; ++n){
 	      offsetOutputs[chan][n] *=m_masterVolume->get_value();
+	      m_playHead +=1;
 	  }
 	}
 	
-	m_playHead += frameCount;
+// 	m_playHead += frameCount;
 }
 
 void Session::process(float** ins,float** outs,int frameCount,int channelCount){
@@ -792,8 +794,8 @@ bool Session::get_preview_state(){
 	return m_previewState;
 }
 
-SamplePosition& Session::get_playhead_value(){
-	return m_playHead;
+SamplePosition* Session::get_playhead_value(){
+	return &m_playHead;
 }
 
 const SampleLength& Session::get_playback_duration() const{

@@ -192,7 +192,7 @@ public:
 	
 	void set_preview_loop_state(bool state);
 	
-	SamplePosition& get_playhead_value();
+	SamplePosition* get_playhead_value();
 	
 	SamplePosition& get_previed_playhead_value();
 	
