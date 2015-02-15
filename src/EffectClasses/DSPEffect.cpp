@@ -66,7 +66,8 @@ DSPEffect::~DSPEffect()
 ParameterPtr DSPEffect::get_parameter(std::string IDName) {
 	std::map<std::string, ParameterPtr>::iterator it;
 	it = m_parameterList.find(IDName);
-	assert(it != m_parameterList.end() && "Could not find Param Name");
+// 	assert(it != m_parameterList.end() && "Could not find Param Name");
+	if(it == m_parameterList.end())throw "Could not obtain parameter";
 	return  (*it).second;
 }
 
@@ -74,6 +75,7 @@ ParameterPtr DSPEffect::get_parameter(int ID) {
 	std::map<std::string, ParameterPtr>::iterator it;
 	it =  m_parameterList.begin();
 	advance(it,ID);
+	if(it == m_parameterList.end())throw "Could not obtain parameter";
 	//assert(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
