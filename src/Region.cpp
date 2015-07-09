@@ -133,7 +133,7 @@ void Region::save_region_parameters(TiXmlElement* node){
 };
 
 
-void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
+void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node, bool useRelative){
 		TiXmlElement * BasicInfo = new TiXmlElement( "BasicInfo" );
 		node->LinkEndChild(BasicInfo );
 
@@ -142,7 +142,15 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node){
 		BasicInfo->SetAttribute("offset",m_dataStruct.m_offset);
 		BasicInfo->SetAttribute("lanenum",m_dataStruct.m_laneNum);
 		BasicInfo->SetAttribute("extension",m_dataStruct.m_extension);
-		BasicInfo->SetAttribute("path", m_dataStruct.m_filepath.c_str());
+		
+		if(useRelative){
+		  std::size_t pos = m_dataStruct.m_filepath.find_last_of("/\\");
+		  std::string relative = m_dataStruct.m_filepath.substr(pos+1);
+		  BasicInfo->SetAttribute("path", relative.c_str());
+		  
+		}else{
+		  BasicInfo->SetAttribute("path", m_dataStruct.m_filepath.c_str());
+		}
 		BasicInfo->SetAttribute("reversestate",m_dataStruct.m_reverseState);
 		BasicInfo->SetAttribute("mutestate",m_muted);
 		save_region_parameters(node);

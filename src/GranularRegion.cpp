@@ -121,10 +121,10 @@ SampleLength GranularRegion::get_file_length(){
       return get_duration();
 }
 
-void GranularRegion::save_to_xml_node(TiXmlElement* node){
+void GranularRegion::save_to_xml_node(TiXmlElement* node, bool useRelatvie){
 	TiXmlElement * element = new TiXmlElement( "Region" );	
 	save_meta_to_xml(element);
-	save_to_region_specifics_to_existing_xml_node(element);
+	save_to_region_specifics_to_existing_xml_node(element,useRelatvie);
 	element->SetAttribute("path",get_file_path().c_str());
 	node->LinkEndChild( element );	
 

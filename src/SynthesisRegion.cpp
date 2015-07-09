@@ -154,9 +154,9 @@ MultiChannelBuffer& SynthesisRegion::get_bufferB(){
 }	
 
 
-void SynthesisRegion::save_to_xml_node(TiXmlElement* node) {
+void SynthesisRegion::save_to_xml_node(TiXmlElement* node,bool useRelative) {
 	TiXmlElement * element = new TiXmlElement( "Region" );	
-	save_to_region_specifics_to_existing_xml_node(element);
+	save_to_region_specifics_to_existing_xml_node(element,useRelative);
 	GeneratorStack::iterator it;
 	for(it=m_generatorStack.begin(); it!=m_generatorStack.end();++it){
 	    (*it)->save_to_xml_node(element);

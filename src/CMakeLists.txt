@@ -39,6 +39,8 @@ ENDIF(WIN32)
 
 include_directories(
 	../include
+	../FSOM/include/
+	../FSOM/src/
 	${Boost_INCLUDE_DIRS}
 	${SNDFILE_INCLUDE_DIR}
 	${PORTAUDIO_INCLUDE_DIRS}

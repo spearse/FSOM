@@ -45,7 +45,7 @@ public:
 	virtual void process(float** input, float** output, int frameSize, int channels);
 	
 	/// abstract save function
-	void save_to_xml_node(TiXmlElement* node) ;
+	void save_to_xml_node(TiXmlElement* node, bool useRelative) ;
 	/// abstract function to initialise the region for playback.
 	/// this is called automatically during the playback of a session prior to hearing the file for the first time.
 	virtual void on_region_start(SamplePosition seekTime) ;

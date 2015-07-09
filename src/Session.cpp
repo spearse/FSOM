@@ -360,7 +360,7 @@ void Session::load_session(const char* fileLocation){
 	}
 }
 
-void Session::save_session(const char* fileLocation){
+void Session::save_session(const char* fileLocation, bool useRelative){
 	TiXmlDocument doc(fileLocation);
 	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "", "" );
 	doc.LinkEndChild( decl );
@@ -371,7 +371,7 @@ void Session::save_session(const char* fileLocation){
 	save_meta_to_xml(root);
 	//FIXME sort out upper and lower bound in parameter
 	for (std::list<RegionPtr>::iterator it=m_regionPlaylist.begin();it != m_regionPlaylist.end();++it){
-		(*it)->save_to_xml_node(root);
+		(*it)->save_to_xml_node(root,useRelative);
 	}
 	doc.SaveFile( fileLocation );  
 

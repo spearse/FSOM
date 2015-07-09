@@ -63,7 +63,7 @@ namespace fsom{
       void grain_process(float** output, int channels,int frames);
       void reset();  
 
-      virtual void save_to_xml_node(TiXmlElement* node);
+      virtual void save_to_xml_node(TiXmlElement* node,bool useRelatvie);
       void on_region_start(SamplePosition seekTime);
       SampleLength get_file_length();
       

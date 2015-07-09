@@ -33,9 +33,9 @@ namespace fsom{
   }
   
   
-void NoiseRegionBase::save_to_xml_node(TiXmlElement* node) {
+void NoiseRegionBase::save_to_xml_node(TiXmlElement* node, bool useRelative) {
       TiXmlElement* regionElement = new TiXmlElement("Region");
-      save_to_region_specifics_to_existing_xml_node(regionElement);	
+      save_to_region_specifics_to_existing_xml_node(regionElement,useRelative);	
       node->LinkEndChild(regionElement); 
   }
   

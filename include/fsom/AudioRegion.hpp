@@ -43,7 +43,7 @@ SamplePosition m_samplePosition;
 	virtual void process(float** input, float** output, int frameSize, int channels);
 	
 	///store the region data to an xml element
-	virtual void save_to_xml_node(TiXmlElement* node);
+	virtual void save_to_xml_node(TiXmlElement* node, bool useRelative);
 	
 	///
 	virtual void on_region_start(SamplePosition seekTime);

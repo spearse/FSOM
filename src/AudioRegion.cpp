@@ -104,9 +104,9 @@ SampleLength AudioRegion::get_file_length(){
 	return m_file->get_file_length();
 }
 
-void AudioRegion::save_to_xml_node(TiXmlElement* node){
+void AudioRegion::save_to_xml_node(TiXmlElement* node,bool useRelative){
 	TiXmlElement * element = new TiXmlElement( "Region" );	
-	save_to_region_specifics_to_existing_xml_node(element);
+	save_to_region_specifics_to_existing_xml_node(element,useRelative);
 // 	element->SetAttribute("path",get_file_path().c_str());
 	node->LinkEndChild( element );	
 

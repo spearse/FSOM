@@ -145,7 +145,7 @@ private:
 public:
 // 	Session(std::string preset_path);
 	void load_session(const char* fileLocation);
-	void save_session(const char* fileLocation);
+	void save_session(const char* fileLocation, bool useRelative);
 
 	/// seek the transport to the specified sample position and prepare for playback.
 	void seek(SamplePosition seekTarget);
