@@ -37,7 +37,7 @@ public:
 
 class MetaDataStore
 {
-std::map<std::string,std::string> m_map;
+	std::map<std::string,std::string> m_map;
 public:
     MetaDataStore();
     virtual ~MetaDataStore();
@@ -52,6 +52,7 @@ public:
 	float get_meta_as_float(const std::string& key) const;
 	
 	void save_meta_to_xml(TiXmlElement* node);
+	std::map<std::string,std::string> get_map();
 };
 
 

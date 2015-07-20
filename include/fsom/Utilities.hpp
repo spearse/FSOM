@@ -463,11 +463,11 @@ class BreakPointUnit{
     }*/
     
     void print_breakpoints(){
-     /* 
+     
        for( BPList::iterator it = bpList_.begin();it != bpList_.end();	++it){
 		fsom::DebugStream << " : time = " << it->t_ << " : val ="  << it->v_ << std::endl;
        } 
-       */
+     
     }
     
     void sort(){ std::sort(bpList_.begin(), bpList_.end());}

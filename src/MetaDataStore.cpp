@@ -106,5 +106,9 @@ void MetaDataStore::save_meta_to_xml(TiXmlElement* node){
 }
 
 
+std::map<std::string,std::string> MetaDataStore::get_map(){
+  return m_map;
+}
 
+  
 }

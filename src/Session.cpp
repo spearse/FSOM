@@ -836,6 +836,15 @@ RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition pos
 	if(laneId != NULL){
 	 newRegion->set_lane_num(laneId); 
 	}
+	
+	std::map<std::string,std::string> metaMap = region->get_map();
+	for(std::map<std::string,std::string>::iterator it = metaMap.begin(); it!=metaMap.end();++it){
+	  
+	  newRegion->register_meta( (*it).first);
+	  newRegion->set_meta((*it).first,(*it).second);
+	}
+	
+	
 	//------------------------EFFECT STUFF ---------------------------------------------------------
 	//TODO possibly unsafe way of "copying" DSPstack
 	m_audioMutex->lock();
