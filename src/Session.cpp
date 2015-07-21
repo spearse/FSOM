@@ -678,9 +678,11 @@ void Session::add_region(RegionPtr region){
 
 void Session::remove_region(RegionPtr region){
   	ScopedMutexLock lock(m_audioMutex);
-	assert(region && "Remove Region: RegionPtr Invalid");
+// 	assert(region && "Remove Region: RegionPtr Invalid");
 	
-	assert(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
+// 	assert(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
+	if(!region)throw "Region invalid";
+	if(std::find(m_regionPlaylist.begin(),m_regionPlaylist.end(),region) == m_regionPlaylist.end() )throw "Could not find region";
 	m_regionPlaylist.remove(region);
 	region.reset();
 }
