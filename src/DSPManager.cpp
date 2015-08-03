@@ -53,10 +53,10 @@ DSPManager::get_instance().register_factory("SimpleReverb",SimpleReverb::create)
 DSPManager::get_instance().register_factory("Reverb",Reverb::create);
 DSPManager::get_instance().register_factory("Fade",Fade::create);
 
-DSPManager::get_instance().register_factory("Fragment",Fragment::create);
+// DSPManager::get_instance().register_factory("Fragment",Fragment::create);
 DSPManager::get_instance().register_factory("Echo",Echo::create);
 
-DSPManager::get_instance().register_factory("CombFilter",CombFilter::create);
+// DSPManager::get_instance().register_factory("CombFilter",CombFilter::create);
 DSPManager::get_instance().register_factory("LowPassFilter",LowPassFilter::create);
 DSPManager::get_instance().register_factory("HighPassFilter",HighPassFilter::create);
 DSPManager::get_instance().register_factory("ResonatingFilter",ResonatingFilter::create);

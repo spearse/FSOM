@@ -224,6 +224,23 @@ void Region::remove_effect(std::string id){
 		}
 	}
 }
+
+
+void Region::remove_effect(DSPEffectPtr effect){
+    
+	for (int n = 0; n <m_DSPStack.size();++n){
+		if (m_DSPStack.at(n) == effect ){
+			fsom::DebugStream << "Removing effect " << m_DSPStack.at(n)->get_effect_name() << std::endl;
+			m_DSPStack.at(n).reset();
+			m_DSPStack.erase(m_DSPStack.begin()+n);
+		}
+	}
+}
+
+
+
+
+
 //run through the DSPStack map and delete DSPEffectPtrs and clear the stack
 void Region::clear_all_effects(){
    /* std::vector<DSPEffectPtr>::iterator it;
@@ -365,3 +382,9 @@ void Region::set_mute_state(bool state){
 bool Region::get_mute_state(){
     return m_muted;
 }
+
+// 
+
+
+
+
