@@ -60,14 +60,14 @@ typedef std::vector<double> ChannelAmplitudes;
 #endif
 
 
-#if _WIN32
+#ifdef _WIN32
 #define DEBUG_OUTPUT(x) OutputDebugString(x); 
 //#define DEBUG_OUTPUT(x) std::cerr << x;
 #else
 #define DEBUG_OUTPUT(x) std::cerr << x;
 #endif
 
-#if DEBUG
+#ifdef DEBUG
 #define DebugOut(fmt, ...) \
     char buf[256]; \
     sprintf(buf, fmt, __VA_ARGS__ ) ; \
@@ -95,7 +95,7 @@ private:
       std::ptrdiff_t n = pptr() - pbase();
       pbump(-n);
       //fsom::DebugStream << "|";
-      #if DEBUG
+      #ifdef DEBUG
       std::cerr.write(pbase(), n);
       m_file.write(pbase(), n);
       #endif

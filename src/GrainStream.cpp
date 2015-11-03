@@ -2,8 +2,7 @@
 #include "../include/fsom/Engine.hpp"
 #include "../include/fsom/Session.hpp"
 #include <algorithm>
-#include <boost/mem_fn.hpp>
-#include <boost/bind.hpp>
+#include <functional>
 //#include <lo/lo_osc_types.h>
 #include "../include/fsom/Table.hpp"
 namespace fsom{
@@ -154,7 +153,7 @@ void GrainStream::process(float** output, int channels, int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,m_nextSpawn)
+				std::bind(&Grain::process,_1,output,start,m_nextSpawn)
 			);
 			
 			start += m_nextSpawn;
@@ -165,7 +164,7 @@ void GrainStream::process(float** output, int channels, int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,remainder)
+				std::bind(&Grain::process,_1,output,start,remainder)
 			);
 			m_nextSpawn -= remainder;
 			remainder = 0;

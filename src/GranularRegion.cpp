@@ -22,7 +22,7 @@
 #include "tinyxml/tinyxml.h"
 #include "fsom/Engine.hpp"
 #include "fsom/Session.hpp"
-#include "boost/bind.hpp"
+#include <functional>
 
 using namespace fsom;
 
@@ -232,7 +232,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,m_nextSpawn)
+				std::bind(&Grain::process, std::placeholders::_1, output, start, m_nextSpawn)
 			);
 			
 			start += m_nextSpawn;
@@ -243,7 +243,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,remainder)
+				std::bind(&Grain::process, std::placeholders::_1, output, start, remainder)
 			);
 			m_nextSpawn -= remainder;
 			remainder = 0;

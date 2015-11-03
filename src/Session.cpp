@@ -18,7 +18,7 @@
 
 
 
-#include <boost/bind.hpp>
+#include <functional>
 #include <sndfile.h>
 #include <cstdlib>
 #include "tinyxml/tinyxml.h"
@@ -282,7 +282,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   
   if(pRegion->get_meta("RegionType") == std::string("AdditiveSynthesis")){
        fsom::DebugStream << "Synthesis region found"<<std::endl;
-      SynthesisRegionPtr synthregion = boost::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
+      SynthesisRegionPtr synthregion = std::dynamic_pointer_cast<fsom::SynthesisRegion>(pRegion); 
       //Remove the automatic generators
       synthregion->remove_all_generators();
       //remove the automatic modules
@@ -303,7 +303,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
       }
 //       pRegion = synthregion;
   }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
-      std::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
+      std::shared_ptr<fsom::GranularRegion> gran_region = std::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
       if(!path.empty()){
 	gran_region->load_soundfile( m_workingDirectory + path );
       }else{
@@ -534,7 +534,7 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	
 
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
-		bind(&Region::process_region, _1, ins, offsetOutputs, frameCount, channelCount,globalTime)
+		std::bind(&Region::process_region, std::placeholders::_1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
 	for (int chan=0; chan < channelCount;++chan){
 	  for(int n = 0; n < frameCount; ++n){
@@ -690,8 +690,7 @@ void Session::remove_region(RegionPtr region){
 
 
 void Session::print_region_playlist(){
-	using namespace boost;
-	for_each(m_regionPlaylist.begin(), m_regionPlaylist.end(), bind(&Region::print_region_info,_1));
+	std::for_each(m_regionPlaylist.begin(), m_regionPlaylist.end(), std::bind(&Region::print_region_info,std::placeholders::_1));
 }
 
 
@@ -869,7 +868,7 @@ RegionPtr Session::splice_region(fsom::RegionPtr region, SamplePosition splicePo
   
 	if(factoryName =="Audio"){
 	  
-		//std::shared_ptr<fsom::AudioRegion> origAudioRegion = boost::dynamic_pointer_cast<fsom::AudioRegion>(region);
+		//std::shared_ptr<fsom::AudioRegion> origAudioRegion = std::dynamic_pointer_cast<fsom::AudioRegion>(region);
 		
 		SamplePosition splicePortionA = splicePosition - region->get_start_pos();
 		
