@@ -30,10 +30,10 @@ class TiXmlElement;
 
 namespace fsom{
 
-	typedef boost::shared_ptr<Region> RegionPtr;
+	typedef std::shared_ptr<Region> RegionPtr;
 	typedef std::vector<DSPEffectPtr> DSPStack;
 	
-	typedef boost::shared_ptr<Parameter> ParameterPtr;
+	typedef std::shared_ptr<Parameter> ParameterPtr;
 	typedef std::map<std::string,ParameterPtr> ParameterList;
 	
 	

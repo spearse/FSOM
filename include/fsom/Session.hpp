@@ -30,7 +30,7 @@
 
 namespace fsom{
   
-typedef boost::shared_ptr<Region> RegionPtr;
+typedef std::shared_ptr<Region> RegionPtr;
 typedef std::list<RegionPtr> RegionList;
 typedef std::list<Region*> ActiveRegionList;
 

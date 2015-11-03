@@ -22,7 +22,7 @@
 #include "Table.hpp"
 #include "EffectClasses/DSPEffect.hpp"
 #include "Utilities.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <string>
 
@@ -63,7 +63,7 @@ private:
 	
 };
 
-typedef boost::shared_ptr<Generator> GeneratorPtr;
+typedef std::shared_ptr<Generator> GeneratorPtr;
 
 
 }

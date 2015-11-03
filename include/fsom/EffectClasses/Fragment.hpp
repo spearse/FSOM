@@ -23,7 +23,7 @@
 
 namespace fsom{
 //DSPEffect Pointer
-typedef boost::shared_ptr<DSPEffect> DSPEffectPtr;
+typedef std::shared_ptr<DSPEffect> DSPEffectPtr;
 //DSPEffect function pointers
 typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 

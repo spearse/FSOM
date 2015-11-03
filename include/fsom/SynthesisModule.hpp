@@ -21,7 +21,7 @@
 #define _SYNTHESISMODULE_HPP_
 
 #include "EffectClasses/DSPEffect.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "Table.hpp"
 #include "Utilities.hpp"
 
@@ -41,7 +41,7 @@ public:
     virtual void save_parameters_to_node(TiXmlElement* element);
 };
 
-typedef boost::shared_ptr<SynthesisModule> SynthesisModulePtr;
+typedef std::shared_ptr<SynthesisModule> SynthesisModulePtr;
 
 
 

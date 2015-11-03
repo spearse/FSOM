@@ -303,7 +303,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
       }
 //       pRegion = synthregion;
   }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
-      boost::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
+      std::shared_ptr<fsom::GranularRegion> gran_region = boost::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
       if(!path.empty()){
 	gran_region->load_soundfile( m_workingDirectory + path );
       }else{
@@ -869,7 +869,7 @@ RegionPtr Session::splice_region(fsom::RegionPtr region, SamplePosition splicePo
   
 	if(factoryName =="Audio"){
 	  
-		//boost::shared_ptr<fsom::AudioRegion> origAudioRegion = boost::dynamic_pointer_cast<fsom::AudioRegion>(region);
+		//std::shared_ptr<fsom::AudioRegion> origAudioRegion = boost::dynamic_pointer_cast<fsom::AudioRegion>(region);
 		
 		SamplePosition splicePortionA = splicePosition - region->get_start_pos();
 		
