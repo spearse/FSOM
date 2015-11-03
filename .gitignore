@@ -27,3 +27,4 @@ src/tinyxml/tinyxml.vcproj.Dave-PC.dave.user
 
 *.vcproj
 *.sln
+build/
