@@ -26,7 +26,7 @@
 
 using namespace fsom;
 
-	Biquad::Biquad(double sampleRate):
+	Biquad::Biquad(float sampleRate):
 		A(0),w0(0),alpha(0),cw(0),sw(0),Fs(sampleRate),f0(0),
 			dBgain(0),a0(0),a1(0),a2(0),b0(0),b1(0),b2(0),
 			x1(0),x2(0),y1(0),y2(0)
@@ -34,10 +34,10 @@ using namespace fsom;
 	
 	}
 	
-	void Biquad::set_LPF(double frequency,double Q){
+	void Biquad::set_LPF(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
 		alpha = sin(w0)/(2.0*Q);
@@ -49,7 +49,7 @@ using namespace fsom;
 		a2 =   1.0 - alpha;
 	}
 	
-	void Biquad::set_HPF(double frequency,double Q){
+	void Biquad::set_HPF(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -63,7 +63,7 @@ using namespace fsom;
 		a1 =  -2.0*cw;
 		a2 =   1.0 - alpha;
 	}
-	void Biquad::set_BPF(double frequency,double Q){
+	void Biquad::set_BPF(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -86,7 +86,7 @@ using namespace fsom;
             a2 =   1 - alpha
 */
 	}
-	void Biquad::set_BPF_const_gain(double frequency,double Q){
+	void Biquad::set_BPF_const_gain(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -100,7 +100,7 @@ using namespace fsom;
 		a1 =  -2*cw;
 		a2 =   1 - alpha;
 	}
-	void Biquad::set_BAND_REJECT(double frequency, double Q){
+	void Biquad::set_BAND_REJECT(float frequency, float Q){
 		A = 0;
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -114,7 +114,7 @@ using namespace fsom;
 		a1 =  -2*cw;
 		a2 =   1 - alpha;
 	}
-	void Biquad::set_ALL(double frequency,double Q){
+	void Biquad::set_ALL(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -137,7 +137,7 @@ using namespace fsom;
 		a1 =  -2*cw;
 		a2 =   1 - alpha/A;
 	}
-	void Biquad::set_LOWSHELF(double frequency,double S,double amp){
+	void Biquad::set_LOWSHELF(float frequency,float S,float amp){
 		A = 0;//FIXME
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -151,7 +151,7 @@ using namespace fsom;
 		a1 =   -2*( (A-1) + (A+1)*cw                   );
 		a2 =        (A+1) + (A-1)*cw - 2*sqrt(A)*alpha;
 	}
-	void Biquad::set_HIGHSHELF(double frequency,double S,double amp){
+	void Biquad::set_HIGHSHELF(float frequency,float S,float amp){
 		A = 0;//FIXME
 		f0 = frequency;
 		w0 = 2.0*PI*(f0/Fs);
@@ -169,8 +169,8 @@ using namespace fsom;
 	
 	void Biquad::process(const float* in,float* out,int frameSize){
 		while(--frameSize >= 0){ 
-			double x0 = *in;
-			double y0;
+			float x0 = *in;
+			float y0;
 			y0 = (b0/a0)*x0 + (b1/a0)*x1 + (b2/a0)*x2 - (a1/a0)*y1 - (a2/a0)*y2; 
 			x2 = x1;		
 			x1 = x0;
@@ -182,12 +182,12 @@ using namespace fsom;
 		}
 	}
 
-	typedef std::complex<double> Complex;
+	typedef std::complex<float> Complex;
 	
 	void Biquad::solve_quadratic(Complex a, Complex b, Complex c, Complex* r){
-		Complex t = sqrt(b*b - 4.0*a*c);
-		r[0] = (-b + t) / (2.0*a);
-		r[1] = (-b - t) / (2.0*a);
+		Complex t = sqrt(b*b - 4.0f*a*c);
+		r[0] = (-b + t) / (2.0f*a);
+		r[1] = (-b - t) / (2.0f*a);
 	}
 
 	void Biquad::print_coef(){
@@ -207,7 +207,7 @@ using namespace fsom;
 	}
 	
 
-	std::complex<double> Biquad::H(std::complex<double> z){
+	std::complex<float> Biquad::H(std::complex<float> z){
 
 		return ( b0 + b1*pow(z,-1) + b2*pow(z,-2) ) 
 			/ 
@@ -218,16 +218,16 @@ using namespace fsom;
 
 		int N = 44100;
 
-		std::complex<double> j(0,1);
+		std::complex<float> j(0,1);
 
 		std::vector<float> amplitudes(steps);
 		
 		//goes through coeffiecients and pushes them into a vector to allow visualization
 		for(int n = 0; n < steps ; ++n){
-			double x = pow( (double(n) / steps), 2 ) * double(N) / 2.0;
-			double w = 2.0*PI/N * x;
-			std::complex<double> z = exp(j*w);
-			double val = 20.0*log10(abs( H(z)));
+			float x = pow( (float(n) / steps), 2 ) * float(N) / 2.0;
+			float w = 2.0*PI/N * x;
+			std::complex<float> z = exp(j*w);
+			float val = 20.0*log10(abs( H(z)));
 			amplitudes[n] = val;
 		}
 		

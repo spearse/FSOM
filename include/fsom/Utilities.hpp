@@ -27,8 +27,9 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
-
+#include <cstdint>
 #include <cmath>
+
 #ifdef _WIN32
 	#define NOMINMAX
 	#include <windows.h>
@@ -39,15 +40,18 @@
 
 namespace fsom{
  
-const float SR = 44100.0;
-const double TWOPI = 2.0*3.14159;
-const double PI = 3.14159;
+const float SR = 44100.0f;
+const float PI = 3.14159265359f;
+const float TWOPI = 6.28318530718f;
 
 /// audio objects should be measuring time in integer time values
 /// use the following typedefs for time references.
-typedef long int SamplePosition;
-typedef long int SampleLength;
+// 32bit signed gives us 2^31/44100/60 = ~811 minutes
+typedef int32_t SamplePosition; 
+typedef int32_t SampleLength;
 
+static_assert(sizeof(SamplePosition) == 4, "Bad sample position size.");
+static_assert(sizeof(SampleLength) == 4, "Bad sample length size.");
 
 typedef std::vector<double> ChannelAmplitudes;
 
