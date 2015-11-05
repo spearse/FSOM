@@ -12,7 +12,7 @@ LowFrequencyModulation::LowFrequencyModulation(dspCreationStruct creationStruct)
   set_effect_name("LowFrequencyModulation");
 
   add_parameter("Modulation Amount",0,12,1);  
-  add_parameter("Modulation Speed",0.001,10,0.1);
+  add_parameter("Modulation Speed",0.001f,10,0.1f);
   
   set_implementation();
 }

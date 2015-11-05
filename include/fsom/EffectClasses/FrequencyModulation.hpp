@@ -9,7 +9,7 @@ namespace fsom{
 
 class LowFrequencyModulation : public DSPEffect{
   TransposeUnit m_transposeUnit;
-  Table<double> m_table;
+  Table<float> m_table;
   Phasor m_phasor;
 public:
   LowFrequencyModulation(dspCreationStruct creationStruct);
@@ -29,7 +29,7 @@ virtual ~LowFrequencyModulation();
 
 class HighFrequencyModulation : public DSPEffect{
   TransposeUnit m_transposeUnit;
-  Table<double> m_table;
+  Table<float> m_table;
   Phasor m_phasor;
 public:
   HighFrequencyModulation(dspCreationStruct creationStruct);

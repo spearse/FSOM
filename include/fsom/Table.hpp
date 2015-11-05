@@ -40,7 +40,7 @@ public:
 	}	
 	void fill_sine(){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
-		T f = 2.0*PI/(m_table.size()-1);
+		T f = static_cast<T>(2.0*PI/(m_table.size()-1));
 		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			m_table.at(n) = sin( T(n) * f );
 		}
@@ -144,7 +144,7 @@ public:
 		bIndex = aIndex+1;
 		va = m_table[aIndex];
 		vb = m_table[bIndex];
-		return (1.0-r)* va + r*vb;
+		return T((1.0-r)* va + r*vb);
 	}
 	T cubic_lookup(T index){
 	
