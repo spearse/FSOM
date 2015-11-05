@@ -122,7 +122,7 @@ void Region::save_region_parameters(TiXmlElement* node){
 	    for(int i = 0; i < tempUnit->get_list_size(); ++i){
 	      TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
 	      Parameter->LinkEndChild(Breakpoint);
-	      Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
+	      Breakpoint->SetAttribute("Pos", static_cast<int>(tempUnit->get_pair(i).t_));
 	      Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
 	    }
 	
@@ -156,7 +156,7 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node, b
 		save_region_parameters(node);
 		save_meta_to_xml(node);
 
-		for(int n = 0; n < m_DSPStack.size(); ++n){
+		for (DSPStack::size_type n = 0; n < m_DSPStack.size(); ++n){
 				TiXmlElement * Effect = new TiXmlElement( "Effect" );
 				node->LinkEndChild(Effect );
 				Effect->SetAttribute("name", m_DSPStack[n]->get_effect_name().c_str());
@@ -175,7 +175,7 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node, b
 					for(int i = 0; i < tempUnit->get_list_size(); ++i){
 					  TiXmlElement * Breakpoint = new TiXmlElement("Breakpoint");
 					  Parameter->LinkEndChild(Breakpoint);
-					  Breakpoint->SetAttribute("Pos",tempUnit->get_pair(i).t_);
+					  Breakpoint->SetAttribute("Pos", static_cast<int>(tempUnit->get_pair(i).t_));
 					  Breakpoint->SetDoubleAttribute("Val",tempUnit->get_pair(i).v_);
 					}
 				}
@@ -208,7 +208,7 @@ void Region::attach_effect(DSPEffectPtr p){
 void Region::add_effect(std::string id){
 	m_DSPStack.push_back(fsom::DSPManager::get_instance().create(id,dspCreationStruct(this)));
 	fsom::DebugStream << "***    Effect Stack  ***"<<std::endl;
-	for(int n = 0; n < m_DSPStack.size();++n){
+	for(DSPStack::size_type n = 0; n < m_DSPStack.size();++n){
 	 fsom::DebugStream << "***" <<  m_DSPStack.at(n)->get_effect_name()<< "***"<<std::endl;
 	}
 	
@@ -216,7 +216,7 @@ void Region::add_effect(std::string id){
 
 void Region::remove_effect(std::string id){
     
-	for (int n = 0; n <m_DSPStack.size();++n){
+	for (DSPStack::size_type n = 0; n <m_DSPStack.size(); ++n){
 		if (id.compare(m_DSPStack.at(n)->get_effect_name()) == 0){
 			fsom::DebugStream << "Removing effect " << m_DSPStack.at(n)->get_effect_name() << std::endl;
 			m_DSPStack.at(n).reset();
@@ -228,7 +228,7 @@ void Region::remove_effect(std::string id){
 
 void Region::remove_effect(DSPEffectPtr effect){
     
-	for (int n = 0; n <m_DSPStack.size();++n){
+	for (DSPStack::size_type n = 0; n <m_DSPStack.size(); ++n){
 		if (m_DSPStack.at(n) == effect ){
 			fsom::DebugStream << "Removing effect " << m_DSPStack.at(n)->get_effect_name() << std::endl;
 			m_DSPStack.at(n).reset();
@@ -297,7 +297,7 @@ void Region::add_parameter(std::string IdName, float lowerBound, float upperBoun
 	
 	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
 	tempBPUnit->add_breakpoint(TVPair(0,value));
-	tempBPUnit->add_breakpoint(TVPair(get_duration(),value));
+	tempBPUnit->add_breakpoint(TVPair(static_cast<float>(get_duration()),value));
   
 	m_parameterList.insert(std::pair<std::string, ParameterPtr>(IdName,ParameterPtr(new Parameter(get_duration(),IdName,lowerBound,upperBound,value, tempBPUnit))));
 }

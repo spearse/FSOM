@@ -242,6 +242,12 @@ inline float remap(float r1_a, float r1_b, float r2_a, float r2_b, float in){
   return dv/d1 *d2 + r2_a ;
 }
 
+template<typename IntType, typename FloatType>
+inline IntType truncate_to_integer(FloatType v)
+{
+	return static_cast<IntType>(std::floor(v));
+}
+
 /// a simple dsp phasor class for use in oscilator and control objects.
 /// it provides a tick function that should be called once per sample of playback.
 /// a get phase function returns the current phase of the phasor in the range 0.0f to 1.0f.
@@ -313,6 +319,9 @@ public:
 		clear_multichannel_buffers(m_buffers,m_channels,m_size);
 	}
 	size_t size() const { return m_size; }
+
+	MultiChannelBuffer(const MultiChannelBuffer& op) = delete;
+	MultiChannelBuffer& operator = (const MultiChannelBuffer& op) = delete;
 };
 
 /// This function is a helper to aid offseting into a multichannel buffers.

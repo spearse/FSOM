@@ -60,7 +60,7 @@ void Generator::process(float** input, float** output, int frameSize, int channe
 	}else{
 		for(int frame = 0; frame < frameSize;++frame){
 			for(int chan =0; chan < channels;++chan){
-				output[chan][frame] += (0.6 * ((rand()%100)/50)-1.0f)* get_parameter("Amp")->get_value();
+				output[chan][frame] += (0.6f * ((rand()%100)/50)-1.0f)* get_parameter("Amp")->get_value();
 			}
 		}
 	}	
@@ -138,9 +138,8 @@ void Generator::set_file_path(std::string filepath){
 }
 
 
-Table<double> Generator::get_table()const{
+const Table<float>& Generator::get_table() const {
   return m_shape;
-  
 }
 
   

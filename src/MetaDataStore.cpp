@@ -91,7 +91,7 @@ int MetaDataStore::get_meta_as_int(const std::string& key) const{
 }
 
 float MetaDataStore::get_meta_as_float(const std::string& key) const{
-	return atof(get_meta(key).c_str()); 
+	return strtof(get_meta(key).c_str(), nullptr);
 }
 
 void MetaDataStore::save_meta_to_xml(TiXmlElement* node){
