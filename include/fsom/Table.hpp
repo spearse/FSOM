@@ -32,7 +32,8 @@ namespace fsom{
 
 template<class T>
 class Table{
-	std::vector<T> m_table;
+	typedef std::vector<T> TableDataType;
+	TableDataType m_table;
 public:
 	Table(int size) : m_table(size,0){
 		fill_sine();	
@@ -40,14 +41,14 @@ public:
 	void fill_sine(){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
 		T f = 2.0*PI/(m_table.size()-1);
-		for (int n = 0; n < m_table.size();++n){
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			m_table.at(n) = sin( T(n) * f );
 		}
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
 	void fill_sine(float frequency){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
-		 for( int n=0; n < m_table.size(); ++n)  {
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)  {
 		      m_table[n] = sin( 2.0f * PI * (float)n * frequency / (float)m_table.size() );
 		}
 
@@ -135,9 +136,11 @@ public:
 	T at(int index){
 		return m_table.at(index);
 	}
-	T linear_lookup(T index){
-		T aIndex,bIndex,r,va,vb;
-		r = modf(index,&aIndex);
+	T linear_lookup(T fIndex){
+		TableDataType::size_type aIndex, bIndex;
+		T fIntPart,r,va,vb;
+		r = modf(fIndex, &fIntPart);
+		aIndex = static_cast<TableDataType::size_type>(fIntPart);
 		bIndex = aIndex+1;
 		va = m_table[aIndex];
 		vb = m_table[bIndex];

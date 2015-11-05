@@ -232,7 +232,7 @@ public:
 	///return master level
 	ParameterPtr get_master_level();
 	///set master level, ideally between 0 - 1
-	void set_master_level(double level);
+	void set_master_level(float level);
 	///Function to reset all effects on seek
 	void reset_all_effects();
 	

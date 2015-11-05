@@ -42,8 +42,7 @@ class WindowsMutex : public Mutex{
 	   EnterCriticalSection( &cs );
 	}
 	virtual bool try_lock(){
-	 return TryEnterCriticalSection(&cs) == true;
-		//return true;
+	 return TryEnterCriticalSection(&cs) == TRUE;
 	}
 	virtual void unlock(){
 	  LeaveCriticalSection( &cs );

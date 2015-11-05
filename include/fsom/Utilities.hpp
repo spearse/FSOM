@@ -390,7 +390,7 @@ class BreakPointUnit{
     BreakPointUnit() {}
     ///Copy constructor
     BreakPointUnit(const BreakPointUnit& old){
-	for(int n = 0; n < old.bpList_.size();++n){
+	for (BPList::size_type n = 0; n < old.bpList_.size(); ++n){
 	    bpList_.push_back(old.bpList_.at(n));
 	}
       
