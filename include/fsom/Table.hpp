@@ -156,7 +156,7 @@ public:
 		}
 		fsom::DebugStream << " " << std::endl;
 	}
-	double get_size(){
+	typename TableDataType::size_type get_size(){
 		return m_table.size()-1;
 	}
 	std::vector<T>& get_table(){

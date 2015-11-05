@@ -27,9 +27,11 @@ namespace fsom{
 template<class T>
 
 class DelayBase{
-public:
-	typedef long sample_index;
-	std::vector<T> m_buffer;
+public:	
+	typedef std::vector<T> BufferType;
+	typedef int sample_index;
+
+	BufferType m_buffer;
 	sample_index m_maxDelay,m_writePos;	
 public:
 	DelayBase(sample_index maxDelay): 
@@ -50,7 +52,7 @@ public:
 		return m_buffer[t];
 	}
 	
-	///increment the writeing position
+	///increment the writing position
 	void tick(){
 		++m_writePos;
 		if(m_writePos >= m_maxDelay){
@@ -62,7 +64,7 @@ public:
 	}
 	void clear_buffer(){
 // 	  fsom::DebugStream << "Clearing delay buffer"<<std::endl;
-	  for(int n = 0;n < m_buffer.size();++n){
+		for (BufferType::size_type n = 0; n < m_buffer.size(); ++n){
 	      m_buffer[n]=0;
 	  }
 // 	  fsom::DebugStream << m_buffer.size()<<std::endl;  

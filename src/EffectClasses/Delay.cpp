@@ -31,9 +31,9 @@ Delay::Delay(dspCreationStruct data):
 {
 	set_effect_name("Delay");
 	set_meta(get_tutId(),"link to html");
-	add_parameter("Delay Time",0.01,10.0,1.0);
+	add_parameter("Delay Time",0.01f,10.0f,1.0f);
 // 	get_parameter("Delay Time")->set_meta("GuiHint","soCustomFader");
-	add_parameter("Delay Volume",0.01,1,0.9);
+	add_parameter("Delay Volume",0.01f,1,0.9f);
 // 	get_parameter("Delay Volume")->set_meta("GuiHint","soCustomFader");
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_implementation();
@@ -66,8 +66,8 @@ void Delay::process(float** input, float** output, int frameSize, int channels){
 	  for(int n = 0; n < frameSize; ++n){
 		  m_delayUnitL.write_sample(input[0][n]);
 		  m_delayUnitR.write_sample(input[1][n]);
-		  a = input[0][n] + m_delayUnitL.read_sample(get_parameter("Delay Time")->get_value() * 44100);
-		  b = input[1][n] + m_delayUnitR.read_sample(get_parameter("Delay Time")->get_value() * 44100);
+		  a = input[0][n] + m_delayUnitL.read_sample(truncate_to_integer<int>(get_parameter("Delay Time")->get_value() * 44100.0f));
+		  b = input[1][n] + m_delayUnitR.read_sample(truncate_to_integer<int>(get_parameter("Delay Time")->get_value() * 44100.0f));
 		  output[0][n]= a;
 		  output[1][n]= b;
 		  m_delayUnitL.write_sample(b * get_parameter("Delay Volume")->get_value());
