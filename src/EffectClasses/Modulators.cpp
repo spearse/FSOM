@@ -100,10 +100,10 @@ LowAmpMod::LowAmpMod(dspCreationStruct data) :
 {
 	set_effect_name("LowAmpMod");
 	
-	add_parameter("Frequency",0.01,20.0,1); //add parameter for phasor frequency
+	add_parameter("Frequency",0.01f, 20.0f, 1); //add parameter for phasor frequency
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Amplitude",0.0,1.0,0.5); //add parameter for phasor amplitude
+	add_parameter("Amplitude",0.0f, 1.0f, 0.5f); //add parameter for phasor amplitude
 	get_parameter("Amplitude")->set_meta("GuiHint","soCustomFader");
 	
 	set_meta(get_tutId(),"link to html");
@@ -197,8 +197,8 @@ RingMod::RingMod(dspCreationStruct data) :
 	m_table(512)
 {
 	set_effect_name("RingMod");
-	add_parameter("Freq",1.0,15000.0,500.0); //add parameter for phasor frequency
-	add_parameter("Multiplier",0.01,2,1);
+	add_parameter("Freq", 1.0f, 15000.0f, 500.0f); //add parameter for phasor frequency
+	add_parameter("Multiplier", 0.01f, 2, 1);
 	set_meta(get_tutId(),"link to html");
 // 	get_parameter("Freq")->set_meta("GuiHint","soCustomFader");
 	set_implementation();

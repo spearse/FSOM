@@ -31,7 +31,7 @@ typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 
 class Distort : public DSPEffect
 {
-	Table<double> m_table;
+	Table<float> m_table;
 public:
 	Distort(dspCreationStruct data);
 	virtual ~Distort();

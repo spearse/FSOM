@@ -122,8 +122,8 @@ public:
 
 class CombFilter :public DSPEffect
 {
-	DelayBase<double> m_delayUnitL,m_delayUnitR;	
-	//Table<double> m_table;
+	DelayBase<float> m_delayUnitL,m_delayUnitR;	
+	//Table<float> m_table;
 	Phasor m_phasor;
 public:
 	CombFilter(dspCreationStruct data);

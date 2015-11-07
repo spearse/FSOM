@@ -56,11 +56,11 @@ void Transpose::process(float** input, float** output, int frameSize, int channe
   
     if(!bypass_active()){
   
-	static const float Factor = log(pow(2.0,1.0/12.0));
+	static const float Factor = log(pow(2.0f,1.0f/12.0f));
 // 	m_phasor.set_frequency(  (((pow(2.0f, get_parameter("Pitch Shift Amount")->get_value()/12.0f)-1)*-1.0f) *m_proportion  )); //TODO Why does this need to be inverted?
 	
 	m_transposeUnit2.set_frequency(12);
-	float valL,valR;
+
 	for (int n = 0; n < frameSize; ++n){
 	      m_transposeUnit.set_frequency(get_parameter("Pitch Shift Amount")->get_value());
 	      m_transposeUnit.process_replace(input[0][n],input[1][n],output[0][n],output[1][n]);

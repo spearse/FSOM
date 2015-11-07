@@ -70,7 +70,7 @@ public:
 class RingMod : public DSPEffect
 {
    Phasor m_phasor;
-   Table<double> m_table;
+   Table<float> m_table;
 public:
     RingMod(dspCreationStruct data);
     ~RingMod();

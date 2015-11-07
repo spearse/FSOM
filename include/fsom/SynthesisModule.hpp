@@ -47,7 +47,7 @@ typedef std::shared_ptr<SynthesisModule> SynthesisModulePtr;
 
 
 class LFOModule :public SynthesisModule{
-	Table<double> m_sineTable;
+	Table<float> m_sineTable;
 	Phasor m_phasor;
 	public:
 	LFOModule(dspCreationStruct _struct);
@@ -61,7 +61,7 @@ class LFOModule :public SynthesisModule{
 };
 
 class VolModule :public SynthesisModule{
-	Table<double> m_sineTable;
+	Table<float> m_sineTable;
 	Phasor m_phasor;
 	public:
 	VolModule(dspCreationStruct _struct);

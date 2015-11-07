@@ -39,7 +39,7 @@ m_density(2),
 m_grainSize(44100),
 m_nextSpawn(44100),
 m_grainRate(1),
-m_window(TablePtr(new Table<double>(512))),
+m_window(TablePtr(new Table<float>(512))),
 m_filepath(""),
 m_internalClock(0),
 m_grainAmp(1.0f)
@@ -53,8 +53,8 @@ m_grainAmp(1.0f)
   
   m_window->fill_hann();
   MultiTablePtr mt;
-  TablePtr t1 = TablePtr(new Table<double>(44100*5));
-  TablePtr t2 = TablePtr(new Table<double>(44100*5));
+  TablePtr t1 = TablePtr(new Table<float>(44100*5));
+  TablePtr t2 = TablePtr(new Table<float>(44100*5));
   m_table = MultiTablePtr(new MultiTableBuffer());
   m_table->push_back(t1);
   m_table->push_back(t2);

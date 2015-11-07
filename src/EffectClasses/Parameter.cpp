@@ -85,7 +85,7 @@ std::string Parameter::get_name(){
 
 void Parameter::tick(SampleLength& samplesRead){
     if(m_inDynamicMode){
-	  m_currentValue = m_bpUnit->get_value(samplesRead);
+	  m_currentValue = m_bpUnit->get_value(static_cast<float>(samplesRead));
     }
 }
 

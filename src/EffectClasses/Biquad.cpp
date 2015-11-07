@@ -40,43 +40,43 @@ using namespace fsom;
 		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
-		b0 =  (1.0 - cw)/2.0;
-		b1 =   1.0 - cw;
-		b2 =  (1.0 - cw)/2.0;
-		a0 =   1.0 + alpha;
-		a1 =  -2.0*cw;
-		a2 =   1.0 - alpha;
+		alpha = sin(w0)/(2.f*Q);
+		b0 =  (1.f - cw)/2.f;
+		b1 =   1.f - cw;
+		b2 =  (1.f - cw)/2.f;
+		a0 =   1.f + alpha;
+		a1 =  -2.f*cw;
+		a2 =   1.f - alpha;
 	}
 	
 	void Biquad::set_HPF(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
-		b0 =  (1.0 + cw)/2.0;
-		b1 =  -( 1.0 + cw);
-		b2 =  (1.0 + cw)/2.0;
-		a0 =   1.0 + alpha;
-		a1 =  -2.0*cw;
-		a2 =   1.0 - alpha;
+		alpha = sin(w0)/(2.f*Q);
+		b0 =  (1.f + cw)/2.f;
+		b1 =  -( 1.f + cw);
+		b2 =  (1.f + cw)/2.f;
+		a0 =   1.f + alpha;
+		a1 =  -2.f*cw;
+		a2 =   1.f - alpha;
 	}
 	void Biquad::set_BPF(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
+		alpha = sin(w0)/(2.f*Q);
 	//	b0 = Q*alpha;
-		b0 = sw/float(2.0);
-		b1 = 0.0;
+		b0 = sw/float(2.f);
+		b1 = 0.f;
 		b2 = -Q*alpha;
-		a0 =   1.0 + alpha;
-		a1 =  -2.0*cw;
-		a2 =   1.0 - alpha;
+		a0 =   1.f + alpha;
+		a1 =  -2.f*cw;
+		a2 =   1.f - alpha;
 /*
 			b0 =   sin(w0)/2  =   Q*alpha
             b1 =   0
@@ -89,10 +89,10 @@ using namespace fsom;
 	void Biquad::set_BPF_const_gain(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
+		alpha = sin(w0)/(2.f*Q);
 		b0 =   alpha;
 		b1 =   0;
 		b2 =  -alpha;
@@ -103,10 +103,10 @@ using namespace fsom;
 	void Biquad::set_BAND_REJECT(float frequency, float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
+		alpha = sin(w0)/(2.f*Q);
 		b0 =   1;
 		b1 =  -2*cw;
 		b2 =   1;
@@ -117,10 +117,10 @@ using namespace fsom;
 	void Biquad::set_ALL(float frequency,float Q){
 		A = 0;
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
-		alpha = sin(w0)/(2.0*Q);
+		alpha = sin(w0)/(2.f*Q);
 		b0 =   1 - alpha;
 		b1 =  -2*cw;
 		b2 =   1 + alpha;
@@ -140,7 +140,7 @@ using namespace fsom;
 	void Biquad::set_LOWSHELF(float frequency,float S,float amp){
 		A = 0;//FIXME
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
 		alpha= sw/2 * sqrt( (A + 1/A)*(1/S - 1) + 2 ); 
@@ -154,7 +154,7 @@ using namespace fsom;
 	void Biquad::set_HIGHSHELF(float frequency,float S,float amp){
 		A = 0;//FIXME
 		f0 = frequency;
-		w0 = 2.0*PI*(f0/Fs);
+		w0 = TWOPI*(f0/Fs);
 		cw = cos(w0);
 		sw = sin(w0);
 		alpha= sw/2 * sqrt( (A + 1/A)*(1/S - 1) + 2 ); 
@@ -185,9 +185,9 @@ using namespace fsom;
 	typedef std::complex<float> Complex;
 	
 	void Biquad::solve_quadratic(Complex a, Complex b, Complex c, Complex* r){
-		Complex t = sqrt(b*b - 4.0f*a*c);
-		r[0] = (-b + t) / (2.0f*a);
-		r[1] = (-b - t) / (2.0f*a);
+		Complex t = sqrt(b*b - 4.f*a*c);
+		r[0] = (-b + t) / (2.f*a);
+		r[1] = (-b - t) / (2.f*a);
 	}
 
 	void Biquad::print_coef(){
@@ -203,7 +203,7 @@ using namespace fsom;
 		//fsom::DebugStream << "Zeros args: " << arg(r[0]) << " " << arg(r[1]) << std::endl;
 		solve_quadratic(a2,a1,a0,r);
 		//fsom::DebugStream << "Poles at  : " << r[0] << " " << r[1] << std::endl;
-		//fsom::DebugStream << "Poles args: " << arg(r[0])*(Fs/(2.0*PI)) << " " << arg(r[1])*(Fs/(2.0*PI)) << std::endl;
+		//fsom::DebugStream << "Poles args: " << arg(r[0])*(Fs/(TWOPI)) << " " << arg(r[1])*(Fs/(TWOPI)) << std::endl;
 	}
 	
 
@@ -222,12 +222,12 @@ using namespace fsom;
 
 		std::vector<float> amplitudes(steps);
 		
-		//goes through coeffiecients and pushes them into a vector to allow visualization
+		//goes through coefficients and pushes them into a vector to allow visualization
 		for(int n = 0; n < steps ; ++n){
-			float x = pow( (float(n) / steps), 2 ) * float(N) / 2.0;
-			float w = 2.0*PI/N * x;
+			float x = pow( (float(n) / steps), 2 ) * float(N) / 2.f;
+			float w = TWOPI/N * x;
 			std::complex<float> z = exp(j*w);
-			float val = 20.0*log10(abs( H(z)));
+			float val = 20.f*log10(abs( H(z)));
 			amplitudes[n] = val;
 		}
 		

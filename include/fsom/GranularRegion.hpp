@@ -31,7 +31,7 @@ namespace fsom{
   class GranularRegion : public Region
   {	
 //     AudioFile m_file;
-//     Table<double> m_table;
+//     Table<float> m_table;
 //     MultiTableBuffer m_tables;
     MultiChannelBuffer m_diskStreamBuffers;
     ParameterList m_parameters;

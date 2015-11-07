@@ -79,7 +79,8 @@ void AsymmetricDelay::process(float** input, float** output, int frameSize, int 
 	samplesRead = sess.get_previed_playhead_value(); 
     }  
     
-  
+   const float kSampleRate = 44100;
+
  if(!bypass_active()){
   
 	  float a,b;
@@ -87,18 +88,28 @@ void AsymmetricDelay::process(float** input, float** output, int frameSize, int 
 		  m_delayUnitL.write_sample(input[0][n]);
 		  m_delayUnitR.write_sample(input[1][n]);
 		  
-		  
-		  
-		  a = input[0][n] +	( m_delayUnitL.read_sample(get_parameter("First Delay Time")->get_value() * 44100)  * get_parameter("First Delay Volume")->get_value()   )
-					  +( m_delayUnitL.read_sample(get_parameter("Second Delay Time")->get_value() * 44100)  * get_parameter("Second Delay Volume")->get_value()   )
-				          + ( m_delayUnitL.read_sample(get_parameter("Third Delay Time")->get_value() * 44100)  * get_parameter("Third Delay Volume")->get_value()   );
-		  b = input[1][n] + 	( m_delayUnitR.read_sample(get_parameter("First Delay Time")->get_value() * 44100)  * get_parameter("First Delay Volume")->get_value()   )
-					  +( m_delayUnitR.read_sample(get_parameter("Second Delay Time")->get_value() * 44100)  * get_parameter("Second Delay Volume")->get_value()   )
-				          + ( m_delayUnitR.read_sample(get_parameter("Third Delay Time")->get_value() * 44100)  * get_parameter("Third Delay Volume")->get_value()   );
+		  float fVolume[3];
+		  fVolume[0] = get_parameter("First Delay Volume")->get_value();
+		  fVolume[1] = get_parameter("Second Delay Volume")->get_value();
+		  fVolume[2] = get_parameter("Third Delay Volume")->get_value();
+
+		  DelayBase<float>::sample_index nSampleIndex[3];
+		  nSampleIndex[0] = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("First Delay Time")->get_value() * kSampleRate);
+		  nSampleIndex[1] = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Second Delay Time")->get_value() * kSampleRate);
+		  nSampleIndex[2] = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Third Delay Time")->get_value() * kSampleRate);
+
+		  a = input[0][n] + (m_delayUnitL.read_sample(nSampleIndex[0]) * fVolume[0])
+			  + (m_delayUnitL.read_sample(nSampleIndex[1]) * fVolume[1])
+			  + (m_delayUnitL.read_sample(nSampleIndex[2]) * fVolume[2]);
+
+		  b = input[1][n] + (m_delayUnitR.read_sample(nSampleIndex[0]) * fVolume[0])
+			  + (m_delayUnitR.read_sample(nSampleIndex[1]) * fVolume[1])
+			  + (m_delayUnitR.read_sample(nSampleIndex[2]) * fVolume[2]);
+
 		  output[0][n]= a;
 		  output[1][n]= b;
-		  m_delayUnitL.write_sample(b*0.9);
-		  m_delayUnitR.write_sample(a*0.9);
+		  m_delayUnitL.write_sample(b*0.9f);
+		  m_delayUnitR.write_sample(a*0.9f);
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
 		  

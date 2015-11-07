@@ -40,7 +40,7 @@ public:
 	}	
 	void fill_sine(){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
-		T f = static_cast<T>(2.0*PI/(m_table.size()-1));
+		T f = static_cast<T>(TWOPI/(m_table.size()-1));
 		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			m_table.at(n) = sin( T(n) * f );
 		}
@@ -49,43 +49,43 @@ public:
 	void fill_sine(float frequency){
 		fsom::DebugStream << "filling table with sine" <<std::endl;
 		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)  {
-		      m_table[n] = sin( 2.0f * PI * (float)n * frequency / (float)m_table.size() );
+		      m_table[n] = sin( TWOPI * (float)n * frequency / (float)m_table.size() );
 		}
 
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
 	void fill_cos(){
 		fsom::DebugStream << "filling table with cosine" <<std::endl;
-		T f = 2.0*PI/(m_table.size()-1);
-		for (int n = 0; n < m_table.size();++n){
+		T f = TWOPI/(m_table.size()-1);
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			m_table.at(n) = cos( T(n) * f );
 		}
 		m_table.at(m_table.size()-1) = m_table.at(0);
 	}
 	void fill_hann(){
 		fsom::DebugStream << "filling table with hanning" <<std::endl;	
-		T f = 2.0*PI/(m_table.size()-1);
-		for (int n = 0; n < m_table.size();++n){
-			m_table.at(n) =   0.5*(1.0-cos(T(n) * f ));
+		T f = TWOPI/(m_table.size()-1);
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
+			m_table.at(n) =   0.5f*(1.0f-cos(T(n) * f ));
 		}
 	}
 	void fill_linear(){
 		fsom::DebugStream << "filling table linearly" << std::endl;
-		T f = 1.0/(m_table.size()-1);
-		for (int n = 0; n < m_table.size();++n){
+		T f = 1.0f/(m_table.size()-1);
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			m_table.at(n) =   n*f;
 		}
 	}
 	
 	void fill_triangle(){
 		fsom::DebugStream << "filling table with triangle" << std::endl;
-		T f = (1.0/(m_table.size()-1));
-		for (int n = 0; n < m_table.size();++n){
+		T f = (1.0f/(m_table.size()-1));
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 		      if(n <= m_table.size()/2){
-			m_table.at(n) = (((m_table.size() - n) * f) - 1.0);
+			m_table.at(n) = (((m_table.size() - n) * f) - 1.0f);
 			
 		      }else{
-			m_table.at(n) = ((n*f) - 1.0);
+			m_table.at(n) = ((n*f) - 1.0f);
 		      }
 		}
 		m_table.at(m_table.size()-1) = m_table.at(0);
@@ -94,17 +94,17 @@ public:
 	//for working with audio
 	void fill_linear_offset(){
 		fsom::DebugStream << "filling table withg linear data offset between -1 to 1" <<std::endl;
-		T f = 2.0/(m_table.size()-1);
-		for(int n = 0 ; n < m_table.size(); ++n){
-			m_table.at(n) = (n * f) - 1.0; 	
+		T f = 2.0f/(m_table.size()-1);
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
+			m_table.at(n) = (n * f) - 1.0f; 	
 		}
 	}
 	void fill_clipped(float threshold){
 		fsom::DebugStream << "clipping table" <<std::endl;
-		T f = 2.0/(m_table.size()-1);
+		T f = 2.0f/(m_table.size()-1);
 		float t;
-		for(int n = 0 ; n < m_table.size(); ++n){
-			t = (n * f) - 1.0;
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
+			t = (n * f) - 1.0f;
 			if(t > threshold){ 
 				m_table.at(n) = threshold;  		
 			}else if (t < -threshold){
@@ -117,13 +117,13 @@ public:
 	void fill_noise(){
 	    fsom::DebugStream << "filling table with noise"<<std::endl;
 // 	    T f = 2.0*PI/(m_table.size()-1);
-	      for(int n = 0; n < m_table.size();++n){
-		      m_table.at(n) = (((rand()%1000)*0.001)*2.0f)-1.0f;
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
+		      m_table.at(n) = (((rand()%1000)*0.001f)*2.0f)-1.0f;
 	      }
 	}
 	void fill_square(){
-	    T f = 2.0/(m_table.size()-1);
-	    for (int n = 0; n < m_table.size();++n){
+	    T f = 2.0f/(m_table.size()-1);
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 	    if(n <= m_table.size()/2.0f){
 		m_table.at(n) = 1.0f;
 	    }else{
@@ -151,7 +151,7 @@ public:
 	}	
 	void print_table(){
 		fsom::DebugStream << "Table values  = " ;
-		for (int n = 0; n < m_table.size();++n){
+		for (TableDataType::size_type n = 0; n < m_table.size(); ++n){
 			fsom::DebugStream << " " << m_table.at(n) << " "; 
 		}
 		fsom::DebugStream << " " << std::endl;
@@ -165,7 +165,7 @@ public:
 
 };
 
-typedef std::shared_ptr<Table<double> > TablePtr;
+typedef std::shared_ptr<Table<float> > TablePtr;
 typedef std::vector<TablePtr> MultiTableBuffer;
 typedef std::shared_ptr<MultiTableBuffer> MultiTablePtr;
 

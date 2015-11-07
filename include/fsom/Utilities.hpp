@@ -44,6 +44,7 @@ const float SR = 44100.0f;
 const float PI = 3.14159265359f;
 const float TWOPI = 6.28318530718f;
 
+
 /// audio objects should be measuring time in integer time values
 /// use the following typedefs for time references.
 // 32bit signed gives us 2^31/44100/60 = ~811 minutes

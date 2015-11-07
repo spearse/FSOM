@@ -938,7 +938,7 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
 	deinterleave(tempBuffer,deInterleavedBuffer,channels,frames);
 	MultiTableBuffer buffer;
 	for( int c =0;c<channels;++c){
-	   TablePtr tempTable(new Table<double>(frames));
+	   TablePtr tempTable(new Table<float>(frames));
 	    for(int f = 0;f<frames;++f){
 		tempTable->get_table().at(f) = deInterleavedBuffer[c][f];
 
@@ -1019,7 +1019,7 @@ std::string Session::timestretch_region(RegionPtr region, double speed, std::str
   const int WINDOWSIZE = 1024;
   const float FREQ = 44100.0f/float(WINDOWSIZE);
   Phasor tapeHead(44100,FREQ);
-  Table<double> t_han(WINDOWSIZE);
+  Table<float> t_han(WINDOWSIZE);
   t_han.fill_hann();
   
   float pos = 0.0;

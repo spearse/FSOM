@@ -32,8 +32,8 @@ typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 
 class Chorus : public DSPEffect
 {
-  DelayBase<double> m_delayUnitL,m_delayUnitR;
-  Table<double> m_modTable;
+  DelayBase<float> m_delayUnitL,m_delayUnitR;
+  Table<float> m_modTable;
   Phasor m_modPhasor;
   
   

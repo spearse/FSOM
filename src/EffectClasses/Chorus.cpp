@@ -35,13 +35,13 @@ Chorus::Chorus(dspCreationStruct data):
     set_meta(get_tutId(),"link to html");
     
     m_modTable.fill_sine();
-    add_parameter("Chorus Amount",0.0,1.0,0.5);
+    add_parameter("Chorus Amount", 0.0f, 1.0f, 0.5f);
     get_parameter("Chorus Amount")->set_meta("GuiHint","soCustomFader");
     
-    add_parameter("Depth",0.0,1.0,0.5);
+    add_parameter("Depth", 0.0f, 1.0f, 0.5f);
     get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
     
-    add_parameter("Frequency",0.01,5.0,1.0);
+    add_parameter("Frequency", 0.01f, 5.0f, 1.0f);
     get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 
     set_implementation();
@@ -81,10 +81,11 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
 	  depth = get_parameter("Depth")->get_value() * 100.0f;
 	  mix = get_parameter("Chorus Amount")->get_value();
 	  invmix = 1.0f - mix;
-	  frequency = get_parameter("Frequency")->get_value() *0.8 ;
+	  frequency = get_parameter("Frequency")->get_value() * 0.8f ;
 	
-	  float dt = m_modTable.linear_lookup( m_modPhasor.get_phase()* m_modTable.get_size()) * depth + depth + 1.0f;
-
+	  float fDt = m_modTable.linear_lookup( m_modPhasor.get_phase() * m_modTable.get_size()) * depth + depth + 1.0f;
+	  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(fDt);
+	  
 	  output[0][n] = input[0][n] * invmix + m_delayUnitL.read_sample(dt) * mix;     
 	  output[1][n] = input[1][n] * invmix + m_delayUnitR.read_sample(dt) * mix;
 	  
