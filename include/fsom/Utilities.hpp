@@ -33,11 +33,15 @@
 #define NOMINMAX
 #include <windows.h>
 
+#ifdef _DEBUG
+#define DEBUG
+#endif
+
 #else
 #include <unistd.h>
 #endif
 
-#define FSOM_ASSERT(x) assert(x)
+
 
 namespace fsom
 {
@@ -68,14 +72,14 @@ typedef uint32_t frame_size_t;
 #define DEBUG_ONLY(x)
 #endif
 
+#ifdef DEBUG
+
 #ifdef _WIN32
 #define DEBUG_OUTPUT(x) OutputDebugString(x);
-//#define DEBUG_OUTPUT(x) std::cerr << x;
 #else
 #define DEBUG_OUTPUT(x) std::cerr << x;
 #endif
 
-#ifdef DEBUG
 #define DebugOut(fmt, ...)          \
 	char buf[256];                  \
 	sprintf(buf, fmt, __VA_ARGS__); \
@@ -83,7 +87,22 @@ typedef uint32_t frame_size_t;
 
 #else
 #define DebugOut(fmt, ...)
+#endif
 
+// Improved assertion.
+
+#ifdef _WIN32
+#ifdef DEBUG
+#define FSOM_ASSERT(x) if(!(x)){__debugbreak();}
+#else
+#define FSOM_ASSERT(x)
+#endif
+#else
+#ifdef DEBUG
+#define FSOM_ASSERT(x) assert(x)
+#else
+#define FSOM_ASSERT(x)
+#endif
 #endif
 
 // static std::ofstream g_debugLog("log.txt");
