@@ -20,13 +20,19 @@ TEST_CASE("MultiChannelBuffer default construct different buffer sizes", "[Multi
 
 TEST_CASE("MultiChannelBuffer write into each channel", "[MultiChannelBuffer]")
 {
-	const fsom::MultiChannelBuffer::channel_index_type kChannels = 8;
+	const fsom::channel_index_t kChannels = 8;
 	const fsom::MultiChannelBuffer::size_type kSize = 4096;
 	fsom::MultiChannelBuffer mb(kChannels, kSize);
 
 	float** pBuffers = mb.get_buffers();
-	for (int n = 0; n < kChannels; ++n)
+	for (fsom::channel_index_t n = 0; n < kChannels; ++n)
 	{
 		std::fill(pBuffers[n], pBuffers[n] + kSize, static_cast<float>(n));
+	}
+
+	for (fsom::channel_index_t n = 0; n < kChannels; ++n)
+	{
+		REQUIRE(pBuffers[n][0] == static_cast<float>(n));
+		REQUIRE(pBuffers[n][kSize-1] == static_cast<float>(n));
 	}
 }

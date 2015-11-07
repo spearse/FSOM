@@ -55,6 +55,9 @@ static_assert(sizeof(SampleLength) == 4, "Bad sample length size.");
 
 typedef std::vector<float> ChannelAmplitudes;
 
+typedef uint8_t channel_index_t;
+typedef uint32_t frame_size_t;
+
 #ifdef DEBUG
 #define dbgStream std::cerr
 #define DEBUG_ONLY(x) x
@@ -142,12 +145,12 @@ struct PeakData
 		, clipped(false)
 	{
 	}
-	void analyse(float** data, int chan, int blockSize, SamplePosition initialPos)
+	void analyse(float** data, channel_index_t chan, frame_size_t blockSize, SamplePosition initialPos)
 	{
 
-		for (int n = 0; n < blockSize; ++n)
+		for (frame_size_t n = 0; n < blockSize; ++n)
 		{
-			for (int c = 0; c < chan; ++c)
+			for (channel_index_t c = 0; c < chan; ++c)
 			{
 				if (std::abs(data[c][n]) >= amp)
 				{
@@ -215,12 +218,12 @@ class ScopedMutexLock
 	}
 };
 
-inline void interleave(const float** in, float* out, const int channels, const int frameCount)
+inline void interleave(const float** in, float* out, const channel_index_t channels, const frame_size_t frameCount)
 {
 	float* p = out;
-	for (int frame = 0; frame < frameCount; ++frame)
+	for (frame_size_t frame = 0; frame < frameCount; ++frame)
 	{
-		for (int chan = 0; chan < channels; ++chan)
+		for (channel_index_t chan = 0; chan < channels; ++chan)
 		{
 			*p = in[chan][frame];
 			++p;
@@ -228,12 +231,12 @@ inline void interleave(const float** in, float* out, const int channels, const i
 	}
 }
 
-inline void deinterleave(const float* in, float** out, const int channels, const int frameCount)
+inline void deinterleave(const float* in, float** out, const channel_index_t channels, const frame_size_t frameCount)
 {
 	const float* p = in;
-	for (int frame = 0; frame < frameCount; ++frame)
+	for (frame_size_t frame = 0; frame < frameCount; ++frame)
 	{
-		for (int chan = 0; chan < channels; ++chan)
+		for (channel_index_t chan = 0; chan < channels; ++chan)
 		{
 			out[chan][frame] = *p;
 			++p;
@@ -242,9 +245,9 @@ inline void deinterleave(const float* in, float** out, const int channels, const
 }
 
 /// a procedure for clearing the contents, setting to silence the contents of a buffer
-inline void clear_multichannel_buffers(float** buffers, const int channels, const int frameCount)
+inline void clear_multichannel_buffers(float** buffers, const channel_index_t channels, const frame_size_t frameCount)
 {
-	for (int n = 0; n < channels; ++n)
+	for (channel_index_t n = 0; n < channels; ++n)
 	{
 		memset(buffers[n], 0, frameCount * sizeof(float));
 	}
@@ -334,11 +337,10 @@ public:
 	};
 
 	typedef std::vector<float> audio_data_block_t;
-	typedef audio_data_block_t::size_type size_type;
-	typedef uint8_t channel_index_type;
+	typedef frame_size_t size_type;
 
  public:
-	 MultiChannelBuffer(channel_index_type channels, size_type size)
+	 MultiChannelBuffer(channel_index_t channels, frame_size_t size)
 		: m_data(channels * size, 0.f)
 		, m_channels(channels)
 		, m_size(size)
@@ -368,12 +370,14 @@ public:
 		return m_channelPtrs;
 	}
 
+	channel_index_t channels() const { return m_channels; }
+
 	void clear()
 	{
 		std::fill(m_data.begin(), m_data.end(), 0.f);
 	}
 
-	size_type size() const { return m_size; }
+	frame_size_t size() const { return m_size; }
 
 	
 private:
@@ -381,14 +385,14 @@ private:
 	size_type m_size; // size of individual buffers
 
 	float* m_channelPtrs[kMaxChannels]; // offset pointers for each channel
-	channel_index_type m_channels;
+	channel_index_t m_channels;
 };
 
 /// This function is a helper to aid offsetting into a multichannel buffers.
 /// buffersIn is copied to offsetBuffersOut with the offset specified.
-inline void get_multichannel_offset_ptrs(float* const buffersIn[], float* offsetBuffersOut[], uint8_t channels, size_t offset)
+inline void get_multichannel_offset_ptrs(float* const buffersIn[], float* offsetBuffersOut[], channel_index_t channels, frame_size_t offset)
 {
-	for (int n = 0; n < channels; n++)
+	for (channel_index_t n = 0; n < channels; n++)
 	{
 		offsetBuffersOut[n] = buffersIn[n] + offset;
 	}
