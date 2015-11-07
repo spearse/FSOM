@@ -200,19 +200,17 @@ class Mutex
 
 class ScopedMutexLock
 {
-	Mutex* m_mtx;
-
+	Mutex& m_mtx;
   public:
-	ScopedMutexLock(Mutex* mtx)
+	ScopedMutexLock(Mutex& mtx)
 		: m_mtx(mtx)
 	{
-		assert(m_mtx);
-		m_mtx->lock();
+		m_mtx.lock();
 	}
+
 	~ScopedMutexLock()
 	{
-		assert(m_mtx);
-		m_mtx->unlock();
+		m_mtx.unlock();
 	}
 };
 

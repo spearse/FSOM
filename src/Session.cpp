@@ -497,7 +497,7 @@ void Session::play(){
 }
 
 void Session::stop(){
-	ScopedMutexLock lock(m_audioMutex);
+	ScopedMutexLock lock(*m_audioMutex);
 	// set transport state to stoped
 	// playback will stop on the next process block.
 	clear_all_active_regions();//clear all active regions TODO needs to be more sophisticated to handle stop and continue
@@ -672,13 +672,13 @@ void Session::sort_regions(){
 
 void Session::add_region(RegionPtr region){
   	assert(region && "Remove Region: RegionPtr Invalid");
- 	ScopedMutexLock lock(m_audioMutex);
+ 	ScopedMutexLock lock(*m_audioMutex);
 	m_regionPlaylist.push_back(region);
 	sort_regions();
 }
 
 void Session::remove_region(RegionPtr region){
-  	ScopedMutexLock lock(m_audioMutex);
+  	ScopedMutexLock lock(*m_audioMutex);
 // 	assert(region && "Remove Region: RegionPtr Invalid");
 	
 // 	assert(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
