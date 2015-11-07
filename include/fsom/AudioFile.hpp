@@ -43,7 +43,7 @@ public:
 	typedef std::vector<rangeList> multiRangeList; ///multiRangeList is a vector of rangeLists - one for each channel
 	typedef std::vector<multiRangeList> audioPeakImage; ///audioPeakImage is a vector of multiRangeLists
 private:
-	std::auto_ptr<AudioFileImpl> m_pImpl; ///the structure containing libsndfile data for AudioFile class 
+	std::unique_ptr<AudioFileImpl> m_pImpl; ///the structure containing libsndfile data for AudioFile class 
 	audioVec m_audioBuffer; ///audio buffer for the audio file
 	std::string m_filePath; ///string path for the AudioFile
 	int m_mode; ///the mode 

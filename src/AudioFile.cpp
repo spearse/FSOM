@@ -29,6 +29,8 @@ namespace fsom{
 struct AudioFileImpl{ //contains main data for AudioFile class to use
 	SF_INFO m_sfInfo; //basic info of sound file
 	SNDFILE* m_sndFile; //pointer to soundfile
+
+	AudioFileImpl() { memset(this, 0, sizeof(AudioFileImpl)); }
 };
 }
 
@@ -38,53 +40,51 @@ bool accepted_file_format(int formatFlags)
 	return (formatFlags & (SF_FORMAT_WAV | SF_FORMAT_OGG | SF_FORMAT_AIFF | SF_FORMAT_FLAC)) != 0;
 }
 
-AudioFile::AudioFile(const std::string& filePath) :
-	m_pImpl(new AudioFileImpl), //pImpl idiom for AudioFile created
-	m_filePath(filePath), //AudioFile file path set
-	m_peakImage(DMAX) //peak image draw depth set to maximum
+AudioFile::AudioFile(const std::string& filePath)
+	: m_pImpl(new AudioFileImpl)
+	, m_filePath(filePath)
+	, m_peakImage(DMAX)
 {
-	fsom::DebugStream << "Attempting to spawn audiofile from"<< filePath<<std::endl;
+	m_pImpl->m_sndFile = sf_open(m_filePath.c_str(), SFM_READ, &m_pImpl->m_sfInfo); //set soundfile to open and read mode and set filepath and structure to contain info
 
-	m_pImpl->m_sndFile = sf_open(m_filePath.c_str(),SFM_READ,&m_pImpl->m_sfInfo); //set soundfile to open and read mode and set filepath and structure to contain info
-	
 	if (!m_pImpl->m_sndFile)
 	{
-		//if did not construct pImpl correctly throw exception
+		int err = sf_error(nullptr); // will get the error code for failed open.
+		DebugPrintf("ERROR: sf_open failed to open %s\n  sf_error code (%i) : %s\n", m_filePath.c_str(), err, sf_error_number(err));
 		throw AudioFileException();
 	}
 	if (m_pImpl->m_sfInfo.frames == 0)
-	{ 
+	{
 		//if the audiofile is damaged or contains no data throw exception
-		throw  AudioFileException(); 
-	} 
+		DebugPrintf("ERROR: Damaged audio file %s\n", m_filePath.c_str());
+		throw AudioFileException();
+	}
 	if (!accepted_file_format(m_pImpl->m_sfInfo.format))
 	{
-		throw  AudioFileException();
+		DebugPrintf("ERROR: Not an accepted file format file %s\n", m_filePath.c_str());
+		throw AudioFileException();
 	}
+
+#ifdef FORCE_SR_44100
 	if (m_pImpl->m_sfInfo.samplerate != 44100)
 	{
-		throw  AudioFileException();
+		DebugPrintf("ERROR: Bad sample rate.\n", m_filePath.c_str());
+		throw AudioFileException();
 	}
-	//m_peakImage.at(D16) = multiRangeList(m_pImpl->m_sfInfo.channels);
-	//m_peakImage.at(D32) = multiRangeList(m_pImpl->m_sfInfo.channels);
-	//m_peakImage.at(D64) = multiRangeList(m_pImpl->m_sfInfo.channels);
-	//m_peakImage.at(D128) = multiRangeList(m_pImpl->m_sfInfo.channels);
+#endif // FORCE_SR_44100
+
 	m_peakImage.at(D256) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D512) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D1024) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D2048) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D4096) = multiRangeList(m_pImpl->m_sfInfo.channels);
-    
-	//fill_range_list(m_peakImage.at(D16),16);
-	//fill_range_list(m_peakImage.at(D32),32);
-	//fill_range_list(m_peakImage.at(D64),64);
-	//fill_range_list(m_peakImage.at(D128),128);
-	fill_range_list(m_peakImage.at(D256),256);
-	fill_range_list(m_peakImage.at(D512),512);
-	fill_range_list(m_peakImage.at(D1024),1024);
-	fill_range_list(m_peakImage.at(D2048),2048);
-	fill_range_list(m_peakImage.at(D4096),4096);
-	//fsom::DebugStream << "RangeList  size= " << m_peakImage.at(D128).at(0).size() <<std::endl;
+
+	fill_range_list(m_peakImage.at(D256), 256);
+	fill_range_list(m_peakImage.at(D512), 512);
+	fill_range_list(m_peakImage.at(D1024), 1024);
+	fill_range_list(m_peakImage.at(D2048), 2048);
+	fill_range_list(m_peakImage.at(D4096), 4096);
+
 	//show_info(); //display audio data on construction
 }
 

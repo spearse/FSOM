@@ -533,7 +533,6 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	float* offsetOutputs[kMaxChannels];
 	FSOM_ASSERT(channelCount < kMaxChannels);
 
-	fsom::DebugStream << "handling offset process block due to event with offset=" << offset << std::endl;
 	get_multichannel_offset_ptrs(outs, offsetOutputs, channelCount, offset);
 
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 

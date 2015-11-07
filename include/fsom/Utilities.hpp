@@ -40,6 +40,7 @@
 #else
 #include <unistd.h>
 #endif
+#include <stdarg.h>
 
 
 
@@ -80,13 +81,18 @@ typedef uint32_t frame_size_t;
 #define DEBUG_OUTPUT(x) std::cerr << x;
 #endif
 
-#define DebugOut(fmt, ...)          \
-	char buf[256];                  \
-	sprintf(buf, fmt, __VA_ARGS__); \
+inline void DebugPrintf(const char* fmt, ...)
+{
+	char buf[256];
+	va_list vl;
+	va_start(fmt, vl);
+	vsprintf_s(buf, 256, fmt, vl);
+	va_end(vl);
 	DEBUG_OUTPUT(buf)
+}
 
 #else
-#define DebugOut(fmt, ...)
+#define DebugPrintf(fmt, ...)
 #endif
 
 // Improved assertion.
