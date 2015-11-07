@@ -25,24 +25,27 @@
 #include <fsom/Session.hpp>
 
 namespace fsom{
+
+static const float kfSampleRateKHz = 44.1f;
+
 Fade::Fade(dspCreationStruct data):
-	DSPEffect(data), m_currentAmp(0.0)
+	DSPEffect(data), m_currentAmp(0.0f)
 {
   m_duration = data.attatchedRegion->get_duration();
   set_effect_name("Fade");
 
   set_meta(get_tutId(),"link to html");
   
-  add_parameter("Fade In Time(ms)",10,m_duration/44.1,1000.0);
+  add_parameter("Fade In Time(ms)",10,m_duration/kfSampleRateKHz,1000.0f);
   get_parameter("Fade In Time(ms)")->set_meta("GuiHint","soCustomFader");
   
-  add_parameter("Fade Out Time(ms)",10,m_duration/44.1,1000.0);
+  add_parameter("Fade Out Time(ms)",10,m_duration/kfSampleRateKHz,1000.0f);
   get_parameter("Fade Out Time(ms)")->set_meta("GuiHint","soCustomFader");
     
    m_fadeUnit.add_breakpoint(TVPair(0, 0));
-   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time(ms)")->get_value()*44.1, 1.0));
-   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time(ms)")->get_value()*44.10, 1.0));
-   m_fadeUnit.add_breakpoint(TVPair(m_duration, 0));
+   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz, 1.0f));
+   m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz, 1.0f));
+   m_fadeUnit.add_breakpoint(TVPair(static_cast<float>(m_duration), 0));
    
    set_implementation();
 }
@@ -65,11 +68,11 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
   }
  // fsom::DebugStream << samplesRead <<std::endl;
   if(!bypass_active()){
-       m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*44.1;
-       m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time(ms)")->get_value()*44.1);
+       m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz;
+       m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz);
       for(int n = 0; n < frameSize; ++n){ 
 	
-	    m_currentAmp = m_fadeUnit.get_value(samplesRead);
+	    m_currentAmp = m_fadeUnit.get_value(static_cast<float>(samplesRead));
 	    
 	    output[0][n] = input[0][n] * m_currentAmp;     
 	    output[1][n] = input[1][n] * m_currentAmp;
@@ -85,8 +88,8 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
 }
 
 void Fade::reset_effect(){
-    m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*44.1;
-    m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time(ms)")->get_value()*44.1;
+    m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz;
+    m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz;
     m_fadeUnit.sort();
 }
 

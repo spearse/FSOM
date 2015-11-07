@@ -23,7 +23,7 @@
 #include "../Parameter.hpp"
 #include "../MetaDataStore.hpp"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <map>
 #include "../Utilities.hpp"
 
@@ -73,14 +73,14 @@ public:
 	/// returns a copy of the creation arguments
 	dspCreationStruct get_creation_struct(){ return m_dataStruct; }
 	/// all effects must provide a deep copy using clone
-	virtual boost::shared_ptr<DSPEffect> clone() = 0;
+	virtual std::shared_ptr<DSPEffect> clone() = 0;
 	bool bypass_active();
 	virtual void reset_effect(){};
 	void set_bypass(bool state);
 
 };
 
-typedef boost::shared_ptr<DSPEffect> DSPEffectPtr;
+typedef std::shared_ptr<DSPEffect> DSPEffectPtr;
 
 }
 #endif // DSPEFFECT_HPP

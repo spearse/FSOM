@@ -34,17 +34,17 @@ SynthesisRegion::SynthesisRegion(regionCreationStruct creationStruct) :
 {
 	fsom::DebugStream << "In synthesis region base class, region duration = "<< creationStruct.m_duration<< std::endl;
 	if(creationStruct.m_duration < (m_preferedFadeTime*2)){
-	      float fadeTime = creationStruct.m_duration/2.0;
+	      float fadeTime = creationStruct.m_duration/2.0f;
 	  
 	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
 	      m_internalFadeUnit.add_breakpoint(TVPair(fadeTime, 1.0));
 	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-fadeTime, 1.0));
-	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
+	      m_internalFadeUnit.add_breakpoint(TVPair(static_cast<float>(creationStruct.m_duration), 0));
 	}else{
 	      m_internalFadeUnit.add_breakpoint(TVPair(0, 0));
 	      m_internalFadeUnit.add_breakpoint(TVPair(m_preferedFadeTime, 1.0));
 	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration-m_preferedFadeTime, 1.0));
-	      m_internalFadeUnit.add_breakpoint(TVPair(creationStruct.m_duration, 0));
+		  m_internalFadeUnit.add_breakpoint(TVPair(static_cast<float>(creationStruct.m_duration), 0));
 	}
 }
 	
@@ -85,8 +85,8 @@ void SynthesisRegion::process(float** input, float** output, int frameSize, int 
 	
 	for(int n = 0; n < frameSize; ++n){ 
 	    
-	    t2[0][n] = t[0][n] * m_internalFadeUnit.get_value(samplesRead);   
-	    t2[1][n] = t[1][n] * m_internalFadeUnit.get_value(samplesRead);
+		t2[0][n] = t[0][n] * m_internalFadeUnit.get_value(static_cast<float>(samplesRead));
+		t2[1][n] = t[1][n] * m_internalFadeUnit.get_value(static_cast<float>(samplesRead));
 	    
 	    samplesRead++;
 	}
@@ -121,7 +121,7 @@ void SynthesisRegion::process_generator_stack(float** input, float** output, int
 			output[n][s] += B[n][s];
 		}
 	}*/
-	for(int n  = 0 ; n< m_generatorStack.size();++n){
+	for (GeneratorStack::size_type n = 0; n < m_generatorStack.size(); ++n){
 		m_generatorStack.at(n)->process(input,output,frameSize,channels);
 	}
 
@@ -141,7 +141,7 @@ void SynthesisRegion::add_module(std::string id){
 }
 
 void SynthesisRegion::process_module_stack(float** input, float** output, int frameSize, int channels){
-	for(int n = 0; n < m_moduleStack.size();++n){
+	for (SynthesisModuleStack::size_type n = 0; n < m_moduleStack.size(); ++n){
 		m_moduleStack.at(n)->process(input,output,frameSize,channels);
 	}
 }
@@ -176,7 +176,7 @@ void SynthesisRegion::on_region_start(SamplePosition seekTime) {
 	
 }
 void SynthesisRegion::remove_all_generators(){
-    for (int n = 0; n <m_generatorStack.size();++n){
+	for (GeneratorStack::size_type n = 0; n <m_generatorStack.size(); ++n){
 		fsom::DebugStream << "Removing generator " << m_generatorStack.at(n)->get_effect_name() << std::endl;
 		m_generatorStack.at(n).reset();
 		m_generatorStack.erase(m_generatorStack.begin()+n);
@@ -185,7 +185,7 @@ void SynthesisRegion::remove_all_generators(){
 
 	
 void SynthesisRegion::remove_all_modules(){
-    for (int n = 0; n <m_moduleStack.size();++n){
+	for (SynthesisModuleStack::size_type n = 0; n <m_moduleStack.size(); ++n){
 		fsom::DebugStream << "Removing effect " << m_moduleStack.at(n)->get_effect_name() << std::endl;
 		m_moduleStack.at(n).reset();
 		m_moduleStack.erase(m_moduleStack.begin()+n);
@@ -204,19 +204,19 @@ void SynthesisRegion::add_generatorPtr(GeneratorPtr generator){
 void SynthesisRegion::update_fade_points(){
  
   	if(get_duration() < (m_preferedFadeTime*2)){
-		float fadeTime = get_duration()/2.0;
+		float fadeTime = get_duration()/2.0f;
 	      
-	        m_internalFadeUnit.get_pair(0).t_ = 0.0;
+	    m_internalFadeUnit.get_pair(0).t_ = 0.0;
 		m_internalFadeUnit.get_pair(1).t_ = fadeTime;
 		m_internalFadeUnit.get_pair(2).t_ = get_duration()-fadeTime;
-		m_internalFadeUnit.get_pair(3).t_ = get_duration();
+		m_internalFadeUnit.get_pair(3).t_ = static_cast<float>(get_duration());
 		m_internalFadeUnit.sort();
 	}else{
 	      
 	      m_internalFadeUnit.get_pair(0).t_ = 0.0;
 	      m_internalFadeUnit.get_pair(1).t_ = m_preferedFadeTime;
 	      m_internalFadeUnit.get_pair(2).t_ = get_duration()-m_preferedFadeTime;
-	      m_internalFadeUnit.get_pair(3).t_ = get_duration();
+		  m_internalFadeUnit.get_pair(3).t_ = static_cast<float>(get_duration());
 	      m_internalFadeUnit.sort();
 	}
   

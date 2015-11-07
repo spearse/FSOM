@@ -22,7 +22,7 @@
 #include "Table.hpp"
 #include "EffectClasses/DSPEffect.hpp"
 #include "Utilities.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <string>
 
@@ -43,7 +43,7 @@ public:
 	};
 private:
 	GeneratorType m_genType;
-	Table<double> m_shape;
+	Table<float> m_shape;
 	Phasor m_pitchPhasor;
 	bool m_noiseState;
 	std::string m_filePath;
@@ -57,13 +57,13 @@ public:
 	void set_noise_state(bool state);
 	void save_to_xml_node(TiXmlElement* node );
 	void set_file_path(std::string filepath);
-	Table<double> get_table()const;
+	const Table<float>& get_table() const;
 private:
 	void fill_generator_accordingly();
 	
 };
 
-typedef boost::shared_ptr<Generator> GeneratorPtr;
+typedef std::shared_ptr<Generator> GeneratorPtr;
 
 
 }

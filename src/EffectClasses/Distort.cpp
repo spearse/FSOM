@@ -30,9 +30,9 @@ Distort::Distort(dspCreationStruct data):
   
 	set_effect_name("Distort");
 	set_meta(get_tutId(),"link to html");
-	add_parameter("Distortion Level",0.1,1.0,0.1);
+	add_parameter("Distortion Level", 0.1f, 1.0f, 0.1f);
 	get_parameter("Distortion Level")->set_meta("GuiHint","soCustomFader");
-	m_table.fill_clipped(0.01);
+	m_table.fill_clipped(0.01f);
 	//m_table.print_table();
 	set_meta(get_tutId(),"learning/gaintree.xml");
 	set_implementation();
@@ -58,13 +58,13 @@ void Distort::process(float** input, float** output, int frameSize, int channels
   
   if(!bypass_active()){
 	
-	double N = m_table.get_size();
+	float N = static_cast<float>(m_table.get_size());
 	for (int n = 0; n < frameSize; ++n){
 		float wetMix = get_parameter("Distortion Level")->get_value();
 		float dryMix = 1.0f - wetMix;
 		
-		output[0][n] = (m_table.linear_lookup(0.5*(N*input[0][n])+(0.5*N))*9.0) * wetMix + (input[0][n]*dryMix);
-		output[1][n] = (m_table.linear_lookup(0.5*(N*input[1][n])+(0.5*N))*9.0) * wetMix + (input[1][n]*dryMix);
+		output[0][n] = (m_table.linear_lookup(0.5f*(N*input[0][n])+(0.5f*N))*9.0f) * wetMix + (input[0][n]*dryMix);
+		output[1][n] = (m_table.linear_lookup(0.5f*(N*input[1][n])+(0.5f*N))*9.0f) * wetMix + (input[1][n]*dryMix);
 	
 		 for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
 		      (*it).second->tick(samplesRead);

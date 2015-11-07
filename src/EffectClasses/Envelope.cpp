@@ -24,6 +24,9 @@
 #include <fsom/Session.hpp>
 
 namespace fsom{
+
+static const float kfSampleRateKHz = 44.1f;
+
 Envelope::Envelope(dspCreationStruct data) :
 	DSPEffect(data), m_currentAmp(0.0)
 
@@ -33,25 +36,27 @@ Envelope::Envelope(dspCreationStruct data) :
 	
 	  set_meta(get_tutId(),"link to html");
 	  
-	  add_parameter("Attack Time(ms)",10,regionDuration/44.1,10);
+	  const float kDurationOverSR = regionDuration / kfSampleRateKHz;
+
+	  add_parameter("Attack Time(ms)",10,kDurationOverSR,10);
 	  get_parameter("Attack Time(ms)")->set_meta("GuiHint","soCustomFader");
 	
-	  add_parameter("Decay Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.25);
+	  add_parameter("Decay Time(ms)",10,kDurationOverSR, kDurationOverSR*0.25f);
 	  get_parameter("Decay Time(ms)")->set_meta("GuiHint","soCustomFader");
 	  
-	  add_parameter("Release Time(ms)",10,regionDuration/44.1,(regionDuration/44.1)*0.8);
+	  add_parameter("Release Time(ms)",10,kDurationOverSR, kDurationOverSR*0.8f);
 	  get_parameter("Release Time(ms)")->set_meta("GuiHint","soCustomFader");
 	
-	  add_parameter("Sustain Amplitude",0.1,1.0,1.0);
+	  add_parameter("Sustain Amplitude",0.1f, 1.0f, 1.0f);
 	  get_parameter("Sustain Amplitude")->set_meta("GuiHint","soCustomFader");
       
 	  m_fadeUnit.add_breakpoint(TVPair(0, 0));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time(ms)")->get_value()*44.1, 1.0));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1, 
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Attack Time(ms)")->get_value()*kfSampleRateKHz, 1.0f));
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Decay Time(ms)")->get_value()*kfSampleRateKHz, 
 					   get_parameter("Sustain Amplitude")->get_value()));
-	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time(ms)")->get_value()*44.1,
+	  m_fadeUnit.add_breakpoint(TVPair(get_parameter("Release Time(ms)")->get_value()*kfSampleRateKHz,
 					   get_parameter("Sustain Amplitude")->get_value()));
-	  m_fadeUnit.add_breakpoint(TVPair(regionDuration, 0));
+	  m_fadeUnit.add_breakpoint(TVPair(static_cast<float>(regionDuration), 0));
 	  
 	  set_implementation();
 }
@@ -80,7 +85,7 @@ void  Envelope::process(float** input, float** output, int frameSize, int channe
       for(int n = 0; n < frameSize; ++n){
 
 
-	    m_currentAmp = m_fadeUnit.get_value(samplesRead);
+	    m_currentAmp = m_fadeUnit.get_value(static_cast<float>(samplesRead));
 	
 	    output[0][n] = input[0][n] * m_currentAmp;     
 	    output[1][n] = input[1][n] * m_currentAmp;
@@ -94,10 +99,10 @@ void  Envelope::process(float** input, float** output, int frameSize, int channe
 }
 
 void Envelope::reset_effect(){
-    m_fadeUnit.get_pair(1).t_ = get_parameter("Attack Time(ms)")->get_value()*44.1;
-    m_fadeUnit.get_pair(2) = TVPair(get_parameter("Decay Time(ms)")->get_value()*44.1,
+    m_fadeUnit.get_pair(1).t_ = get_parameter("Attack Time(ms)")->get_value()*kfSampleRateKHz;
+    m_fadeUnit.get_pair(2) = TVPair(get_parameter("Decay Time(ms)")->get_value()*kfSampleRateKHz,
 			     get_parameter("Sustain Amplitude")->get_value());
-    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time(ms)")->get_value()*44.1,
+    m_fadeUnit.get_pair(3) = TVPair(get_parameter("Release Time(ms)")->get_value()*kfSampleRateKHz,
 			     get_parameter("Sustain Amplitude")->get_value());
     m_fadeUnit.sort();
 }

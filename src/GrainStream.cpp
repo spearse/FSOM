@@ -2,8 +2,7 @@
 #include "../include/fsom/Engine.hpp"
 #include "../include/fsom/Session.hpp"
 #include <algorithm>
-#include <boost/mem_fn.hpp>
-#include <boost/bind.hpp>
+#include <functional>
 //#include <lo/lo_osc_types.h>
 #include "../include/fsom/Table.hpp"
 namespace fsom{
@@ -70,20 +69,20 @@ GrainStream::GrainStream():
   m_grainSize(44100),
   m_nextSpawn(44100),
   m_grainRate(1),
-  m_window(TablePtr(new Table<double>(512))),
+  m_window(TablePtr(new Table<float>(512))),
   m_filepath("")
 {
   m_window->fill_hann();
 //   spawn();
   
-  TablePtr t1 = TablePtr(new Table<double>(44100));
-  TablePtr t2 = TablePtr(new Table<double>(44100));
-  MultiTablePtr mt(new MultiChannelBuffer(TablePtr(new Table<double>(44100)));
+  TablePtr t1 = TablePtr(new Table<float>(44100));
+  TablePtr t2 = TablePtr(new Table<float>(44100));
+  MultiTablePtr mt(new MultiChannelBuffer(TablePtr(new Table<float>(44100)));
   mt->push_back(t1);
   mt->push_back(t2);
   MultiTablePtr mt;
-  TablePtr t1 = TablePtr(new Table<double>(44100*5));
-  TablePtr t2 = TablePtr(new Table<double>(44100*5));
+  TablePtr t1 = TablePtr(new Table<float>(44100*5));
+  TablePtr t2 = TablePtr(new Table<float>(44100*5));
   m_table = MultiTablePtr(new MultiTableBuffer());
   m_table->push_back(t1);
   m_table->push_back(t2);
@@ -154,7 +153,7 @@ void GrainStream::process(float** output, int channels, int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,m_nextSpawn)
+				std::bind(&Grain::process,_1,output,start,m_nextSpawn)
 			);
 			
 			start += m_nextSpawn;
@@ -165,7 +164,7 @@ void GrainStream::process(float** output, int channels, int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,remainder)
+				std::bind(&Grain::process,_1,output,start,remainder)
 			);
 			m_nextSpawn -= remainder;
 			remainder = 0;

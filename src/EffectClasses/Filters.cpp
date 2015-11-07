@@ -36,14 +36,14 @@ LowPassFilter::LowPassFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("LowPassFilter");
-	add_parameter("Frequency",5,10000.0,10000.0);
-	add_parameter("Quality of Filter",0.2,10.0,1);
+	add_parameter("Frequency",5,10000.0f,10000.0f);
+	add_parameter("Quality of Filter",0.2f,10.0f,1);
 	
 	set_meta(get_tutId(),"link to html");	
 	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
-	get_biquad_left().set_LPF(10000.0,5.0);
-	get_biquad_right().set_LPF(10000.0,5.0);
+	get_biquad_left().set_LPF(10000.0f,5.0f);
+	get_biquad_right().set_LPF(10000.0f,5.0f);
 	get_biquad_left().print_coef();
 	set_implementation();
 	
@@ -99,14 +99,14 @@ HighPassFilter::HighPassFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("HighPassFilter");
-	add_parameter("Frequency",5.0,20000.0,440.0);
-	add_parameter("Quality of Filter",0.2,10,0.5);
+	add_parameter("Frequency",5.0f,20000.0f,440.0f);
+	add_parameter("Quality of Filter",0.2f,10,0.5);
 	
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
-	get_biquad_left().set_HPF(440,5.0);
-	get_biquad_right().set_HPF(440.0,5.0);
+	get_biquad_left().set_HPF(440,5.0f);
+	get_biquad_right().set_HPF(440.0f,5.0f);
 	set_implementation();
 	
 }
@@ -160,8 +160,8 @@ ResonatingFilter::ResonatingFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("ResonatingFilter");
-	add_parameter("Frequency",5.0,20000,440.0);
-	add_parameter("Q",0.1,10.0,5.0);
+	add_parameter("Frequency",5.0f,20000,440.0f);
+	add_parameter("Q",0.1f,10.0f,5.0f);
 	
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Q")->set_meta("GuiHint","soCustomFader");
@@ -203,8 +203,8 @@ BandRejectFilter::BandRejectFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("BandRejectFilter");
-	add_parameter("Frequency",10.0,20000,440.0);
-	add_parameter("Quality of Filter",0.1,10.0,5.0);
+	add_parameter("Frequency",10.0f,20000,440.0f);
+	add_parameter("Quality of Filter",0.1f,10.0f,5.0f);
 	
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
@@ -265,8 +265,8 @@ BandPassFilter::BandPassFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("BandPassFilter");
-	add_parameter("Frequency",10.0,20000,440.0);
-	add_parameter("Quality of Filter",0.1,10.0,5.0);
+	add_parameter("Frequency",10.0f,20000,440.0f);
+	add_parameter("Quality of Filter",0.1f,10.0f,5.0f);
 	
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
@@ -330,13 +330,13 @@ CombFilter::CombFilter(dspCreationStruct data):
 	m_delayUnitR(2048)
 {
 	set_effect_name("CombFilter");
-	add_parameter("Dry Amount",0.0,1.0,0.9);
+	add_parameter("Dry Amount",0.0f,1.0f,0.9f);
 	get_parameter("Dry Amount")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Delay Time",10,800,10);
 	get_parameter("Delay Time")->set_meta("GuiHint","soCustomFader");
-	add_parameter("Feedback",0.0,0.99,0.68);
+	add_parameter("Feedback",0.0f,0.99f,0.68f);
 	get_parameter("Feedback")->set_meta("GuiHint","soCustomFader");
-	add_parameter("Feedforward",0.0,0.99,0.68);
+	add_parameter("Feedforward",0.0f,0.99f,0.68f);
 	get_parameter("Feedforward")->set_meta("GuiHint","soCustomFader");
 	set_implementation();
 	
@@ -351,11 +351,11 @@ void CombFilter::process(float** input, float** output, int frameSize, int chann
 	assert(channels == 2);
 	
 	  if(!bypass_active()){
-	      double feedforward = get_parameter("Feedforward")->get_value();
-	      double feedback = get_parameter("Feedback")->get_value();
-	      double dry = get_parameter("Dry Amount")->get_value();
-	      double wet = 1.0 - dry;
-	      double dt = get_parameter("Delay Time")->get_value();
+	      float feedforward = get_parameter("Feedforward")->get_value();
+	      float feedback = get_parameter("Feedback")->get_value();
+	      float dry = get_parameter("Dry Amount")->get_value();
+	      float wet = 1.0f - dry;
+		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Delay Time")->get_value());
 	      for (int n = 0; n < frameSize; ++n){
 		      output[0][n] = m_delayUnitL.read_sample(dt) * wet + input[0][n]*dry;	
 		      output[1][n] = m_delayUnitR.read_sample(dt) * wet+ input[1][n]*dry;
@@ -380,8 +380,8 @@ AllPassFilter::AllPassFilter(dspCreationStruct data):
 	Filter(data)
 {
 	set_effect_name("AllPassFilter");
-	add_parameter("Frequency",10.0,20000,440.0);
-	add_parameter("Quality of Filter",0.1,10.0,5.0);
+	add_parameter("Frequency",10.0f,20000,440.0f);
+	add_parameter("Quality of Filter",0.1f,10.0f,5.0f);
 	
 	set_meta(get_tutId(),"link to html");
 	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
@@ -423,14 +423,14 @@ void AllPassFilter::process(float** input, float** output, int frameSize, int ch
 
 MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biquadAmount(6),m_combinedAmps(0){
     set_effect_name("MultiBandFilter");
-    add_parameter("Low Shelf Frequency",5,10000.0,50.0);
-    add_parameter("Low Shelf Quality",0.2,10.0,1);
+    add_parameter("Low Shelf Frequency",5,10000.0f,50.0f);
+    add_parameter("Low Shelf Quality",0.2f,10.0f,1);
     
-    add_parameter("Band Pass Frequency",500,20000.0,5000.0);
-    add_parameter("Band Pass Quality",0.2,10.0,1);
+    add_parameter("Band Pass Frequency",500,20000.0f,5000.0f);
+    add_parameter("Band Pass Quality",0.2f,10.0f,1);
     
-    add_parameter("High Shelf Frequency",50,20000.0,440.0);
-    add_parameter("High Shelf Quality",0.2,10.0,1);
+    add_parameter("High Shelf Frequency",50,20000.0f,440.0f);
+    add_parameter("High Shelf Quality",0.2f,10.0f,1);
     
     set_meta(get_tutId(),"link to html");	
     get_parameter("Low Shelf Frequency")->set_meta("GuiHint","soCustomFader");
@@ -446,14 +446,14 @@ MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biqu
 	m_biquadList.push_back(BiquadPtr(new Biquad(44100)));
     }
     
-    m_biquadList.at(0)->set_HPF(10000.0,5.0);
-    m_biquadList.at(1)->set_HPF(10000.0,5.0);
+    m_biquadList.at(0)->set_HPF(10000.0f,5.0f);
+    m_biquadList.at(1)->set_HPF(10000.0f,5.0f);
     
-    m_biquadList.at(2)->set_BPF(5000.0,5.0);
-    m_biquadList.at(3)->set_BPF(5000.0,5.0);
+    m_biquadList.at(2)->set_BPF(5000.0f,5.0f);
+    m_biquadList.at(3)->set_BPF(5000.0f,5.0f);
     
-    m_biquadList.at(4)->set_LPF(440.0,5.0);
-    m_biquadList.at(5)->set_LPF(440.0,5.0);
+    m_biquadList.at(4)->set_LPF(440.0f,5.0f);
+    m_biquadList.at(5)->set_LPF(440.0f,5.0f);
     
     one_shot(0);
     
@@ -513,14 +513,14 @@ void MultiBandFilter::one_shot(int steps){
       m_biquadList.at(4)->set_HPF(hpf,hpq);
       m_biquadList.at(5)->set_HPF(hpf,hpq);
       
-      float combinedValue = 0.0;
+      float combinedValue = 0.0f;
       m_combinedAmps.clear();
       
       for(int i = 0; i < steps; ++i){
-	  m_combinedAmps.push_back(1.0);
+	  m_combinedAmps.push_back(1.0f);
       }
       for(int j = 0; j < steps; ++j){
-	  combinedValue = 0.0;
+	  combinedValue = 0.0f;
 	  for(int i = 0; i < m_biquadAmount; ++i){
 	    combinedValue +=  m_biquadList.at(i)->get_amplitudes(steps).at(j);
 	  }

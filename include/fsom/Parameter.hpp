@@ -21,7 +21,7 @@
 #define __PARAMETER_HPP__
 
 #include "MetaDataStore.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "Utilities.hpp"
 
 
@@ -29,7 +29,7 @@ namespace fsom{
 
   class BreakPointUnit;
   
-typedef boost::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
+typedef std::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
   
 class Parameter : public MetaDataStore {
 
@@ -70,7 +70,7 @@ void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 void set_automated_mode(bool isDynamic);
 bool get_automated_mode();
 };
-typedef boost::shared_ptr<Parameter> ParameterPtr;
+typedef std::shared_ptr<Parameter> ParameterPtr;
 typedef std::map<std::string,ParameterPtr> ParameterList;
 
 

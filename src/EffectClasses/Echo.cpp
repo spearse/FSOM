@@ -32,9 +32,9 @@ Echo::Echo(dspCreationStruct data) :
 	{
 		set_effect_name("Echo");
 		set_meta(get_tutId(),"link to html");
-		add_parameter("Echo Time",0.0,5.0,1.0);
+		add_parameter("Echo Time", 0.0f, 5.0f ,1.0f);
 		get_parameter("Echo Time")->set_meta("GuiHint","soCustomFader");
-		add_parameter("Echo Volume",0.0,1.0,0.9);
+		add_parameter("Echo Volume",0.0f, 1.0f, 0.9f);
 		get_parameter("Echo Volume")->set_meta("GuiHint","soCustomFader");
 		//m_delayUnitL.m_delayTime = 44100;
 		
@@ -67,12 +67,17 @@ void Echo::process(float** input, float** output, int frameSize, int channels){
 	  for(int n = 0; n < frameSize; ++n){
 		  m_delayUnitL.write_sample(input[0][n]);
 		  m_delayUnitR.write_sample(input[0][n]);
-		  a = input[0][n] + m_delayUnitL.read_sample(get_parameter("Echo Time")->get_value() * 44100);
-		  b = input[1][n] + m_delayUnitR.read_sample(get_parameter("Echo Time")->get_value() * 44100);
+
+		  DelayBase<float>::sample_index nEchoTime = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Echo Time")->get_value() * 44100);
+		  float fEchoVolume = get_parameter("Echo Volume")->get_value();
+
+		  a = input[0][n] + m_delayUnitL.read_sample(nEchoTime);
+		  b = input[1][n] + m_delayUnitR.read_sample(nEchoTime);
 		  output[0][n]= a;
 		  output[1][n]= b;
-		  m_delayUnitL.write_sample((b * get_parameter("Echo Volume")->get_value() )  );
-		  m_delayUnitR.write_sample((a * get_parameter("Echo Volume")->get_value())   );
+		  
+		  m_delayUnitL.write_sample(b * fEchoVolume );
+		  m_delayUnitR.write_sample(a * fEchoVolume );
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();
 		  

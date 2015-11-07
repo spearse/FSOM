@@ -45,7 +45,7 @@ public:
 	void kill();
 };
 
-typedef boost::shared_ptr<Grain> GrainPtr;
+typedef std::shared_ptr<Grain> GrainPtr;
 
 /*
 class GrainStream

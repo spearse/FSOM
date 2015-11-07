@@ -29,22 +29,22 @@ namespace fsom{
 
 
 struct Biquad{
-	double A,w0, alpha,cw,sw, Fs , f0,dBgain,a0,a1,a2,b0,b1,b2;
-	double x1,x2,y1,y2;
+	float A,w0, alpha,cw,sw, Fs , f0,dBgain,a0,a1,a2,b0,b1,b2;
+	float x1,x2,y1,y2;
 
 public:
-	typedef std::complex<double> Complex;
-	Biquad(double sampleRate);
+	typedef std::complex<float> Complex;
+	Biquad(float sampleRate);
 	
-	void set_LPF(double frequency,double Q);
-	void set_HPF(double frequency,double Q);
-	void set_BPF(double frequency,double Q);
-	void set_BPF_const_gain(double frequency,double Q);
-	void set_BAND_REJECT(double frequency, double Q);
-	void set_ALL(double frequency,double Q);
+	void set_LPF(float frequency,float Q);
+	void set_HPF(float frequency,float Q);
+	void set_BPF(float frequency,float Q);
+	void set_BPF_const_gain(float frequency,float Q);
+	void set_BAND_REJECT(float frequency, float Q);
+	void set_ALL(float frequency,float Q);
 	void set_PEAKING();
-	void set_LOWSHELF(double frequency,double S,double amp);
-	void set_HIGHSHELF(double frequency,double S,double amp);
+	void set_LOWSHELF(float frequency,float S,float amp);
+	void set_HIGHSHELF(float frequency,float S,float amp);
 	
 	void process(const float* in,float* out,int frameSize);
 
@@ -53,7 +53,7 @@ public:
 	void solve_quadratic(Complex a, Complex b, Complex c, Complex* r);
 	void print_coef();
 
-	std::complex<double> H(std::complex<double> z);
+	std::complex<float> H(std::complex<float> z);
 	std::vector<float> get_amplitudes(int steps);
 
 

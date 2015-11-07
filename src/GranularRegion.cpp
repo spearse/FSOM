@@ -22,7 +22,7 @@
 #include "tinyxml/tinyxml.h"
 #include "fsom/Engine.hpp"
 #include "fsom/Session.hpp"
-#include "boost/bind.hpp"
+#include <functional>
 
 using namespace fsom;
 
@@ -34,27 +34,27 @@ m_diskStreamBuffers(2,4096),
 m_counter(0),
 m_fileLoaded(false),
 m_basePosition(0),
-m_basePitch(1),
+m_basePitch(1.0f),
 m_density(2),
 m_grainSize(44100),
 m_nextSpawn(44100),
 m_grainRate(1),
-m_window(TablePtr(new Table<double>(512))),
+m_window(TablePtr(new Table<float>(512))),
 m_filepath(""),
 m_internalClock(0),
-m_grainAmp(1)
+m_grainAmp(1.0f)
 {
-  add_parameter("GrainSize - ms",175,1000,500);
-  add_parameter("GrainPitch",0,3,1);
-  add_parameter("GrainPosition",0,1,0);
-  add_parameter("GrainRate - grains per second",0.1,16,4);
-  add_parameter("GrainAmp",0.01,1.5,1);
+  add_parameter("GrainSize - ms",175.f,1000.f,500.f);
+  add_parameter("GrainPitch",0.f,3.f,1.f);
+  add_parameter("GrainPosition",0.f,1.f,0.f);
+  add_parameter("GrainRate - grains per second",0.1f,16.f,4.f);
+  add_parameter("GrainAmp",0.01f,1.5f,1.f);
 
   
   m_window->fill_hann();
   MultiTablePtr mt;
-  TablePtr t1 = TablePtr(new Table<double>(44100*5));
-  TablePtr t2 = TablePtr(new Table<double>(44100*5));
+  TablePtr t1 = TablePtr(new Table<float>(44100*5));
+  TablePtr t2 = TablePtr(new Table<float>(44100*5));
   m_table = MultiTablePtr(new MultiTableBuffer());
   m_table->push_back(t1);
   m_table->push_back(t2);
@@ -178,7 +178,7 @@ void GranularRegion::reset(){
 }
 
 void GranularRegion::kill_all_grains(){
-    for(int n =0; n < m_grains.size();++n){
+    for(GrainList::size_type n =0; n < m_grains.size();++n){
 	    m_grains.at(n).reset();
 	    m_grains.erase(m_grains.begin()+n);
     }
@@ -216,9 +216,9 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 // 	m_grainStream.set_grainRate(get_parameter("GrainRate")->get_value());
 // 	m_grainStream.set_grainSize(get_parameter("GrainSize")->get_value());
 	m_basePitch = get_parameter("GrainPitch")->get_value();
-	m_basePosition = get_parameter("GrainPosition")->get_value()* m_table->at(0)->get_size() ;
-	m_grainRate = get_parameter("GrainRate - grains per second")->get_value();
-	m_grainSize = get_parameter("GrainSize - ms")->get_value()*44.1f;
+	m_basePosition = truncate_to_integer<int>( get_parameter("GrainPosition")->get_value() * m_table->at(0)->get_size() );
+	m_grainRate = truncate_to_integer<int>( get_parameter("GrainRate - grains per second")->get_value());
+	m_grainSize = truncate_to_integer<int>( get_parameter("GrainSize - ms")->get_value()*44.1f);
 	m_grainAmp  = get_parameter("GrainAmp")->get_value();
 	
       if(m_nextSpawn <= 0){
@@ -232,7 +232,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,m_nextSpawn)
+				std::bind(&Grain::process, std::placeholders::_1, output, start, m_nextSpawn)
 			);
 			
 			start += m_nextSpawn;
@@ -243,7 +243,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 			
 			std::for_each(
 				m_grains.begin(),m_grains.end(),
-				boost::bind(&Grain::process,_1,output,start,remainder)
+				std::bind(&Grain::process, std::placeholders::_1, output, start, remainder)
 			);
 			m_nextSpawn -= remainder;
 			remainder = 0;
@@ -260,7 +260,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 
 void GranularRegion::spawn(){
       float dur = 44100.0f/m_grainRate;
-      m_nextSpawn = dur;
+	  m_nextSpawn = truncate_to_integer<int>(dur);
       
       m_grains.push_back(GrainPtr(new Grain(m_window,m_table,m_grainSize,m_basePosition,m_basePitch,m_grainAmp)));
 //       fsom::DebugStream << "Spawned " << "next = " << m_nextSpawn<<std::endl; 
@@ -268,7 +268,7 @@ void GranularRegion::spawn(){
 }
 
 void GranularRegion::kill_grains(){
-  for(int n =0; n < m_grains.size();++n){
+  for(GrainList::size_type n =0; n < m_grains.size();++n){
 	bool kill =false; 
 	if(m_grains[n]->is_dead())kill = true;
 	if(kill){ 

@@ -21,7 +21,7 @@
 #define _SYNTHESISMODULE_HPP_
 
 #include "EffectClasses/DSPEffect.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "Table.hpp"
 #include "Utilities.hpp"
 
@@ -41,13 +41,13 @@ public:
     virtual void save_parameters_to_node(TiXmlElement* element);
 };
 
-typedef boost::shared_ptr<SynthesisModule> SynthesisModulePtr;
+typedef std::shared_ptr<SynthesisModule> SynthesisModulePtr;
 
 
 
 
 class LFOModule :public SynthesisModule{
-	Table<double> m_sineTable;
+	Table<float> m_sineTable;
 	Phasor m_phasor;
 	public:
 	LFOModule(dspCreationStruct _struct);
@@ -61,7 +61,7 @@ class LFOModule :public SynthesisModule{
 };
 
 class VolModule :public SynthesisModule{
-	Table<double> m_sineTable;
+	Table<float> m_sineTable;
 	Phasor m_phasor;
 	public:
 	VolModule(dspCreationStruct _struct);

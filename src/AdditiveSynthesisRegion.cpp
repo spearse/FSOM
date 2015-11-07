@@ -33,7 +33,7 @@ AdditiveSynthesisRegion::AdditiveSynthesisRegion(regionCreationStruct data):
 	 for(int n = 0; n < 4; ++n){
 		GeneratorPtr t = GeneratorPtr(new Generator(Generator::GEN_Sine,dspCreationStruct(this)));
 		t->get_parameter("Freq")->set_value(440);
-		t->get_parameter("Amp")->set_value(0.2);
+		t->get_parameter("Amp")->set_value(0.2f);
 		add_generator(t);
 	}
 	//add_synth_module(SynthesisModulePtr(new LFOModule(dspCreationStruct(this))));

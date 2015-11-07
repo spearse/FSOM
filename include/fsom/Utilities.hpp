@@ -27,8 +27,9 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
-
+#include <cstdint>
 #include <cmath>
+
 #ifdef _WIN32
 	#define NOMINMAX
 	#include <windows.h>
@@ -39,15 +40,19 @@
 
 namespace fsom{
  
-const float SR = 44100.0;
-const double TWOPI = 2.0*3.14159;
-const double PI = 3.14159;
+const float SR = 44100.0f;
+const float PI = 3.14159265359f;
+const float TWOPI = 6.28318530718f;
+
 
 /// audio objects should be measuring time in integer time values
 /// use the following typedefs for time references.
-typedef long int SamplePosition;
-typedef long int SampleLength;
+// 32bit signed gives us 2^31/44100/60 = ~811 minutes
+typedef int32_t SamplePosition; 
+typedef int32_t SampleLength;
 
+static_assert(sizeof(SamplePosition) == 4, "Bad sample position size.");
+static_assert(sizeof(SampleLength) == 4, "Bad sample length size.");
 
 typedef std::vector<double> ChannelAmplitudes;
 
@@ -60,14 +65,14 @@ typedef std::vector<double> ChannelAmplitudes;
 #endif
 
 
-#if _WIN32
+#ifdef _WIN32
 #define DEBUG_OUTPUT(x) OutputDebugString(x); 
 //#define DEBUG_OUTPUT(x) std::cerr << x;
 #else
 #define DEBUG_OUTPUT(x) std::cerr << x;
 #endif
 
-#if DEBUG
+#ifdef DEBUG
 #define DebugOut(fmt, ...) \
     char buf[256]; \
     sprintf(buf, fmt, __VA_ARGS__ ) ; \
@@ -95,7 +100,7 @@ private:
       std::ptrdiff_t n = pptr() - pbase();
       pbump(-n);
       //fsom::DebugStream << "|";
-      #if DEBUG
+      #ifdef DEBUG
       std::cerr.write(pbase(), n);
       m_file.write(pbase(), n);
       #endif
@@ -242,6 +247,12 @@ inline float remap(float r1_a, float r1_b, float r2_a, float r2_b, float in){
   return dv/d1 *d2 + r2_a ;
 }
 
+template<typename IntType, typename FloatType>
+inline IntType truncate_to_integer(FloatType v)
+{
+	return static_cast<IntType>(std::floor(v));
+}
+
 /// a simple dsp phasor class for use in oscilator and control objects.
 /// it provides a tick function that should be called once per sample of playback.
 /// a get phase function returns the current phase of the phasor in the range 0.0f to 1.0f.
@@ -313,6 +324,9 @@ public:
 		clear_multichannel_buffers(m_buffers,m_channels,m_size);
 	}
 	size_t size() const { return m_size; }
+
+	MultiChannelBuffer(const MultiChannelBuffer& op) = delete;
+	MultiChannelBuffer& operator = (const MultiChannelBuffer& op) = delete;
 };
 
 /// This function is a helper to aid offseting into a multichannel buffers.
@@ -390,7 +404,7 @@ class BreakPointUnit{
     BreakPointUnit() {}
     ///Copy constructor
     BreakPointUnit(const BreakPointUnit& old){
-	for(int n = 0; n < old.bpList_.size();++n){
+	for (BPList::size_type n = 0; n < old.bpList_.size(); ++n){
 	    bpList_.push_back(old.bpList_.at(n));
 	}
       

@@ -26,14 +26,14 @@
 
 namespace fsom{
   //DSPEffect Pointer
-typedef boost::shared_ptr<DSPEffect> DSPEffectPtr;
+typedef std::shared_ptr<DSPEffect> DSPEffectPtr;
 //DSPEffect function pointers
 typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 
 class Chorus : public DSPEffect
 {
-  DelayBase<double> m_delayUnitL,m_delayUnitR;
-  Table<double> m_modTable;
+  DelayBase<float> m_delayUnitL,m_delayUnitR;
+  Table<float> m_modTable;
   Phasor m_modPhasor;
   
   

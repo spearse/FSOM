@@ -23,7 +23,7 @@
 #ifndef ABSTRACTFACTORY_HPP
 #define ABSTRACTFACTORY_HPP
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <map>
 #include <iostream>
 #include <string>
@@ -39,7 +39,7 @@ template<class T, class Arg1> //abstract factory template class
 class AbstractFactory
 {
 public:
-	typedef boost::shared_ptr<T> ptr;
+	typedef std::shared_ptr<T> ptr;
 	typedef ptr(*Factory)(Arg1);
 private:
 	typedef std::map<std::string,Factory> FactoryMap; //typedef for a map of Factory types and their assigned names

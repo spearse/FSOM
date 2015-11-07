@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "Utilities.hpp"
 
 namespace fsom{
@@ -93,7 +93,7 @@ public:
 
 };
 
-typedef boost::shared_ptr<AudioFile> AudioFilePtr;
+typedef std::shared_ptr<AudioFile> AudioFilePtr;
 
 
 } //fsom

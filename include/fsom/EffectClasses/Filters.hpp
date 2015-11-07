@@ -41,7 +41,7 @@ public:
 };
 
 class MultiBandFilter : public DSPEffect{
-	typedef boost::shared_ptr<Biquad> BiquadPtr;
+	typedef std::shared_ptr<Biquad> BiquadPtr;
 	typedef std::vector<BiquadPtr> BiquadPtrList;
 	BiquadPtrList m_biquadList;
 	const int m_biquadAmount;
@@ -122,8 +122,8 @@ public:
 
 class CombFilter :public DSPEffect
 {
-	DelayBase<double> m_delayUnitL,m_delayUnitR;	
-	//Table<double> m_table;
+	DelayBase<float> m_delayUnitL,m_delayUnitR;	
+	//Table<float> m_table;
 	Phasor m_phasor;
 public:
 	CombFilter(dspCreationStruct data);

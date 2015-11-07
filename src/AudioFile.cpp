@@ -32,18 +32,39 @@ struct AudioFileImpl{ //contains main data for AudioFile class to use
 };
 }
 
+
+bool accepted_file_format(int formatFlags)
+{
+	return (formatFlags & (SF_FORMAT_WAV | SF_FORMAT_OGG | SF_FORMAT_AIFF | SF_FORMAT_FLAC)) != 0;
+}
+
 AudioFile::AudioFile(const std::string& filePath) :
 	m_pImpl(new AudioFileImpl), //pImpl idiom for AudioFile created
 	m_filePath(filePath), //AudioFile file path set
 	m_peakImage(DMAX) //peak image draw depth set to maximum
 {
 	fsom::DebugStream << "Attempting to spawn audiofile from"<< filePath<<std::endl;
+
 	m_pImpl->m_sndFile = sf_open(m_filePath.c_str(),SFM_READ,&m_pImpl->m_sfInfo); //set soundfile to open and read mode and set filepath and structure to contain info
-	if(!m_pImpl->m_sndFile) throw AudioFileException(); //if did not construct pImpl correctly throw exception
-	//if(!m_pImpl->m_sndFile) throw "Could not open audio file";
-	if(m_pImpl->m_sfInfo.frames == 0) throw  AudioFileException(); //if the audiofile is damaged or contains no data throw exception
-	if(!m_pImpl->m_sfInfo.format & SF_FORMAT_WAV & SF_FORMAT_OGG & SF_FORMAT_AIFF & SF_FORMAT_FLAC)throw  AudioFileException();
- 	if(m_pImpl->m_sfInfo.samplerate != 44100) throw  AudioFileException();
+	
+	if (!m_pImpl->m_sndFile)
+	{
+		//if did not construct pImpl correctly throw exception
+		throw AudioFileException();
+	}
+	if (m_pImpl->m_sfInfo.frames == 0)
+	{ 
+		//if the audiofile is damaged or contains no data throw exception
+		throw  AudioFileException(); 
+	} 
+	if (!accepted_file_format(m_pImpl->m_sfInfo.format))
+	{
+		throw  AudioFileException();
+	}
+	if (m_pImpl->m_sfInfo.samplerate != 44100)
+	{
+		throw  AudioFileException();
+	}
 	//m_peakImage.at(D16) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	//m_peakImage.at(D32) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	//m_peakImage.at(D64) = multiRangeList(m_pImpl->m_sfInfo.channels);
@@ -79,7 +100,7 @@ void AudioFile::get_block(float** out, int blockSize){
 	
 	
 	
-	size_t ret = sf_readf_float(m_pImpl->m_sndFile,temp,blockSize); //fills temp with float data the size of blockSize taken from sndfile
+	int ret = static_cast<int>(sf_readf_float(m_pImpl->m_sndFile,temp,blockSize)); //fills temp with float data the size of blockSize taken from sndfile
 		
 	
 	if(m_pImpl->m_sfInfo.channels == 1){ //if the sound file is mono
@@ -115,7 +136,7 @@ void AudioFile::show_info() const{
 //print peak data to console
 void AudioFile::show_peaks(DrawDepth dd,int channel ) const{
 	const rangeList& rl = get_peak_image(dd,channel); //get a rangelist determined by the drawdepth
-	for (int n = 0; n< rl.size();++n){
+	for (rangeList::size_type n = 0; n< rl.size(); ++n){
 		fsom::DebugStream << rl[n].fmin << " " << rl[n].fmax << " "; //couts the min and max value of each part of rangelist
 	}
 }
@@ -123,7 +144,7 @@ void AudioFile::show_peaks(DrawDepth dd,int channel ) const{
 
 int AudioFile::get_channels() const {return m_pImpl->m_sfInfo.channels;} //returns the sound files number of channels 
 
-SampleLength AudioFile::get_file_length() const {return m_pImpl->m_sfInfo.frames;} //returns the file length of the sound file
+SampleLength AudioFile::get_file_length() const { return static_cast<SampleLength>(m_pImpl->m_sfInfo.frames); } //returns the file length of the sound file
 
 std::string AudioFile::get_file_path(){return m_filePath;} //returns the file path of sound file
 
@@ -141,7 +162,7 @@ void AudioFile::fill_range_list(multiRangeList& output, int blockSize){
 	//for each block go through each sample frame.
 	//for each sample frame determine if we have reached the minimum & maximum of this block of this channel
 	int channels = m_pImpl->m_sfInfo.channels; //get channel number and store in channels
-	int size = m_pImpl->m_sfInfo.frames / blockSize + 1; //set size to the amount of blocks to be filled
+	int size = static_cast<int>(m_pImpl->m_sfInfo.frames) / blockSize + 1; //set size to the amount of blocks to be filled
 	std::vector<float> temp(blockSize*channels); 
 	assert(output.size() == channels );
 	for (int c = 0; c < channels;++c){
@@ -151,7 +172,7 @@ void AudioFile::fill_range_list(multiRangeList& output, int blockSize){
 	//seek to the beginning of the file and seek through the entire file..
 	seek(0);
 	int blockCount = 0; //start the block count at 0
-	size_t ret = sf_readf_float(m_pImpl->m_sndFile,&temp[0],blockSize); 
+	int ret = static_cast<int>(sf_readf_float(m_pImpl->m_sndFile,&temp[0],blockSize)); 
 	while(ret > 0 ){
 		//temp now contains multichannel sampleframes up to the blocksize
 		//n represents the sampleframe
@@ -170,7 +191,7 @@ void AudioFile::fill_range_list(multiRangeList& output, int blockSize){
 
 		//finally read the next block
 		++blockCount;
-		ret = sf_readf_float(m_pImpl->m_sndFile,&temp[0],blockSize);
+		ret = static_cast<int>(sf_readf_float(m_pImpl->m_sndFile, &temp[0], blockSize));
 	}
 
 }

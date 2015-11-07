@@ -32,16 +32,16 @@ Flanger::Flanger(dspCreationStruct data):
 {
 	set_effect_name("Flanger");
 	m_table.fill_sine();
-	add_parameter("Flanger Amount",0.0,1.0,0.5);
+	add_parameter("Flanger Amount",0.0f, 1.0f, 0.5f);
 	get_parameter("Flanger Amount")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Depth",0.0,1.0,0.5);
+	add_parameter("Depth",0.0f, 1.0f, 0.5f);
 	get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Frequency",0.01,8.0,1.0);
+	add_parameter("Frequency", 0.01f, 8.0f, 1.0f);
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Feedback",0.0,1.0,0.2);
+	add_parameter("Feedback", 0.0f, 1.0f, 0.2f);
 	get_parameter("Feedback")->set_meta("GuiHint","soCustomFader");
 	
 	set_implementation();
@@ -66,12 +66,12 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
       } 
   
     if(!bypass_active()){
-	  static const double offset = 882.0;
-	  double S = m_table.get_size();
-	  double depth;
-	  double feedback;
-	  double dry;
-	  double wet;
+	  static const float offset = 882.0f;
+	  float S = static_cast<float>(m_table.get_size());
+	  float depth;
+	  float feedback;
+	  float dry;
+	  float wet;
 	  
 	  for (int n = 0; n < frameSize; ++n){
 		  m_phasor.set_frequency(get_parameter("Frequency")->get_value());
@@ -80,7 +80,7 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
 		  dry = get_parameter("Flanger Amount")->get_value();
 		  wet = 1.0f - dry;
 	    
-		  double dt = offset+ m_table.linear_lookup(m_phasor.get_phase()*S) * depth;
+		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(offset + m_table.linear_lookup(m_phasor.get_phase()*S) * depth);
 		  output[0][n] = m_delayUnitL.read_sample(dt) * wet + (input[0][n]*dry);	
 		  output[1][n] = m_delayUnitR.read_sample(dt) * wet + (input[1][n]*dry);
 		  m_delayUnitL.write_sample(output[0][n]*feedback + input[0][n]);

@@ -76,7 +76,7 @@ public:
 	MultiChannelBuffer& get_bufferB();
 };
 	
-typedef boost::shared_ptr<SynthesisRegion> SynthesisRegionPtr;
+typedef std::shared_ptr<SynthesisRegion> SynthesisRegionPtr;
 	
 }
 

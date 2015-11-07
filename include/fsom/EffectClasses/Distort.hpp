@@ -25,13 +25,13 @@
 
 namespace fsom{
 //DSPEffect Pointer
-typedef boost::shared_ptr<DSPEffect> DSPEffectPtr;
+typedef std::shared_ptr<DSPEffect> DSPEffectPtr;
 //DSPEffect function pointers
 typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 
 class Distort : public DSPEffect
 {
-	Table<double> m_table;
+	Table<float> m_table;
 public:
 	Distort(dspCreationStruct data);
 	virtual ~Distort();

@@ -18,7 +18,7 @@ template<class T>
 struct FixedArray{
   T* ptr;
   FixedArray(size_t size) : ptr(new T[size]) {
-    for(int n = 0 ; n < size;++n)ptr[n]=0.0;
+	  for (size_t n = 0; n < size; ++n)ptr[n] = 0.0;
   }
   ~FixedArray(){ if(ptr) delete[] ptr; }
   T& operator [](int pos){
@@ -26,8 +26,8 @@ struct FixedArray{
   }
 };
 
-
-inline ScalarT wrap(ScalarT input,ScalarT maximum){
+template<typename T>
+inline T wrap(T input, T maximum){
     while(input >=maximum){
 	input -=maximum;
     }
@@ -112,7 +112,7 @@ public:
 	    out[n] += m_output[pos];// * gain;
 	}
 	
-	m_outPos = wrap( m_outPos + size,m_fftsize);
+	m_outPos = wrap( m_outPos + size, m_fftsize);
     }
   
 };
@@ -155,22 +155,24 @@ public:
       m_samplerate = m_inputHandle.samplerate();
       m_outputHandle = SndfileHandle(m_outputfilename,SFM_WRITE,SF_FORMAT_PCM_24 | SF_FORMAT_WAV ,1,m_samplerate); 
       if(m_outputHandle.error())throw std::runtime_error("Unable to open file for writing");
-      //create audio buffer of appropriate size
-      int bufferSize = m_inputHandle.frames()+m_fftsize +1 ;
+      
+	  //create audio buffer of appropriate size
+	  int inputFrameCount = static_cast<int>(m_inputHandle.frames());
+      int bufferSize = inputFrameCount + m_fftsize + 1 ;
       m_audioBuffer = new ScalarT[bufferSize ];
       for(int n =0;n < bufferSize;++n)m_audioBuffer[n] = 0.0;
       //fill buffer with audio
       
-      ScalarT* temp = new ScalarT[m_inputHandle.frames()* m_inputHandle.channels()];
+      ScalarT* temp = new ScalarT[inputFrameCount * m_inputHandle.channels()];
       
-      m_inputHandle.readf(temp,m_inputHandle.frames());
+      m_inputHandle.readf(temp,inputFrameCount);
       
-      std::cout << "TimeStretcher succesfully created & audio buffer filled(size)" << m_inputHandle.frames()<<std::endl;
+      std::cout << "TimeStretcher succesfully created & audio buffer filled(size)" << inputFrameCount<<std::endl;
       
       const ScalarT *p= temp;
       int channelCount = m_inputHandle.channels();
-      int size = m_inputHandle.frames()* channelCount;
-      for (int frame = 0;frame < m_inputHandle.frames();++frame  ){
+      int size = inputFrameCount * channelCount;
+      for (int frame = 0;frame < inputFrameCount;++frame  ){
 		  m_audioBuffer[frame]= *p;
 		  p+=channelCount;
       }
@@ -182,24 +184,26 @@ public:
   }
   void run(){
       int current = 0;
-      int totalSize = m_inputHandle.frames() * (1.0/m_speed)+1;
+	  double fTotalSize = m_inputHandle.frames() * (1.0 / m_speed);
+	  int totalSize = static_cast<int>(std::floor(fTotalSize)) + 1;
 //       std::cout << "Total output frames = "<<totalSize<<std::endl;
       ScalarT* readPosition = m_audioBuffer;
       FixedArray<ScalarT> output(m_blockSize);
       for(int block = 0;block < totalSize;block +=m_blockSize  ){
 	  std::cout << ".";
 	  m_childProcesses.at(current)->process(readPosition,m_fftsize,block);
-	  int offset = m_blockSize* m_speed;
+	  double fOffset = m_blockSize * m_speed;
+	  int offset = static_cast<int>(std::floor(fOffset));
 	  readPosition += offset ;
 	  ++current;
 	  current %= m_numOverlaps;
-	  for(int n = 0; n< m_blockSize;++n)output[n]=0;
-	  for(int n = 0; n < m_childProcesses.size();++n){
-	      m_childProcesses.at(n)->sumtobuffer(output.ptr,m_blockSize,1.0/m_numOverlaps);
+	  for (int n = 0; n < m_blockSize; ++n) output[n] = 0;
+	  for (FprocVector::size_type n = 0; n < m_childProcesses.size(); ++n){
+		  m_childProcesses.at(n)->sumtobuffer(output.ptr, m_blockSize, 1.0f / m_numOverlaps);
 	  }
-	  m_outputHandle.writef(output.ptr,m_blockSize);
-	  
-      }
+	  m_outputHandle.writef(output.ptr, m_blockSize);
+
+	  }
       
     
   }
@@ -208,7 +212,7 @@ public:
   
   
   virtual ~TimeStretcher(){
-    for(int n = 0 ;n < m_childProcesses.size();++n){
+	for (FprocVector::size_type n = 0; n < m_childProcesses.size(); ++n){
 	delete m_childProcesses.at(n);
     }
     if(m_audioBuffer)delete[] m_audioBuffer;
