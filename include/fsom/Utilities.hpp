@@ -201,6 +201,7 @@ class Mutex
 class ScopedMutexLock
 {
 	Mutex& m_mtx;
+
   public:
 	ScopedMutexLock(Mutex& mtx)
 		: m_mtx(mtx)
@@ -326,55 +327,71 @@ inline float phase_wrap(float x)
 //class designed to manage the creation, access to and destruction of multi-channel buffers
 class MultiChannelBuffer
 {
-	float** m_buffers;
-	int m_channels;
-	size_t m_size; // size of individual buffers
-  public:
-	MultiChannelBuffer(int channels, size_t size)
-		: m_channels(channels)
+public:
+	enum
+	{
+		kMaxChannels = 8
+	};
+
+	typedef std::vector<float> audio_data_block_t;
+	typedef audio_data_block_t::size_type size_type;
+	typedef uint8_t channel_index_type;
+
+ public:
+	 MultiChannelBuffer(channel_index_type channels, size_type size)
+		: m_data(channels * size, 0.f)
+		, m_channels(channels)
 		, m_size(size)
 	{
-		m_buffers = new float*[channels];
+		assert(m_channels > 0 && m_channels <= kMaxChannels);
+		std::fill(&m_channelPtrs[0], m_channelPtrs + kMaxChannels, nullptr);
+
 		for (int n = 0; n < channels; n++)
 		{
-			m_buffers[n] = new float[size];
+			m_channelPtrs[n] = &m_data[0] + (n * size);
 		}
 	}
-	~MultiChannelBuffer()
-	{
-		for (int n = 0; n < m_channels; n++)
-		{
-			delete[] m_buffers[n];
-		}
-		delete[] m_buffers;
-	}
-	float** get_buffers()
-	{
-		return m_buffers;
-	}
-	void clear()
-	{
-		clear_multichannel_buffers(m_buffers, m_channels, m_size);
-	}
-	size_t size() const { return m_size; }
 
 	MultiChannelBuffer(const MultiChannelBuffer& op) = delete;
+
 	MultiChannelBuffer& operator=(const MultiChannelBuffer& op) = delete;
+
+	~MultiChannelBuffer()
+	{
+		std::fill(&m_channelPtrs[0], m_channelPtrs + kMaxChannels, nullptr);
+		m_size = 0;
+		m_channels = 0;
+	}
+
+	float** get_buffers()
+	{
+		return m_channelPtrs;
+	}
+
+	void clear()
+	{
+		std::fill(m_data.begin(), m_data.end(), 0.f);
+	}
+
+	size_type size() const { return m_size; }
+
+	
+private:
+	audio_data_block_t m_data;
+	size_type m_size; // size of individual buffers
+
+	float* m_channelPtrs[kMaxChannels]; // offset pointers for each channel
+	channel_index_type m_channels;
 };
 
-/// This function is a helper to aid offseting into a multichannel buffers.
-/// It uses a static array and is not thread safe and any new call will invalid a previous one.
-/// However, it does not have to allocate or de-allocate so is good in the dsp call.
-inline float** get_multichannel_offset_ptrs(float** buffers, int channels, size_t offset)
+/// This function is a helper to aid offsetting into a multichannel buffers.
+/// buffersIn is copied to offsetBuffersOut with the offset specified.
+inline void get_multichannel_offset_ptrs(float* const buffersIn[], float* offsetBuffersOut[], uint8_t channels, size_t offset)
 {
-	static const int MAX_OUTPUT_CHANNELS = 64; // should be more than enough for stereo lol.
-	assert(channels < MAX_OUTPUT_CHANNELS);
-	static float* temp[MAX_OUTPUT_CHANNELS];
 	for (int n = 0; n < channels; n++)
 	{
-		temp[n] = buffers[n] + offset;
+		offsetBuffersOut[n] = buffersIn[n] + offset;
 	}
-	return temp;
 }
 
 class FMinMax
@@ -539,7 +556,6 @@ class BreakPointUnit
 
 	void print_breakpoints()
 	{
-
 		for (BPList::iterator it = bpList_.begin(); it != bpList_.end(); ++it)
 		{
 			fsom::DebugStream << " : time = " << it->t_ << " : val =" << it->v_ << std::endl;

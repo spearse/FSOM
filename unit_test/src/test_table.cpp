@@ -94,6 +94,6 @@ TEST_CASE("Table: linear lookup", "[table]")
 	for (int n = 0; n < kMax; ++n)
 	{
 		float f = (float)n / (float)kMax;
-		REQUIRE(EQ_TOL(table.linear_lookup(n), f));
+		REQUIRE(EQ_TOL(table.linear_lookup((float)n), f));
 	}
 }

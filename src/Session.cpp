@@ -525,18 +525,21 @@ void Session::clear_all_active_regions(){
 
 
 void Session::internal_process(float** ins, float** outs, int frameCount, int channelCount, size_t offset, SamplePosition globalTime){
-	float** offsetOutputs;
-	if(offset > 0){
-		fsom::DebugStream << "handling offset process block due to event with offset=" << offset << std::endl;
-		offsetOutputs = get_multichannel_offset_ptrs(outs,channelCount,offset);
-	} else {
-		offsetOutputs = outs;
-	}
 	
+	enum{
+		kMaxChannels = 8
+	};
+
+	float* offsetOutputs[kMaxChannels];
+	assert(channelCount < kMaxChannels);
+
+	fsom::DebugStream << "handling offset process block due to event with offset=" << offset << std::endl;
+	get_multichannel_offset_ptrs(outs, offsetOutputs, channelCount, offset);
 
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
 		std::bind(&Region::process_region, std::placeholders::_1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
+
 	for (int chan=0; chan < channelCount;++chan){
 	  for(int n = 0; n < frameCount; ++n){
 	      offsetOutputs[chan][n] *=m_masterVolume->get_value();

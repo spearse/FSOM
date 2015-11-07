@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 
 set (unit_test_SOURCES
 	src/catch.hpp
+	src/test_multichannelbuffer.cpp
 	src/test_table.cpp
 	src/test_template.cpp
 	src/unit_testing.h
