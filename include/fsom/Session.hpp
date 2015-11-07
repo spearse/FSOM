@@ -212,7 +212,7 @@ public:
 	
 	std::string get_working_directory()const;
 	
-	std::string timestretch_region(RegionPtr region, double speed,std::string folderpath,std::string name,int fftSize = 2048,int numOverlaps = 4);
+	std::string timestretch_region(RegionPtr region, float speed,std::string folderpath,std::string name,int fftSize = 2048,int numOverlaps = 4);
 	
 	///function to set left locator
 	void set_left_locator(SamplePosition location);
@@ -236,7 +236,7 @@ public:
 	///Function to reset all effects on seek
 	void reset_all_effects();
 	
-	double get_amp_envelope(int chan);
+	float get_amp_envelope(int chan);
 	
 	MultiTableBuffer load_file_to_table(std::string path);
 

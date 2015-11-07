@@ -54,7 +54,7 @@ typedef int32_t SampleLength;
 static_assert(sizeof(SamplePosition) == 4, "Bad sample position size.");
 static_assert(sizeof(SampleLength) == 4, "Bad sample length size.");
 
-typedef std::vector<double> ChannelAmplitudes;
+typedef std::vector<float> ChannelAmplitudes;
 
 #ifdef DEBUG
   #define dbgStream std::cerr

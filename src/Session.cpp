@@ -367,7 +367,7 @@ void Session::save_session(const char* fileLocation, bool useRelative){
 	doc.LinkEndChild( decl );
 	TiXmlElement * root = new TiXmlElement( "Session" );  
 	doc.LinkEndChild( root );  
-	root->SetDoubleAttribute("MasterVolume",m_masterVolume->get_value());
+	root->SetDoubleAttribute("MasterVolume", static_cast<double>(m_masterVolume->get_value()));
 	
 	save_meta_to_xml(root);
 	//FIXME sort out upper and lower bound in parameter
@@ -642,14 +642,14 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	}
 	//TEMPORARY usage for stereo envelope tracking
 	
-	double t_lTotal(0),t_rTotal(0);
+	float t_lTotal(0),t_rTotal(0);
 	int t = frameCount/channelCount;
 	for(int n = 0; n < frameCount;++n){
 	    t_lTotal +=  std::abs( outs[0][n]);
 	    t_rTotal += std::abs( outs[1][n]);
 	}
-	m_channelAmps[0] =   (( double( t_lTotal)/double(t))*2.0f);
-	m_channelAmps[1] =   (double( t_rTotal)/double(t))*2.0f;
+	m_channelAmps[0] =   (( float( t_lTotal)/float(t))*2.0f);
+	m_channelAmps[1] =   (float( t_rTotal)/float(t))*2.0f;
 	m_peakData->analyse(outs,channelCount,frameCount,startSamp);
 	// now unlock the mutex
 	m_audioMutex->unlock();
@@ -952,7 +952,7 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
   
 }
 
-std::string Session::timestretch_region(RegionPtr region, double speed, std::string folderpath, std::string name, int fftSize, int numOverlaps){
+std::string Session::timestretch_region(RegionPtr region, float speed, std::string folderpath, std::string name, int fftSize, int numOverlaps){
   //got here
   //need to take region,
   //call internal process on the region passing the output into a table,
@@ -1110,7 +1110,7 @@ void Session::reset_all_effects(){
   
 }
 
-double Session::get_amp_envelope(int chan){
+float Session::get_amp_envelope(int chan){
     return m_channelAmps.at(chan);
 }
 
