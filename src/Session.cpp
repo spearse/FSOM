@@ -940,7 +940,7 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
 	for( int c =0;c<channels;++c){
 	   TablePtr tempTable(new Table<float>(frames));
 	    for(int f = 0;f<frames;++f){
-		tempTable->get_table().at(f) = deInterleavedBuffer[c][f];
+		tempTable->at(f) = deInterleavedBuffer[c][f];
 
 	    }
 

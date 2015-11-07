@@ -14,6 +14,7 @@ cmake_minimum_required(VERSION 2.8)
 
 g_cmakeFooter="""add_executable({target} ${{{target}_SOURCES}})
 target_link_libraries({target} {libs})
+target_include_directories({target} PUBLIC ${{CMAKE_CURRENT_SOURCE_DIR}}/../include)
 """.format(**g_templateVars)
 
 g_testFiles = []
