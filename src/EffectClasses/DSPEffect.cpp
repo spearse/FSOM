@@ -51,7 +51,7 @@ DSPEffect::DSPEffect(const DSPEffect& op) :
 		it != op.m_parameterList.end();
 		++it){
 		std::pair<ParameterList::iterator,bool> ret = m_parameterList.insert( std::make_pair(it->first, ParameterPtr(new Parameter(*(it->second) ) ) ) );
-		assert(ret.second == true && "could not insert into the map");
+		FSOM_ASSERT(ret.second == true && "could not insert into the map");
 	}
 	
 	
@@ -66,7 +66,7 @@ DSPEffect::~DSPEffect()
 ParameterPtr DSPEffect::get_parameter(std::string IDName) {
 	std::map<std::string, ParameterPtr>::iterator it;
 	it = m_parameterList.find(IDName);
-// 	assert(it != m_parameterList.end() && "Could not find Param Name");
+// 	FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
 	if(it == m_parameterList.end())throw "Could not obtain parameter";
 	return  (*it).second;
 }
@@ -76,7 +76,7 @@ ParameterPtr DSPEffect::get_parameter(int ID) {
 	it =  m_parameterList.begin();
 	advance(it,ID);
 	if(it == m_parameterList.end())throw "Could not obtain parameter";
-	//assert(it != m_parameterList.end() && "Could not find Param Name");
+	//FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
 

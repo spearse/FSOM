@@ -67,7 +67,7 @@ Session::Session() :
 	m_masterVolume = ParameterPtr(new fsom::Parameter(m_playbackDuration,"MasterLevel",0,1.5,1,tempBPUnit));
   
 	DSPManager::get_instance();
-	assert(m_audioMutex && "Audio mutex not created");
+	FSOM_ASSERT(m_audioMutex && "Audio mutex not created");
 }
 
 Session::~Session(){
@@ -81,16 +81,16 @@ Session::~Session(){
 // }
 
 ParameterPtr Session::create_parameter_from_node(TiXmlElement* element,Region* region){
-	assert(element);
+	FSOM_ASSERT(element);
 	std::string id = element->Attribute("Id");
-	assert(id != "");
+	FSOM_ASSERT(id != "");
 	float value(0),lowerBound(0),upperBound(1.0);
 	element->QueryFloatAttribute("Value", &value);
-// 	assert(value);
+// 	FSOM_ASSERT(value);
 	element->QueryFloatAttribute("LowerBound", &lowerBound);
-// 	assert(value);
+// 	FSOM_ASSERT(value);
 	element->QueryFloatAttribute("UpperBound", &upperBound);
-// 	assert(value);
+// 	FSOM_ASSERT(value);
 	
 	
 	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());    
@@ -120,10 +120,10 @@ ParameterPtr Session::create_parameter_from_node(TiXmlElement* element,Region* r
 
 DSPEffectPtr Session::create_effect_from_node(TiXmlElement* element,Region* region){
 
-  assert(element);
+  FSOM_ASSERT(element);
   std::string typeName = element->Attribute("name");
   DSPEffectPtr t =  DSPManager::get_instance().create(typeName,dspCreationStruct(region));
-  assert(t);
+  FSOM_ASSERT(t);
   TiXmlElement * meta = element->FirstChildElement("MetaData");
   //TODO streamline this process of loading, specific function for loading dspeffect and region meta needed
 
@@ -200,7 +200,7 @@ SynthesisModulePtr Session::create_module_from_node(TiXmlElement* element, Regio
   ///WARNING POSSIBLE TO RETURN WITHOUT A VALUE 
   //   SynthesisModulePtr 
   
-  assert(false);
+  FSOM_ASSERT(false);
   return nullptr;
 }
 
@@ -218,9 +218,9 @@ void Session::load_region_parameters(TiXmlElement* element,Region* region){
 }
 
 RegionPtr Session::create_region_from_node(TiXmlElement* element){
-  assert(element);
+  FSOM_ASSERT(element);
   TiXmlElement * basicInfoElement = element->FirstChildElement("BasicInfo");
-  assert(basicInfoElement);
+  FSOM_ASSERT(basicInfoElement);
   int start = 0;
   basicInfoElement->QueryIntAttribute("start", &start);
   int duration = 0;
@@ -248,7 +248,7 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 
   RegionPtr pRegion = RegionManager::get_instance().create(meta->Attribute("RegionType"),cs);
   pRegion->set_mute_state((muteState != 0));
-  assert(pRegion);
+  FSOM_ASSERT(pRegion);
   
   load_region_parameters(element,pRegion.get());
   
@@ -531,7 +531,7 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	};
 
 	float* offsetOutputs[kMaxChannels];
-	assert(channelCount < kMaxChannels);
+	FSOM_ASSERT(channelCount < kMaxChannels);
 
 	fsom::DebugStream << "handling offset process block due to event with offset=" << offset << std::endl;
 	get_multichannel_offset_ptrs(outs, offsetOutputs, channelCount, offset);
@@ -551,7 +551,7 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 }
 
 void Session::process(float** ins,float** outs,int frameCount,int channelCount){
-	assert(m_audioMutex);
+	FSOM_ASSERT(m_audioMutex);
 	if ( ! m_audioMutex->try_lock() ) {
 	  clear_multichannel_buffers(outs,channelCount,frameCount); 
 	  return;
@@ -620,7 +620,7 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 						}
 						break;
 					default: 
-						assert(false && "Unknown SessionEventType");
+						FSOM_ASSERT(false && "Unknown SessionEventType");
 				}
 			} else {
 				// process remaining block
@@ -674,7 +674,7 @@ void Session::sort_regions(){
 }
 
 void Session::add_region(RegionPtr region){
-  	assert(region && "Remove Region: RegionPtr Invalid");
+  	FSOM_ASSERT(region && "Remove Region: RegionPtr Invalid");
  	ScopedMutexLock lock(*m_audioMutex);
 	m_regionPlaylist.push_back(region);
 	sort_regions();
@@ -682,9 +682,9 @@ void Session::add_region(RegionPtr region){
 
 void Session::remove_region(RegionPtr region){
   	ScopedMutexLock lock(*m_audioMutex);
-// 	assert(region && "Remove Region: RegionPtr Invalid");
+// 	FSOM_ASSERT(region && "Remove Region: RegionPtr Invalid");
 	
-// 	assert(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
+// 	FSOM_ASSERT(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
 	if(!region)throw "Region invalid";
 	if(std::find(m_regionPlaylist.begin(),m_regionPlaylist.end(),region) == m_regionPlaylist.end() )throw "Could not find region";
 	m_regionPlaylist.remove(region);
@@ -732,7 +732,7 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 	    };
 	    m_info.samplerate = 44100;
 	    outfile = sf_open(filepath.c_str(),SFM_WRITE,&m_info);
-	    assert(outfile);
+	    FSOM_ASSERT(outfile);
 	    size_t frames;
 	    size_t start;
 	    if(!useLocators){

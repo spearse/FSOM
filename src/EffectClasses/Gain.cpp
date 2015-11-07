@@ -59,7 +59,7 @@ void Gain::process(float** input, float** output, int frameSize, int channels) {
   
 	if(!bypass_active()){
   
-	    assert(channels == 2);
+	    FSOM_ASSERT(channels == 2);
 
 	    for(int n = 0; n < frameSize; ++n){
 		    output[0][n] = input[0][n] * get_parameter("Gain")->get_value();

@@ -96,7 +96,7 @@ AudioFile::~AudioFile(){
 void AudioFile::get_block(float** out, int blockSize){
 	
 	float temp[4096]; //create a temporary array of floats
-	assert(blockSize < 4096); //assert blocksize within maximum block size
+	FSOM_ASSERT(blockSize < 4096); //assert blocksize within maximum block size
 	
 	
 	
@@ -164,7 +164,7 @@ void AudioFile::fill_range_list(multiRangeList& output, int blockSize){
 	int channels = m_pImpl->m_sfInfo.channels; //get channel number and store in channels
 	int size = static_cast<int>(m_pImpl->m_sfInfo.frames) / blockSize + 1; //set size to the amount of blocks to be filled
 	std::vector<float> temp(blockSize*channels); 
-	assert(output.size() == channels );
+	FSOM_ASSERT(output.size() == channels );
 	for (int c = 0; c < channels;++c){
 		//allocating a new block without copying
 		output[c] = rangeList(size);

@@ -37,6 +37,8 @@
 #include <unistd.h>
 #endif
 
+#define FSOM_ASSERT(x) assert(x)
+
 namespace fsom
 {
 
@@ -258,8 +260,8 @@ inline float remap(float r1_a, float r1_b, float r2_a, float r2_b, float in)
 
 	float d1 = r1_b - r1_a;
 	float d2 = r2_b - r2_a;
-	assert(r1_b > r1_a);
-	assert(r2_b > r2_a);
+	FSOM_ASSERT(r1_b > r1_a);
+	FSOM_ASSERT(r2_b > r2_a);
 	float dv = in - r1_a;
 
 	return dv / d1 * d2 + r2_a;
@@ -345,7 +347,7 @@ public:
 		, m_channels(channels)
 		, m_size(size)
 	{
-		assert(m_channels > 0 && m_channels <= kMaxChannels);
+		FSOM_ASSERT(m_channels > 0 && m_channels <= kMaxChannels);
 		std::fill(&m_channelPtrs[0], m_channelPtrs + kMaxChannels, nullptr);
 
 		for (int n = 0; n < channels; n++)
@@ -491,7 +493,7 @@ class BreakPointUnit
 
 	float get_value(float absT) const
 	{
-		assert(bpList_.size() > 0);
+		FSOM_ASSERT(bpList_.size() > 0);
 		if (absT <= bpList_.begin()->t_)
 			return bpList_.begin()->v_;
 		if (absT >= bpList_.rbegin()->t_)
@@ -540,7 +542,7 @@ class BreakPointUnit
 	int get_list_size() { return bpList_.size(); }
 
 	/*  TVPair get_closest_pair(float Time){
-	    assert( bpList_.size() > 0 );
+	    FSOM_ASSERT( bpList_.size() > 0 );
 	//    if(  Time <= bpList_.begin()->t_ ) return bpList_.begin();
 	//    if(  Time >= bpList_.rbegin()->t_ ) return bpList_.rbegin();
 	    

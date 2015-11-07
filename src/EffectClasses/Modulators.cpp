@@ -67,7 +67,7 @@ void HighAmpMod::process(float** input, float** output, int frameSize, int chann
   
   
 	if(!bypass_active()){
-	  assert(channels == 2);
+	  FSOM_ASSERT(channels == 2);
 	  
 	  for(int n = 0; n < frameSize; ++n){
 		  m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
@@ -133,7 +133,7 @@ void LowAmpMod::process(float** input, float** output, int frameSize, int channe
 	  }  
   
 	  if(!bypass_active()){
-	      assert(channels == 2);
+	      FSOM_ASSERT(channels == 2);
 	     
 	      for(int n = 0; n < frameSize; ++n){
 		       m_phasor.set_frequency( get_parameter("Frequency")->get_value() );
@@ -179,7 +179,7 @@ Tremelo::~Tremelo(){}
 //Tremelo Process gets the phase at each frame (K-Rate)
 void Tremelo::process(float** input, float** output, int frameSize, int channels) {
 	m_phasor.set_frequency(get_parameter("Frequency")->get_value());
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	for(int n = 0; n < frameSize; ++n){
 		float v = sin(TWOPI*m_phasor.get_phase());
 		output[0][n] = v * input[0][n];
@@ -223,7 +223,7 @@ void RingMod::process(float** input, float** output, int frameSize, int channels
 	}
   
 	
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
 		m_phasor.set_frequency(get_parameter("Freq")->get_value() * get_parameter("Multiplier")->get_value());

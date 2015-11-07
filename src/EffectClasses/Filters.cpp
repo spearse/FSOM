@@ -76,7 +76,7 @@ void LowPassFilter::process(float** input, float** output, int frameSize, int ch
   
   
 	if(!bypass_active()){
-	    assert(channels == 2);
+	    FSOM_ASSERT(channels == 2);
 	    float f = get_parameter("Frequency")->get_value();
 	    float q = get_parameter("Quality of Filter")->get_value();
 	    get_biquad_left().set_LPF(f,q);
@@ -136,7 +136,7 @@ void HighPassFilter::process(float** input, float** output, int frameSize, int c
 	}  
   
 	if(!bypass_active()){
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
 	float q = get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_HPF(f,q);
@@ -185,7 +185,7 @@ void ResonatingFilter::one_shot(){
 
 void ResonatingFilter::process(float** input, float** output, int frameSize, int channels) {
      if(!bypass_active()){ 
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
 	float b = get_parameter("Q")->get_value();
 	get_biquad_left().set_BPF_const_gain(f,b);
@@ -241,7 +241,7 @@ void BandRejectFilter::process(float** input, float** output, int frameSize, int
 	}
   
 	if(!bypass_active()){
-	    assert(channels == 2);
+	    FSOM_ASSERT(channels == 2);
 	    float f = get_parameter("Frequency")->get_value();
 	    float b = get_parameter("Quality of Filter")->get_value();
 	    get_biquad_left().set_BAND_REJECT(f,b);
@@ -304,7 +304,7 @@ void BandPassFilter::process(float** input, float** output, int frameSize, int c
     }
   
     if(!bypass_active()){
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
 	float q = get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_BPF_const_gain(f,q);
@@ -348,7 +348,7 @@ void CombFilter::one_shot(){}
 
 void CombFilter::process(float** input, float** output, int frameSize, int channels) {
 	
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	
 	  if(!bypass_active()){
 	      float feedforward = get_parameter("Feedforward")->get_value();
@@ -407,7 +407,7 @@ void AllPassFilter::one_shot(){
 
 void AllPassFilter::process(float** input, float** output, int frameSize, int channels) {
     if(!bypass_active()){
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
 	float q = get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_ALL(f,q);
@@ -462,7 +462,7 @@ MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biqu
 
 void MultiBandFilter::process(float** input, float** output, int frameSize, int channels){
   if(!bypass_active()){
-    assert(channels == 2);
+    FSOM_ASSERT(channels == 2);
     
     float lpf = get_parameter("Low Shelf Frequency")->get_value();
     float lpq = get_parameter("Low Shelf Quality")->get_value();

@@ -53,13 +53,13 @@ void Engine::destroy(){
 }
 
 void Engine::attach_session(Session* s){
-	assert(s);
+	FSOM_ASSERT(s);
 	if(m_activeSession)detach_active_session();
 	m_activeSession = s;
 }
 
 int Engine::process(const void *input, void *output, unsigned long frameCount){
-	assert(frameCount == get_block_size());
+	FSOM_ASSERT(frameCount == get_block_size());
 	// session
 	if(m_activeSession){
 		m_activeSession->process(0, m_outputBuffers.get_buffers(), frameCount, get_output_channels());
@@ -72,7 +72,7 @@ int Engine::process(const void *input, void *output, unsigned long frameCount){
 }
 
 Session& Engine::get_active_session(){
-	assert(m_activeSession);
+	FSOM_ASSERT(m_activeSession);
 	return *m_activeSession;
 }
 

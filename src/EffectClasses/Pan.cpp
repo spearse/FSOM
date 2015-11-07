@@ -57,7 +57,7 @@ void Pan::process(float** input, float** output, int frameSize, int channels) {
     if(!bypass_active()){
 	
 
-	assert(channels == 2);
+	FSOM_ASSERT(channels == 2);
 
 	for(int n = 0; n < frameSize; ++n){
 		float val = (get_parameter("Pan")->get_value() +1)*0.5f ;

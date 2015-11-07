@@ -75,7 +75,7 @@ void GranularRegion::process(float** input, float** output, int frameSize, int c
   
    
   
-// 	assert(channels == m_file.get_channels() && channels == 2);
+// 	FSOM_ASSERT(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
 // 	m_file.get_block(m_diskStreamBuffers.get_buffers(),frameSize);//TODO write granular functions
 	// copy from the disk stream buffers through the DSP onto the output buffers.

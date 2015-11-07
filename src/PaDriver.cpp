@@ -16,8 +16,7 @@
 **  along with FSOM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
+#include "fsom/Utilities.hpp"
 #include "fsom/PaDriver.hpp"
 
 #include <cassert>
@@ -40,7 +39,7 @@ int pa_callback( const void *input,
                   PaStreamCallbackFlags statusFlags,
                   void *userData ){
 	PaDriver* driver = reinterpret_cast<PaDriver*>(userData);
-	assert(driver);
+	FSOM_ASSERT(driver);
 	driver->process(input,output,frameCount);
 	// NO FURTHER ALTERATIONS
 	return 0;

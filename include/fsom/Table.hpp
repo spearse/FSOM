@@ -180,7 +180,7 @@ class Table
 
 	T cubic_lookup(T index)
 	{
-		assert(false);
+		FSOM_ASSERT(false);
 		return 0.f;
 	}
 

@@ -305,7 +305,7 @@ void Region::add_parameter(std::string IdName, float lowerBound, float upperBoun
 ParameterPtr Region::get_parameter(std::string IdName){
 	std::map<std::string, ParameterPtr>::iterator it;
 	it = m_parameterList.find(IdName);
-	assert(it != m_parameterList.end() && "Could not find Param Name");
+	FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
 
@@ -314,7 +314,7 @@ ParameterPtr Region::get_parameter(int ID) {
 	std::map<std::string, ParameterPtr>::iterator it;
 	it =  m_parameterList.begin();
 	advance(it,ID);
-	//assert(it != m_parameterList.end() && "Could not find Param Name");
+	//FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
 	return  (*it).second;
 }
 
@@ -329,7 +329,7 @@ int Region::get_num_parameter() const {
 
 DSPEffectPtr Region::get_effect(int id){
 	DSPEffectPtr fx = m_DSPStack.at(id);
-	assert(fx.get() && "Contained ptr effect is invalid.");
+	FSOM_ASSERT(fx.get() && "Contained ptr effect is invalid.");
 	return  fx;
 }
 

@@ -56,7 +56,7 @@ void AudioRegion::show_info(){
 }
 
 void AudioRegion::process(float** input, float** output, int frameSize, int channels){
-	//assert(channels == m_file.get_channels() && channels == 2);
+	//FSOM_ASSERT(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
 	if(!get_reverse_state()){
 	      m_file->seek(m_samplePosition);

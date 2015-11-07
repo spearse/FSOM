@@ -75,7 +75,7 @@ void MetaDataStore::set_meta_as_float(const std::string& key, const float& value
 }
 
 const std::string& MetaDataStore::get_meta(const std::string& key) const{
-	assert(!key.empty());
+	FSOM_ASSERT(!key.empty());
 	
 	std::map<std::string,std::string >::const_iterator it;
 	it = m_map.find(key);
