@@ -20,6 +20,11 @@
 
 namespace fsom{
 
+	static DebugStreamBuf g_debugBuf;
+
+	std::ostream DebugStream(&g_debugBuf);
+
+
 void generic_sleep(int t){
 #ifdef _WIN32
 	Sleep(t*1000);

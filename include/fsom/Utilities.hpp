@@ -127,8 +127,8 @@ class DebugStreamBuf : public std::streambuf
 		setp(m_buf, m_buf + SIZE - 1);
 	}
 };
-static DebugStreamBuf debugBuf;
-static std::ostream DebugStream(&debugBuf);
+
+extern std::ostream DebugStream;
 
 //peak struct designed to store peak amp, the time of occurence and whether it has clipped..
 struct PeakData
