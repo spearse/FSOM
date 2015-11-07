@@ -276,27 +276,30 @@ class Phasor
 	float m_sr;
 	float m_delta;
 	float m_frequency;
-	bool m_isFirstTime;
 
   public:
 	Phasor(float sampleRate = 44100.0f, float frequency = 1.0f, float phase = 0.0f)
 		: m_phase(phase)
 		, m_sr(sampleRate)
 		, m_delta(frequency / sampleRate)
-		, m_isFirstTime(true)
+		, m_frequency(frequency)
 	{
 	}
+
 	float get_frequency() const { return m_frequency; }
+
 	void set_frequency(float frequency)
 	{
 		m_frequency = frequency;
 		m_delta = frequency / m_sr;
 	}
 	float get_phase() const { return m_phase; }
+
 	void set_phase(float phase)
 	{
 		m_phase = phase;
 	}
+
 	// call me to tick the phasor forward by one sample.
 	void tick()
 	{
