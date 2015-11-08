@@ -1,12 +1,11 @@
 #Libfsom->Src Folder
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
+cmake_policy(SET CMP0043 NEW)
 
 add_subdirectory(tinyxml)
 add_subdirectory(Freeverb)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_DIR}/src/CMakeModules/")
-
-#FIND_PACKAGE(Boost REQUIRED) # Debian/Ubuntu system this is package libboost-dev
 
 IF(APPLE)
 #	set(CMAKE_CXX_FLAGS "-g -Wall -arch i386")
@@ -42,18 +41,12 @@ include_directories(
 	../include
 	../FSOM/include/
 	../FSOM/src/
-	${Boost_INCLUDE_DIRS}
 	${SNDFILE_INCLUDE_DIR}
 	${PORTAUDIO_INCLUDE_DIRS}
 	${SNDFILE_INCLUDE_DIR} 
 )
 
-link_directories(
-	${Boost_LIBRARY_DIRS}
-)
-
 SET(LIBS ${LIBS}
-	${Boost_LIBRARIES}
 	${SNDFILE_LIBRARY} 
 	${PORTAUDIO_LIBRARIES}
 	${SNDFILE_LIBRARIES}
