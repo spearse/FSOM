@@ -44,6 +44,7 @@ m_filepath(""),
 m_internalClock(0),
 m_grainAmp(1.0f)
 {
+  set_meta("RegionType", "GranularSynthesis");
   add_parameter("GrainSize - ms",175.f,1000.f,500.f);
   add_parameter("GrainPitch",0.f,3.f,1.f);
   add_parameter("GrainPosition",0.f,1.f,0.f);
