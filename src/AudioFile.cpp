@@ -50,7 +50,7 @@ AudioFile::AudioFile(const std::string& filePath)
 	if (!m_pImpl->m_sndFile)
 	{
 		int err = sf_error(nullptr); // will get the error code for failed open.
-		DebugPrintf("ERROR: sf_open failed to open %s\n  sf_error code (%i) : %s\n", m_filePath.c_str(), err, sf_error_number(err));
+		DebugPrintf("ERROR: sf_open failed to open %s\n  sf_error code (%d) : %s\n", m_filePath.c_str(), err, sf_error_number(err));
 		throw AudioFileException();
 	}
 	if (m_pImpl->m_sfInfo.frames == 0)

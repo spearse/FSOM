@@ -83,10 +83,11 @@ typedef uint32_t frame_size_t;
 
 inline void DebugPrintf(const char* fmt, ...)
 {
-	char buf[256];
+	enum { kBufferSize = 4096 };
+	char buf[kBufferSize];
 	va_list vl;
-	va_start(fmt, vl);
-	vsprintf_s(buf, 256, fmt, vl);
+	va_start(vl, fmt);
+	vsprintf_s(buf, kBufferSize, fmt, vl);
 	va_end(vl);
 	DEBUG_OUTPUT(buf)
 }
@@ -96,7 +97,6 @@ inline void DebugPrintf(const char* fmt, ...)
 #endif
 
 // Improved assertion.
-
 #ifdef _WIN32
 #ifdef DEBUG
 #define FSOM_ASSERT(x) if(!(x)){__debugbreak();}

@@ -193,7 +193,7 @@ class Table
 		fsom::DebugStream << " " << std::endl;
 	}
 
-	typename TableDataType::size_type get_size()
+	typename TableDataType::size_type get_size() const
 	{
 		return m_table.size() - kGuardValues;
 	}
