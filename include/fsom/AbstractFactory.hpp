@@ -56,14 +56,14 @@ public:
 		FSOM_ASSERT( fact != 0 && "Factory function given was null");
 		FSOM_ASSERT(m_factories.count(name) == 0);
 		m_factories[name] = fact;
-		//fsom::DebugStream << "AbstractFactory<"<<typeid(T).name() << ">::register_factory() name=" << name << " func=" << fact << std::endl;
+
 		return true;
 	}
 	///run through the map and return the pointer to the name given in function
 	ptr create(const std::string& name, const Arg1& arg1) const {
 		typename FactoryMap::const_iterator it;
 		it = m_factories.find(name);
-		fsom::DebugStream << name << std::endl;
+
 		FSOM_ASSERT( it != m_factories.end() && "Factory with given name not found .");
 		return (*it).second(arg1);
 	}

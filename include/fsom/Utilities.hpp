@@ -73,7 +73,6 @@ typedef uint32_t frame_size_t;
 #define DEBUG_ONLY(x)
 #endif
 
-#ifdef DEBUG
 
 #ifdef _WIN32
 #define DEBUG_OUTPUT(x) OutputDebugString(x);
@@ -92,18 +91,18 @@ inline void DebugPrintf(const char* fmt, ...)
 	DEBUG_OUTPUT(buf)
 }
 
-#else
-#define DebugPrintf(fmt, ...)
-#endif
-
-// Improved assertion.
+// Assertion and verification macros
 #ifdef _WIN32
+
 #ifdef DEBUG
-#define FSOM_ASSERT(x) if(!(x)){__debugbreak();}
+#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
+#define FSOM_ASSERT(x) if(!(x)){ fsom::DebugPrintf("=== ASSERT FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
 #else
+#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); exit(-1);}
 #define FSOM_ASSERT(x)
 #endif
 #else
+#define FSOM_VERIFY(x) verify(x)
 #ifdef DEBUG
 #define FSOM_ASSERT(x) assert(x)
 #else
