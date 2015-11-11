@@ -27,15 +27,10 @@
 #include <map>
 #include "../Utilities.hpp"
 
-
-
-
 namespace fsom{
 
 class Region;
   
-
-
 struct dspCreationStruct{
 	  int dummy;
 	  Region* attatchedRegion;
@@ -48,24 +43,26 @@ class DSPEffect : public MetaDataStore
 {
 	std::string m_IdName;
 	const std::string m_tutId;
-	//int m_intId;
 	ParameterList m_parameterList;
 	dspCreationStruct m_dataStruct;
-	bool m_isImplemented, m_bypass;
+	bool m_isImplemented;
+	bool m_bypass;
+
 protected:
 	DSPEffect(const DSPEffect& op);
-	DSPEffect& operator = (const DSPEffect& op); // not defined
+	DSPEffect& operator = (const DSPEffect& op) = delete;
+
 public:	
 	DSPEffect(dspCreationStruct creationStruct);
 
 	virtual ~DSPEffect();
 	virtual void process(float** input, float** output, int frameSize, int channels) = 0;
 	ParameterPtr get_parameter(int id);
-	ParameterPtr get_parameter(std::string IdName);
+	ParameterPtr get_parameter(const std::string& IdName);
 	int get_num_parameter() const;
-	void add_parameter(std::string IdName,float lowerBound, float upperBound,float value); // Add a parameter object
+	void add_parameter(const std::string& IdName, float lowerBound, float upperBound, float value); // Add a parameter object
 	std::string& get_effect_name();
-	void set_effect_name(std::string IdName);
+	void set_effect_name(const std::string& IdName);
 	ParameterList& get_parameter_list();
 	const std::string& get_tutId();
 	bool is_implemented();

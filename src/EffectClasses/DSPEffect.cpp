@@ -63,10 +63,10 @@ DSPEffect::~DSPEffect()
 
 }
 
-ParameterPtr DSPEffect::get_parameter(std::string IDName) {
+ParameterPtr DSPEffect::get_parameter(const std::string& IDName) {
 	std::map<std::string, ParameterPtr>::iterator it;
 	it = m_parameterList.find(IDName);
-// 	FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
+
 	if(it == m_parameterList.end())throw "Could not obtain parameter";
 	return  (*it).second;
 }
@@ -76,7 +76,7 @@ ParameterPtr DSPEffect::get_parameter(int ID) {
 	it =  m_parameterList.begin();
 	advance(it,ID);
 	if(it == m_parameterList.end())throw "Could not obtain parameter";
-	//FSOM_ASSERT(it != m_parameterList.end() && "Could not find Param Name");
+
 	return  (*it).second;
 }
 
@@ -90,7 +90,7 @@ int DSPEffect::get_num_parameter() const {
 	return m_parameterList.size();
 }
 
-void DSPEffect::add_parameter(std::string IdName, float lowerBound, float upperBound, float value){
+void DSPEffect::add_parameter(const std::string& IdName, float lowerBound, float upperBound, float value){
   
 	
 	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
@@ -109,7 +109,7 @@ std::string& DSPEffect::get_effect_name(){
  
 }
 
-void DSPEffect::set_effect_name(std::string IdName){
+void DSPEffect::set_effect_name(const std::string& IdName){
   
      m_IdName = IdName; 
   
@@ -127,11 +127,6 @@ bool DSPEffect::is_implemented(){
 void DSPEffect::set_implementation(){
      m_isImplemented = true; 
 }
-/*
-fsom::Region& DSPEffect::get_parent_region(){
-	return m_dataStruct.m_region;
-}
-*/
 
 bool DSPEffect::bypass_active(){
   return m_bypass;

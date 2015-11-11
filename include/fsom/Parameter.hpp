@@ -16,7 +16,6 @@
 **  along with FSOM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef __PARAMETER_HPP__
 #define __PARAMETER_HPP__
 
@@ -24,55 +23,47 @@
 #include <memory>
 #include "Utilities.hpp"
 
+namespace fsom
+{
 
-namespace fsom{
+class BreakPointUnit;
 
-  class BreakPointUnit;
-  
 typedef std::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
-  
-class Parameter : public MetaDataStore {
 
+class Parameter : public MetaDataStore
+{
 
-std::string m_IDName;
-float m_currentValue,m_lowerBound,m_upperBound, m_lastStaticValue; //last static value takes the current value when set to dynamic so that it can return to it later 
-BreakPointUnitPtr m_bpUnit;
-SampleLength m_duration;
-bool m_inDynamicMode;  
+	std::string m_IDName;
+	float m_currentValue, m_lowerBound, m_upperBound, m_lastStaticValue; //last static value takes the current value when set to dynamic so that it can return to it later
+	BreakPointUnitPtr m_bpUnit;
+	SampleLength m_duration;
+	bool m_inDynamicMode;
 
-Parameter& operator = (const Parameter& op);
+	Parameter& operator=(const Parameter& op);
 
-public:
+  public:
+	Parameter(fsom::SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value, fsom::BreakPointUnitPtr bpUnit);
+	Parameter(const Parameter& old);
+	~Parameter();
 
+	void set_value(float value);
 
-  
-Parameter(fsom::SampleLength duration, std::string IDName, float lowerBound, float upperBound, float value, fsom::BreakPointUnitPtr bpUnit);
-///Copy constructor
-Parameter(const Parameter& old);
+	float get_value() const;
+	const std::string& get_name() const;
+	void tick(SampleLength& samplesRead);
+	float get_lowerBound() const;
+	float get_upperBound() const;
+	float get_range() const;
+	float get_last_breakpoint_position() const;
 
-~Parameter();
-
-
-
-
-void set_value(float value);
-//void set_value(float value, double timeCode);
-float get_value();
-std::string get_name();
-void tick(SampleLength& samplesRead);
-float get_lowerBound();
-float get_upperBound();
-float get_range();
-float get_last_breakpoint_position();
-void duplicate_last_breakpoint_at_time(float time);
-BreakPointUnitPtr get_breakpoints();
-void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
-void set_automated_mode(bool isDynamic);
-bool get_automated_mode();
+	void duplicate_last_breakpoint_at_time(float time);
+	BreakPointUnitPtr get_breakpoints();
+	void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
+	void set_automated_mode(bool isDynamic);
+	bool get_automated_mode() const;
 };
+
 typedef std::shared_ptr<Parameter> ParameterPtr;
-typedef std::map<std::string,ParameterPtr> ParameterList;
-
-
+typedef std::map<std::string, ParameterPtr> ParameterList;
 }
 #endif

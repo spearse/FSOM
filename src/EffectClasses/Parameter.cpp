@@ -64,21 +64,18 @@ Parameter::Parameter(const Parameter& old):
   
 }
 
-
-
 Parameter::~Parameter(){}
 
 void Parameter::set_value(float value){
 	m_currentValue = value; 
-// 	//fsom::DebugStream <<"Paramter class is Setting parameter value to " << m_currentValue <<std::endl;
 }
 
-float Parameter::get_value(){
+float Parameter::get_value() const {
 
 	return m_currentValue;
 }
 
-std::string Parameter::get_name(){
+const std::string& Parameter::get_name() const{
   
     return m_IDName;
 }
@@ -89,14 +86,14 @@ void Parameter::tick(SampleLength& samplesRead){
     }
 }
 
-float Parameter::get_lowerBound(){
+float Parameter::get_lowerBound() const{
     return m_lowerBound;
 }
 
-float Parameter::get_upperBound(){
+float Parameter::get_upperBound() const{
     return m_upperBound;
 }
-float Parameter::get_range(){
+float Parameter::get_range() const{
     return m_upperBound - m_lowerBound;
 }
 
@@ -118,11 +115,11 @@ void Parameter::set_automated_mode(bool isDynamic){
     m_inDynamicMode = isDynamic;
 }
 
-bool Parameter::get_automated_mode(){
+bool Parameter::get_automated_mode() const{
     return m_inDynamicMode;
 }
 
-float Parameter::get_last_breakpoint_position(){
+float Parameter::get_last_breakpoint_position() const{
     return m_bpUnit->get_last_breakpoint(); 
 }
 
