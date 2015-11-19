@@ -55,7 +55,7 @@ class Table
 	void fill_sine()
 	{
 		T f = static_cast<T>(TWOPI / (m_table.size() - 1));
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = sin(T(n) * f);
 		}
@@ -64,7 +64,7 @@ class Table
 
 	void fill_sine(float frequency)
 	{
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table[n] = sin(TWOPI * (float)n * frequency / (float)m_table.size());
 		}
@@ -73,7 +73,7 @@ class Table
 	void fill_cos()
 	{
 		T f = TWOPI / (m_table.size() - 1);
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = cos(T(n) * f);
 		}
@@ -82,7 +82,7 @@ class Table
 	void fill_hann()
 	{
 		T f = TWOPI / (m_table.size() - 1);
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = 0.5f * (1.0f - cos(T(n) * f));
 		}
@@ -90,7 +90,7 @@ class Table
 	void fill_linear()
 	{
 		T f = 1.0f / (m_table.size() - 1);
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = n * f;
 		}
@@ -99,7 +99,7 @@ class Table
 	void fill_triangle()
 	{
 		T f = (1.0f / (m_table.size() - 1));
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			if (n <= m_table.size() / 2)
 			{
@@ -116,7 +116,7 @@ class Table
 	void fill_linear_offset()
 	{
 		T f = 2.0f / (m_table.size() - 1);
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = (n * f) - 1.0f;
 		}
@@ -125,7 +125,7 @@ class Table
 	{
 		T f = 2.0f / (m_table.size() - 1);
 		float t;
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			t = (n * f) - 1.0f;
 			if (t > threshold)
@@ -144,7 +144,7 @@ class Table
 	}
 	void fill_noise()
 	{
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			m_table.at(n) = (((rand() % 1000) * 0.001f) * 2.0f) - 1.0f;
 		}
@@ -152,7 +152,7 @@ class Table
 	void fill_square()
 	{
 		T f = 2.0f / (m_table.size() - 1);
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			if (n <= m_table.size() / 2.0f)
 			{
@@ -168,10 +168,10 @@ class Table
 
 	T linear_lookup(T fIndex)
 	{
-		TableDataType::size_type aIndex, bIndex;
-		T fIntPart, r, va, vb;
+		typename TableDataType::size_type aIndex, bIndex;
+		double fIntPart, r, va, vb;
 		r = modf(fIndex, &fIntPart);
-		aIndex = static_cast<TableDataType::size_type>(fIntPart);
+		aIndex = static_cast<typename TableDataType::size_type>(fIntPart);
 		bIndex = aIndex + 1;
 		va = m_table[aIndex];
 		vb = m_table[bIndex];
@@ -186,7 +186,7 @@ class Table
 
 	void print_table()
 	{
-		for (TableDataType::size_type n = 0; n < m_table.size(); ++n)
+		for (typename TableDataType::size_type n = 0; n < m_table.size(); ++n)
 		{
 			fsom::DebugStream << " " << m_table.at(n) << " ";
 		}
@@ -216,7 +216,7 @@ class Table
 	TableDataType m_table;
 };
 
-typedef std::shared_ptr<Table<float>> TablePtr;
+typedef std::shared_ptr<Table<float> > TablePtr;
 typedef std::vector<TablePtr> MultiTableBuffer;
 typedef std::shared_ptr<MultiTableBuffer> MultiTablePtr;
 }

@@ -209,9 +209,7 @@ using namespace fsom;
 
 	std::complex<float> Biquad::H(std::complex<float> z){
 
-		return ( b0 + b1*pow(z,-1) + b2*pow(z,-2) ) 
-			/ 
-			(a0 + a1*pow(z,-1) + a2*pow(z,-2) );
+		return ( b0 + b1*pow(z,-1.f) + b2*pow(z,-2.f) ) /(a0 + a1*pow(z,-1.f) + a2*pow(z,-2.f) );
 	}
 
 	std::vector<float> Biquad::get_amplitudes(int steps){

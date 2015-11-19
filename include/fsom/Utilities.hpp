@@ -86,28 +86,33 @@ inline void DebugPrintf(const char* fmt, ...)
 	char buf[kBufferSize];
 	va_list vl;
 	va_start(vl, fmt);
+#if __WIN32
 	vsprintf_s(buf, kBufferSize, fmt, vl);
+#endif
 	va_end(vl);
+	
 	DEBUG_OUTPUT(buf)
 }
 
 // Assertion and verification macros
 #ifdef _WIN32
 
-#ifdef DEBUG
-#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
-#define FSOM_ASSERT(x) if(!(x)){ fsom::DebugPrintf("=== ASSERT FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
+	#ifdef DEBUG
+		#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
+		#define FSOM_ASSERT(x) if(!(x)){ fsom::DebugPrintf("=== ASSERT FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
+		#else
+	#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); exit(-1);}
+	#define FSOM_ASSERT(x)
+	#endif
 #else
-#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); exit(-1);}
-#define FSOM_ASSERT(x)
-#endif
-#else
-#define FSOM_VERIFY(x) verify(x)
-#ifdef DEBUG
-#define FSOM_ASSERT(x) assert(x)
-#else
-#define FSOM_ASSERT(x)
-#endif
+	
+	#ifdef DEBUG
+		#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__);__debugbreak();}
+		#define FSOM_ASSERT(x) if(!(x)){ fsom::DebugPrintf("=== ASSERT FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); __debugbreak();}
+	#else
+		#define FSOM_VERIFY(x) if(!(x)){ fsom::DebugPrintf("=== VERIFY FAIL ===\n  %s(%d)\n============\n", __FILE__, __LINE__); exit(-1);}
+		#define FSOM_ASSERT(x)
+	#endif
 #endif
 
 // static std::ofstream g_debugLog("log.txt");

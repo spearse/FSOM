@@ -64,7 +64,7 @@ public:
 	}
 	void clear_buffer(){
 // 	  fsom::DebugStream << "Clearing delay buffer"<<std::endl;
-		for (BufferType::size_type n = 0; n < m_buffer.size(); ++n){
+		for (typename BufferType::size_type n = 0; n < m_buffer.size(); ++n){
 	      m_buffer[n]=0;
 	  }
 // 	  fsom::DebugStream << m_buffer.size()<<std::endl;  
