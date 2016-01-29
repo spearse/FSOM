@@ -199,19 +199,19 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node, b
 		}*/
 }
 
-void Region::attach_effect(DSPEffectPtr p){
+int Region::attach_effect(DSPEffectPtr p){
 
 	m_DSPStack.push_back(p);
-
+	return m_DSPStack.size() - 1;
 }
 
-void Region::add_effect(std::string id){
+int Region::add_effect(std::string id){
 	m_DSPStack.push_back(fsom::DSPManager::get_instance().create(id,dspCreationStruct(this)));
 	fsom::DebugStream << "***    Effect Stack  ***"<<std::endl;
 	for(DSPStack::size_type n = 0; n < m_DSPStack.size();++n){
 	 fsom::DebugStream << "***" <<  m_DSPStack.at(n)->get_effect_name()<< "***"<<std::endl;
 	}
-	
+	return m_DSPStack.size() - 1;
 }
 
 void Region::remove_effect(std::string id){
@@ -236,7 +236,14 @@ void Region::remove_effect(DSPEffectPtr effect){
 		}
 	}
 }
-
+void Region::remove_effect(int id){
+	if(!(id < m_DSPStack.size()) || id < 0 )return;
+	
+	m_DSPStack.at(id).reset();
+	m_DSPStack.erase(m_DSPStack.begin() + id);
+	
+	
+}
 
 
 

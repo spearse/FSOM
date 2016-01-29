@@ -107,13 +107,14 @@ public:
 	/// function that processes the dsp stack
 	void process_dsp_stack(float** input, float** output, int frameSize, int channels);
 
-	void attach_effect(DSPEffectPtr p);
-	void add_effect(std::string id);
+	int attach_effect(DSPEffectPtr p);
+	int add_effect(std::string id);
 	void remove_effect(std::string id);
 	void clear_all_effects();
 	DSPEffectPtr get_effect(int id);
 	void remove_effect(DSPEffectPtr effect);
-
+	void remove_effect(int id);
+	
 	regionCreationStruct get_creation_struct();
 	void add_parameter(std::string IdName, float lowerBound, float upperBound, float value);
 	ParameterPtr get_parameter(std::string IdName);
