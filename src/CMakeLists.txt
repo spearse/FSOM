@@ -7,6 +7,11 @@ add_subdirectory(tinyxml)
 add_subdirectory(Freeverb)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_DIR}/src/CMakeModules/")
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -stdlib=libc++ -std=c++11 ")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -stdlib=libc++ -std=c++11 ")
+	set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -stdlib=libc++ -std=c++11 ")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 IF(APPLE)
 #	set(CMAKE_CXX_FLAGS "-g -Wall -arch i386")
 #	set(CMAKE_CXX_FLAGS:STRING "-arch i386")

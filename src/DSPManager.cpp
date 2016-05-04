@@ -66,13 +66,13 @@ DSPManager::get_instance().register_factory("MultiBandFilter",MultiBandFilter::c
 
 DSPManager::get_instance().register_factory("Transpose",Transpose::create);
 DSPManager::get_instance().register_factory("Distort",Distort::create);
-DSPManager::get_instance().register_factory("Feedbackdelay",FeedbackDelay::create);
+//DSPManager::get_instance().register_factory("Feedbackdelay",FeedbackDelay::create);
 // DSPManager::get_instance().register_factory("Timestretch",Timestretch::create);
 DSPManager::get_instance().register_factory("Flanger",Flanger::create);
-DSPManager::get_instance().register_factory("Granulate",Granulate::create);
+//DSPManager::get_instance().register_factory("Granulate",Granulate::create);
 DSPManager::get_instance().register_factory("Chorus",Chorus::create);
-DSPManager::get_instance().register_factory("Envelope",Envelope::create);
-DSPManager::get_instance().register_factory("Convolution",Convolution::create);
+//DSPManager::get_instance().register_factory("Envelope",Envelope::create);
+//DSPManager::get_instance().register_factory("Convolution",Convolution::create);
 
 DSPManager::get_instance().register_factory("LowAmpMod",LowAmpMod::create);
 DSPManager::get_instance().register_factory("HighAmpMod",HighAmpMod::create);

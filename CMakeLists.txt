@@ -8,7 +8,7 @@ project(LIBFSOM)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -stdlib=libc++ -std=c++11 ")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -stdlib=libc++ -std=c++11 ")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -stdlib=libc++ -std=c++11 ")
-
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 IF(WIN32)
 	# Enable parallel compilation on windows
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")

@@ -64,7 +64,9 @@ public:
 		typename FactoryMap::const_iterator it;
 		it = m_factories.find(name);
 
-		FSOM_ASSERT( it != m_factories.end() && "Factory with given name not found .");
+		FSOM_ASSERT( it == m_factories.end() && "Factory with given name not found .");
+		if((*it).second == 0 || it == m_factories.end() )throw "Unable to find factory";
+		
 		return (*it).second(arg1);
 	}
 	///get the singleton instance of the AbstractFactory class
