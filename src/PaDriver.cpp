@@ -46,8 +46,8 @@ int pa_callback( const void *input,
 }
 
 PaDriver::PaDriver() :
-	m_pImpl(new PaDriverImpl), 
-	m_sr(44100), 
+	m_sr(44100),
+	m_pImpl(new PaDriverImpl),
 	m_blockSize(512),
 	m_outputChannels(2)
 	{

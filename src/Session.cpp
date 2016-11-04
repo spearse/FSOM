@@ -538,12 +538,12 @@ void Session::internal_process(float** ins, float** outs, int frameCount, int ch
 	for_each(m_activeRegions.begin(), m_activeRegions.end(), 
 		std::bind(&Region::process_region, std::placeholders::_1, ins, offsetOutputs, frameCount, channelCount,globalTime)
 	);
+	for(int n = 0; n < frameCount; ++n){
+		for (int chan=0; chan < channelCount;++chan){
+		      offsetOutputs[chan][n] *=m_masterVolume->get_value();
+	    }
+		m_playHead +=1;
 
-	for (int chan=0; chan < channelCount;++chan){
-	  for(int n = 0; n < frameCount; ++n){
-	      offsetOutputs[chan][n] *=m_masterVolume->get_value();
-	      m_playHead +=1;
-	  }
 	}
 	
 // 	m_playHead += frameCount;
@@ -798,8 +798,8 @@ bool Session::get_preview_state(){
 	return m_previewState;
 }
 
-SamplePosition* Session::get_playhead_value(){
-	return &m_playHead;
+SamplePosition Session::get_playhead_value(){
+	return m_playHead;
 }
 
 const SampleLength& Session::get_playback_duration() const{
