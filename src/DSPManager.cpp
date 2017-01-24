@@ -59,7 +59,7 @@ DSPManager::get_instance().register_factory("Echo",Echo::create);
 // DSPManager::get_instance().register_factory("CombFilter",CombFilter::create);
 DSPManager::get_instance().register_factory("LowPassFilter",LowPassFilter::create);
 DSPManager::get_instance().register_factory("HighPassFilter",HighPassFilter::create);
-DSPManager::get_instance().register_factory("ResonatingFilter",ResonatingFilter::create);
+//DSPManager::get_instance().register_factory("ResonatingFilter",ResonatingFilter::create);
 DSPManager::get_instance().register_factory("BandRejectFilter",BandRejectFilter::create);
 DSPManager::get_instance().register_factory("BandPassFilter",BandPassFilter::create);
 DSPManager::get_instance().register_factory("MultiBandFilter",MultiBandFilter::create);
