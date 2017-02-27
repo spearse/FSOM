@@ -48,7 +48,8 @@ public:
 	///return a single sample at a given delay time 	
 	T read_sample(sample_index delayTime){
 		sample_index t = m_writePos-delayTime;
-		if(t < 0 )t+=m_maxDelay; 
+		while(t > m_maxDelay )t-=m_maxDelay;
+		while(t < 0 )t+=m_maxDelay;
 		return m_buffer[t];
 	}
 	

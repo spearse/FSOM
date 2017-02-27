@@ -36,17 +36,19 @@ Fade::Fade(dspCreationStruct data):
 
   set_meta(get_tutId(),"link to html");
   
-  add_parameter("Fade In Time(ms)",10,m_duration/kfSampleRateKHz,1000.0f);
+  add_parameter("Fade In Time(ms)",10,m_duration/kfSampleRateKHz,10);
   get_parameter("Fade In Time(ms)")->set_meta("GuiHint","soCustomFader");
   
-  add_parameter("Fade Out Time(ms)",10,m_duration/kfSampleRateKHz,1000.0f);
+  add_parameter("Fade Out Time(ms)",10,m_duration/kfSampleRateKHz,10.0f);
   get_parameter("Fade Out Time(ms)")->set_meta("GuiHint","soCustomFader");
     
    m_fadeUnit.add_breakpoint(TVPair(0, 0));
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz, 1.0f));
    m_fadeUnit.add_breakpoint(TVPair(get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz, 1.0f));
    m_fadeUnit.add_breakpoint(TVPair(static_cast<float>(m_duration), 0));
-   
+	
+   m_fadeUnit.print_breakpoints();
+	
    set_implementation();
 }
 
@@ -70,7 +72,9 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
   if(!bypass_active()){
        m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz;
        m_fadeUnit.get_pair(2).t_ = m_duration - (get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz);
-      for(int n = 0; n < frameSize; ++n){ 
+	  m_fadeUnit.get_pair(3).t_ = m_duration;
+
+      for(int n = 0; n < frameSize; ++n){
 	
 	    m_currentAmp = m_fadeUnit.get_value(static_cast<float>(samplesRead));
 	    
@@ -88,8 +92,16 @@ void Fade::process(float** input, float** output, int frameSize, int channels) {
 }
 
 void Fade::reset_effect(){
-    m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz;
+	m_duration = get_creation_struct().attatchedRegion->get_duration();
+	get_parameter("Fade In Time(ms)")->set_upperBound( m_duration/kfSampleRateKHz   );
+	get_parameter("Fade In Time(ms)")->set_upperBound( m_duration/kfSampleRateKHz   );
+/*
+	m_fadeUnit.get_pair(1).t_ = get_parameter("Fade In Time(ms)")->get_value()*kfSampleRateKHz;
     m_fadeUnit.get_pair(2).t_ = get_parameter("Fade Out Time(ms)")->get_value()*kfSampleRateKHz;
+*/
+	m_fadeUnit.get_pair(3).t_ = m_duration;
+//	m_fadeUnit.print_breakpoints();
+	
     m_fadeUnit.sort();
 }
 

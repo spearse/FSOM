@@ -212,7 +212,7 @@ public:
 	
 	std::string get_working_directory()const;
 	
-	std::string timestretch_region(RegionPtr region, float speed,std::string folderpath,std::string name,int fftSize = 2048,int numOverlaps = 4);
+	std::string timestretch_region(RegionPtr region, float speed,std::string folderpath,std::string name,int fftSize = 512,int numOverlaps = 4);
 	
 	///function to set left locator
 	void set_left_locator(SamplePosition location);

@@ -126,3 +126,8 @@ float Parameter::get_last_breakpoint_position() const{
 void Parameter::duplicate_last_breakpoint_at_time(float time){
     m_bpUnit->duplicate_last_at_time(time);
 }
+
+void Parameter::set_upperBound(float upperBound ){
+	m_upperBound = upperBound;
+}
+

@@ -75,15 +75,18 @@ void Chorus::process(float** input, float** output, int frameSize, int channels)
       float invmix(0);
       float frequency(0);
 
+	  frequency = get_parameter("Frequency")->get_value() * 0.8f ;
+	  
       m_modPhasor.set_frequency( frequency );
       for(int n = 0; n < frameSize; ++n){
 	
-	  depth = get_parameter("Depth")->get_value() * 100.0f;
+	  depth = get_parameter("Depth")->get_value() * 44.1;
 	  mix = get_parameter("Chorus Amount")->get_value();
 	  invmix = 1.0f - mix;
 	  frequency = get_parameter("Frequency")->get_value() * 0.8f ;
+	  m_modPhasor.set_frequency( frequency );
 	
-	  float fDt = m_modTable.linear_lookup( m_modPhasor.get_phase() * m_modTable.get_size()) * depth + depth + 1.0f;
+	  float fDt = (((m_modTable.linear_lookup( m_modPhasor.get_phase() * m_modTable.get_size()))*0.5)+0.5)    * depth + depth ;
 	  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(fDt);
 	  
 	  output[0][n] = input[0][n] * invmix + m_delayUnitL.read_sample(dt) * mix;     

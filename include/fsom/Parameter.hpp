@@ -30,6 +30,8 @@ class BreakPointUnit;
 
 typedef std::shared_ptr<BreakPointUnit> BreakPointUnitPtr;
 
+
+	
 class Parameter : public MetaDataStore
 {
 
@@ -61,9 +63,16 @@ class Parameter : public MetaDataStore
 	void set_breakpoints(fsom::BreakPointUnitPtr bpUnit);
 	void set_automated_mode(bool isDynamic);
 	bool get_automated_mode() const;
+	
+	void set_upperBound(float upperBound);
+	
 };
 
 typedef std::shared_ptr<Parameter> ParameterPtr;
 typedef std::map<std::string, ParameterPtr> ParameterList;
+	
+
+	
+	
 }
 #endif
