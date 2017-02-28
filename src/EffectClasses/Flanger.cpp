@@ -28,7 +28,8 @@ Flanger::Flanger(dspCreationStruct data):
 	m_delayUnitL(2048),
 	m_delayUnitR(2048),
 	m_table(512),
-	m_phasor(44100,2)
+	m_phasor(44100,2),
+	m_lfoValue(0)
 {
 	set_effect_name("Flanger");
 	m_table.fill_sine();
@@ -79,8 +80,9 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
 		  feedback = get_parameter("Feedback")->get_value();
 		  dry = get_parameter("Flanger Amount")->get_value();
 		  wet = 1.0f - dry;
-	    
-		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(offset + m_table.linear_lookup(m_phasor.get_phase()*S) * depth);
+		  
+		  m_lfoValue = m_table.linear_lookup(m_phasor.get_phase()*S);
+		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(offset + m_lfoValue * depth);
 		  output[0][n] = m_delayUnitL.read_sample(dt) * wet + (input[0][n]*dry);	
 		  output[1][n] = m_delayUnitR.read_sample(dt) * wet + (input[1][n]*dry);
 		  m_delayUnitL.write_sample(output[0][n]*feedback + input[0][n]);

@@ -32,6 +32,8 @@ class Flanger :public DSPEffect
 	DelayBase<float> m_delayUnitL,m_delayUnitR;
 	Table<float> m_table;
 	Phasor m_phasor;
+	float m_lfoValue;
+
 public:
 	Flanger(dspCreationStruct data );
 	virtual ~Flanger();
@@ -39,6 +41,9 @@ public:
 	static DSPEffectPtr create(dspCreationStruct data ) { return DSPEffectPtr(new Flanger(data)) ; }
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Flanger(*this) ); }
 	virtual void reset_effect();
+	
+	float get_phasorValue(){ return m_phasor.get_phase();}
+	
 };
 
 }

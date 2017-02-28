@@ -983,7 +983,7 @@ std::string Session::timestretch_region(RegionPtr region, float speed, std::stri
 //   char number[24]; // dummy size, you should take care of the size!
 //    sprintf(number, "%.2f", stretchAmount);
    
-  ssPath<<  folderpath<<  "TS"  << name<< (1.0f/speed)*100<<"%.wav";
+  ssPath<<  folderpath<<  "TS"  << name<< (1.0f/speed)*100<<".wav";
   
   TimeStretcher timeStretcher(speed,fftSize,numOverlaps,filepath,ssPath.str() );
   timeStretcher.run();
