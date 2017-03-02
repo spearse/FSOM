@@ -39,10 +39,10 @@ Flanger::Flanger(dspCreationStruct data):
 	add_parameter("Depth",0.0f, 1.0f, 0.5f);
 	get_parameter("Depth")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Frequency", 0.01f, 8.0f, 1.0f);
+	add_parameter("Frequency", 0.01f, 8.0f, 0.1f);
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	
-	add_parameter("Feedback", 0.0f, 1.0f, 0.2f);
+	add_parameter("Feedback", 0.0f, 1.0f, 0.6f);
 	get_parameter("Feedback")->set_meta("GuiHint","soCustomFader");
 	
 	set_implementation();
@@ -73,20 +73,24 @@ void Flanger::process(float** input, float** output, int frameSize, int channels
 	  float feedback;
 	  float dry;
 	  float wet;
-	  
+	  float hdepth;
+		
 	  for (int n = 0; n < frameSize; ++n){
 		  m_phasor.set_frequency(get_parameter("Frequency")->get_value());
-		  depth = get_parameter("Depth")->get_value() * offset-10;
+		  depth = get_parameter("Depth")->get_value() * offset;
+		  hdepth = depth*0.5;
 		  feedback = get_parameter("Feedback")->get_value();
-		  dry = get_parameter("Flanger Amount")->get_value();
-		  wet = 1.0f - dry;
+		  wet = get_parameter("Flanger Amount")->get_value();
+		  dry = 1.0f - wet;
 		  
-		  m_lfoValue = m_table.linear_lookup(m_phasor.get_phase()*S);
-		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(offset + m_lfoValue * depth);
-		  output[0][n] = m_delayUnitL.read_sample(dt) * wet + (input[0][n]*dry);	
-		  output[1][n] = m_delayUnitR.read_sample(dt) * wet + (input[1][n]*dry);
-		  m_delayUnitL.write_sample(output[0][n]*feedback + input[0][n]);
-		  m_delayUnitR.write_sample(output[1][n]*feedback + input[1][n]);
+		  m_lfoValue = m_table.linear_lookup((m_phasor.get_phase()*S)-1);
+		  DelayBase<float>::sample_index dt = truncate_to_integer<DelayBase<float>::sample_index>(     ( m_lfoValue  +hdepth) *hdepth   );
+		  output[0][n] = (m_delayUnitL.read_sample(dt) * wet) + (input[0][n]*dry);
+		  output[1][n] = (m_delayUnitR.read_sample(dt) * wet) + (input[1][n]*dry);
+		  
+		  m_delayUnitL.write_sample((output[0][n]*feedback)+ input[0][n]);
+		  
+		  m_delayUnitR.write_sample((output[1][n]*feedback) + input[1][n]);
 		  m_phasor.tick();
 		  m_delayUnitL.tick();
 		  m_delayUnitR.tick();

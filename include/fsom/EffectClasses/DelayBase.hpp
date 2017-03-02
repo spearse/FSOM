@@ -45,12 +45,50 @@ public:
 	void write_sample(T sample){
 		m_buffer[m_writePos] = sample;
 	}
+	void sum_sample(T sample){
+		m_buffer[m_writePos] +=sample;
+	}
 	///return a single sample at a given delay time 	
-	T read_sample(sample_index delayTime){
+	T read_sample(float delayTime){
+		/*
 		sample_index t = m_writePos-delayTime;
 		while(t > m_maxDelay )t-=m_maxDelay;
 		while(t < 0 )t+=m_maxDelay;
 		return m_buffer[t];
+		 */
+		float pos, previousSampleValue, nextSampleValue, fraction;
+		
+		pos = m_writePos - delayTime;
+		
+		//Make shure the delay does not overshoot the buffer
+		//Change to while if extreme delays are allowed
+		//If statements are a little bit cheaper in terms of instructions
+		if (pos < 0 ) {
+			pos += m_maxDelay;
+		} else if (pos >= m_maxDelay) {
+			pos -= m_maxDelay;
+		}
+		
+		// Interpolate the signal as one could try to access a value inbetween
+		// what is stored in the buffer as sound waves are continious
+		// while values handled are discrete.
+		int index = (int) pos;
+		fraction = pos - index;
+		previousSampleValue = m_buffer[index];
+		
+		// Get next element in the circular buffer,
+		// If previous element was the last element, get the first element
+		if (index != m_maxDelay-1) {
+			nextSampleValue = m_buffer[index + 1];
+		} else {
+			nextSampleValue = m_buffer[0];
+		}
+		
+		// Get interpolated value
+		float interpolatedValue = ((1.0f - fraction) * previousSampleValue) +
+		(fraction * nextSampleValue);
+		
+		return interpolatedValue;
 	}
 	
 	///increment the writing position

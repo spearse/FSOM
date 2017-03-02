@@ -48,11 +48,11 @@ include_directories(
 	../FSOM/src/
 	${SNDFILE_INCLUDE_DIR}
 	${PORTAUDIO_INCLUDE_DIRS}
-	${SNDFILE_INCLUDE_DIR} 
+	${SNDFILE_INCLUDE_DIR}
 )
 
 SET(LIBS ${LIBS}
-	${SNDFILE_LIBRARY} 
+	${SNDFILE_LIBRARY}
 	${PORTAUDIO_LIBRARIES}
 	${SNDFILE_LIBRARIES}
 
@@ -73,7 +73,7 @@ set(FSOM_SOURCES
 	NoiseRegionBase.cpp
 	NoiseRegions.cpp
 	MetaDataStore.cpp
-	Utilities.cpp	
+	Utilities.cpp
 	Generator.cpp
 	SynthesisRegion.cpp
 	SynthesisModule.cpp
@@ -142,6 +142,7 @@ set(FSOM_EFFECT_SOURCES
 	EffectClasses/TransposeUnit.cpp
 	EffectClasses/Harmonizer.cpp
 	EffectClasses/AsymmetricDelay.cpp
+	EffectClasses/ModulatedDelay.cpp
 )
 
 set(FSOM_EFFECT_HEADERS
@@ -170,6 +171,7 @@ set(FSOM_EFFECT_HEADERS
 	../include/fsom/EffectClasses/Timestretch.hpp
 	../include/fsom/EffectClasses/Transpose.hpp
 	../include/fsom/EffectClasses/TransposeUnit.hpp
+	../include/fsom/EffectClasses/ModulatedDelay.hpp
 )
 source_group(effects FILES ${FSOM_EFFECT_SOURCES} ${FSOM_EFFECT_HEADERS})
 

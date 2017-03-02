@@ -23,6 +23,8 @@
 #include "DSPEffect.hpp"
 #include <fsom/Table.hpp>
 #include <fsom/EffectClasses/DelayBase.hpp>
+#include <fsom/EffectClasses/ModulatedDelay.hpp>
+
 
 namespace fsom{
   //DSPEffect Pointer
@@ -35,8 +37,8 @@ class Chorus : public DSPEffect
   DelayBase<float> m_delayUnitL,m_delayUnitR;
   Table<float> m_modTable;
   Phasor m_modPhasor;
-  
-  
+  float m_samplePos;
+	ModulatedDelay m_modDelayLeft,m_modDelayRight;
   
 public:
     Chorus(dspCreationStruct data);
