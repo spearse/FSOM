@@ -23,23 +23,21 @@
 #include <vector>
 #include <iostream>
 
-#include <fsom/EffectClasses/DelayBase.hpp>
+#include "DelayBase.hpp"
 #include <cmath>
 namespace fsom{
 
 	class ModulatedDelay{
 		
 		DelayBase<float> m_delayUnit;
-		float m_sampleRate,m_sampleRateMS,m_depth,m_frequency,m_phaseIndex;
+		float m_sampleRate,m_sampleRateMS,m_depth,m_frequency,m_phaseIndex,m_maxFrequency,m_minFrequency,m_maxDepth,m_minDepth,m_maxPhaseDelayMS,m_minPhaseDelayMS;
 		
 		// 'speed' 0.0f and 1.0f.
 		//It represents a fraction of the frequency range the unit has to offer.
 		float frequencyFromSpeed(float speed) {
 			
-			float maxFrequency = 5.0f;
-			float minFrequency = 0.00f;
-			
-			return (speed * (maxFrequency - minFrequency)) + maxFrequency;
+		
+			return (speed * (m_maxFrequency - m_minFrequency)) + m_minFrequency;
 		}
 		float getDelay(float delayMS, float minPhaseDelayMS, float maxPhaseDelayMS){
 			float start = minPhaseDelayMS + delayMS;
@@ -58,22 +56,23 @@ namespace fsom{
 			m_delayUnit(maxDelay),
 			m_sampleRate(sampleRate),
 			m_sampleRateMS(sampleRate * 0.001f),
-			m_phaseIndex(0)
-
+			m_phaseIndex(0),
+			m_maxFrequency(5.0f),
+			m_minFrequency(0.0f),
+			m_maxDepth(0.1f),
+			m_minDepth(0.005),
+			m_minPhaseDelayMS(5.0f),
+			m_maxPhaseDelayMS(30.0f)
 		{
 			setDepth(depth);
 		}
 		//range 0 - 1
 		void setDepth (float depth) {
-			
-			float max = 0.1f;
-			float min = 0.005f;
-			m_depth = (depth * (max - min)) + min;
+			m_depth = (depth * (m_maxDepth - m_minDepth)) + m_minDepth;
 		}
 		//value between 0 and 1
 		void set_frequency(float speed){
 			m_frequency = frequencyFromSpeed(speed);
-			
 		}
 		
 	
@@ -81,10 +80,7 @@ namespace fsom{
 			m_delayUnit.tick();
 		}
 		float modulatedDelay(float delayMS){
-			float minPhaseDelayMS = 5.0f;
-			float maxPhaseDelayMS = 30.0f;
-			
-			return getDelay (delayMS, minPhaseDelayMS, maxPhaseDelayMS);
+			return getDelay (delayMS, m_minPhaseDelayMS, m_maxPhaseDelayMS);
 		}
 		void clear(){
 			m_delayUnit.clear_buffer();
@@ -95,6 +91,20 @@ namespace fsom{
 		void write(float sample){
 			m_delayUnit.write_sample(sample);
 		}
+		void set_max_depth(float max){
+			m_maxDepth = max;
+		}
+		void set_min_depth(float min){
+			m_minDepth = min;
+		}
+		void set_min_phase_delayMS(float min){
+			m_minPhaseDelayMS = min;
+		}
+		void set_max_phase_delayMS(float max){
+			m_maxPhaseDelayMS = max;
+		}
+		
+		
 	};
 
 
