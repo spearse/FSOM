@@ -51,6 +51,7 @@ class Parameter : public MetaDataStore
 	void set_value(float value);
 
 	float get_value() const;
+	float get_value_zero_one()const;
 	const std::string& get_name() const;
 	void tick(SampleLength& samplesRead);
 	float get_lowerBound() const;

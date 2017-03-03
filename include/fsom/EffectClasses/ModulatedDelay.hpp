@@ -37,7 +37,7 @@ namespace fsom{
 		float frequencyFromSpeed(float speed) {
 			
 			float maxFrequency = 5.0f;
-			float minFrequency = 0.002f;
+			float minFrequency = 0.00f;
 			
 			return (speed * (maxFrequency - minFrequency)) + maxFrequency;
 		}
@@ -45,8 +45,6 @@ namespace fsom{
 			float start = minPhaseDelayMS + delayMS;
 			
 			
-			//	float phase = (1.0f + OscillatorUnit::getValue()) * 0.5f;
-			//samplerate need to be in MS?
 			float phase = 1.0f + sinf((6.28318530718 * m_phaseIndex  * m_frequency)/m_sampleRate)   *0.5f   ;
 			
 			delayMS = m_depth * (phase * (maxPhaseDelayMS - minPhaseDelayMS)) + start;

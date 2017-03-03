@@ -75,6 +75,11 @@ float Parameter::get_value() const {
 	return m_currentValue;
 }
 
+float Parameter::get_value_zero_one()const {
+	return m_currentValue/get_range();
+}
+
+
 const std::string& Parameter::get_name() const{
   
     return m_IDName;
