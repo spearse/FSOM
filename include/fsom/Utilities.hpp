@@ -487,6 +487,12 @@ struct TVPair
 	{
 		return t_ < op.t_; // && v_ < op.v_;
 	}
+	bool operator == (const TVPair& op){
+		bool valid  = true;
+		if(op.t_ != t_) valid = false;
+		if(op.v_ != v_)valid = false;
+		return valid;
+	}
 };
 
 inline bool operator<(const TVPair& op, const float& t)
@@ -501,7 +507,9 @@ inline bool operator<(const float& t, const TVPair& op)
 
 class BreakPointUnit
 {
+public:
 	typedef std::vector<TVPair> BPList;
+private:
 	BPList bpList_;
 
   public:
@@ -514,10 +522,13 @@ class BreakPointUnit
 			bpList_.push_back(old.bpList_.at(n));
 		}
 	}
-	void add_breakpoint(const TVPair& tvPair)
+	//returns new index for the point
+	BPList::iterator const add_breakpoint(const TVPair& tvPair)
 	{
 		bpList_.push_back(tvPair);
 		std::sort(bpList_.begin(), bpList_.end());
+		BPList::iterator it = std::find(bpList_.begin(),bpList_.end(),tvPair);
+		return it;
 	}
 
 	float get_value(float absT) const
