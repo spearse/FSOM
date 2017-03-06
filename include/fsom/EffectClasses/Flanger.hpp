@@ -44,7 +44,9 @@ public:
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Flanger(*this) ); }
 	virtual void reset_effect();
 	
-	float get_phasorValue(){ return m_lfoValue;}
+	inline ModulatedDelay* get_mod_delay(){
+		return &m_modDelayLeft;
+	}
 	
 };
 

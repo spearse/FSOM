@@ -30,7 +30,7 @@ namespace fsom{
 	class ModulatedDelay{
 		
 		DelayBase<float> m_delayUnit;
-		float m_sampleRate,m_sampleRateMS,m_depth,m_frequency,m_phaseIndex,m_maxFrequency,m_minFrequency,m_maxDepth,m_minDepth,m_maxPhaseDelayMS,m_minPhaseDelayMS;
+		float m_sampleRate,m_sampleRateMS,m_depth,m_frequency,m_phaseIndex,m_maxFrequency,m_minFrequency,m_maxDepth,m_minDepth,m_maxPhaseDelayMS,m_minPhaseDelayMS,m_lfoVal;
 		
 		// 'speed' 0.0f and 1.0f.
 		//It represents a fraction of the frequency range the unit has to offer.
@@ -43,9 +43,9 @@ namespace fsom{
 			float start = minPhaseDelayMS + delayMS;
 			
 			
-			float phase = 1.0f + sinf((6.28318530718 * m_phaseIndex  * m_frequency)/m_sampleRate)   *0.5f   ;
+			m_lfoVal = 1.0f + sinf((6.28318530718 * m_phaseIndex  * m_frequency)/m_sampleRate)   *0.5f   ;
 			
-			delayMS = m_depth * (phase * (maxPhaseDelayMS - minPhaseDelayMS)) + start;
+			delayMS = m_depth * (m_lfoVal * (maxPhaseDelayMS - minPhaseDelayMS)) + start;
 			
 			++m_phaseIndex;
 	//		std::cout << " "<< delayMS * m_sampleRateMS << " ";
@@ -62,7 +62,8 @@ namespace fsom{
 			m_maxDepth(0.1f),
 			m_minDepth(0.005),
 			m_minPhaseDelayMS(5.0f),
-			m_maxPhaseDelayMS(30.0f)
+			m_maxPhaseDelayMS(30.0f),
+			m_lfoVal(0)
 		{
 			setDepth(depth);
 		}
@@ -104,7 +105,9 @@ namespace fsom{
 			m_maxPhaseDelayMS = max;
 		}
 		
-		
+		float get_lfo_value(){
+			return m_lfoVal;
+		}
 	};
 
 

@@ -21,9 +21,9 @@
 #define CHORUS_HPP
 
 #include "DSPEffect.hpp"
-#include <fsom/Table.hpp>
-#include <fsom/EffectClasses/DelayBase.hpp>
-#include <fsom/EffectClasses/ModulatedDelay.hpp>
+#include "../Table.hpp"
+#include "DelayBase.hpp"
+#include "ModulatedDelay.hpp"
 
 
 namespace fsom{
@@ -43,6 +43,11 @@ namespace fsom{
 		static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Chorus(data)) ; }
 		virtual DSPEffectPtr clone() { return DSPEffectPtr( new Chorus(*this) ); }
 		virtual void reset_effect();
+		
+		inline ModulatedDelay* get_mod_delay(){
+			return &m_modDelayLeft;
+		}
+		
 	};
 }
 #endif // CHORUS_HPP
