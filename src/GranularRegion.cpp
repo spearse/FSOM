@@ -262,23 +262,35 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 void GranularRegion::spawn(){
       float dur = 44100.0f/m_grainRate;
 	  m_nextSpawn = truncate_to_integer<int>(dur);
-      
+	
+	if(m_grains.size() < 32){
       m_grains.push_back(GrainPtr(new Grain(m_window,m_table,m_grainSize,m_basePosition,m_basePitch,m_grainAmp)));
 //       fsom::DebugStream << "Spawned " << "next = " << m_nextSpawn<<std::endl; 
-    
+	}else{
+		for(int n = 0; n < m_grains.size();++n){
+			
+			if(m_grains[n]->is_dead()){
+				m_grains[n]->re_init(m_grainSize,m_basePosition,m_basePitch,m_grainAmp);
+				return;
+			}
+		}
+		
+		
+	}
 }
 
 void GranularRegion::kill_grains(){
   for(GrainList::size_type n =0; n < m_grains.size();++n){
 	bool kill =false; 
 	if(m_grains[n]->is_dead())kill = true;
-	if(kill){ 
+	/*
+	if(kill){
 	  m_grains.at(n).reset();
 	  m_grains.erase(m_grains.begin()+n);
 //  	  fsom::DebugStream << "Killed a grain"<<std::endl;
 	}
-      
+      */
     }
- 
+	
 }
 

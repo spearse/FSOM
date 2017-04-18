@@ -36,6 +36,9 @@ class Grain {
 public:
 	/// Grain constructor
 	Grain(fsom::TablePtr window, fsom::MultiTablePtr table, int dur, int position, float pitch, float amp );
+	
+	void re_init(int dur, int position, float pitch, float amp );
+	
 	/// Grain destructor
 	virtual ~Grain();
 	

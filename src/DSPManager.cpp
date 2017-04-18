@@ -46,8 +46,8 @@ using namespace fsom;
 void fsom::register_fx_factories(){
 DSPManager::get_instance().register_factory("Gain",Gain::create);
 DSPManager::get_instance().register_factory("Pan",Pan::create);
-DSPManager::get_instance().register_factory("Tremelo",Tremelo::create);
-DSPManager::get_instance().register_factory("RingMod",RingMod::create);
+//DSPManager::get_instance().register_factory("Tremelo",Tremelo::create);
+//DSPManager::get_instance().register_factory("RingMod",RingMod::create);
 DSPManager::get_instance().register_factory("Delay",Delay::create);
 DSPManager::get_instance().register_factory("SimpleReverb",SimpleReverb::create);
 DSPManager::get_instance().register_factory("Reverb",Reverb::create);

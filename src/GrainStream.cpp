@@ -21,9 +21,21 @@ Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float 
   m_amp(amp)
 {  
   //phasor freqency---- example ........ dur = 44100 .... 1... second  
-  m_phasor.set_frequency(dur/44100.0f);
+  m_phasor.set_frequency(float(dur)/44100.0f);
 }
 
+void Grain::re_init(int dur, int position, float pitch, float amp){
+		
+	m_isDead = false;
+	m_basePosition = position;
+	m_basePitch = pitch;
+	m_dur = dur;
+	m_internalClock = 0;
+	m_phasor.set_frequency(float(dur)/44100.0f);
+	
+}
+	
+	
 Grain::~Grain(){
   
 }
