@@ -135,6 +135,17 @@ void DSPEffect::set_bypass(bool state){
       m_bypass = state;
 }
 
+
+bool DSPEffect::has_parameter(std::string name){
+		
+	ParameterList::iterator it = m_parameterList.find(name);
+	bool state = false;
+	if(it != m_parameterList.end())state = true;
+	
+	return state;
+	
+}
+	
 	
 }
 

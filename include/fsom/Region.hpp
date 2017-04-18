@@ -136,6 +136,10 @@ public:
 	void set_mute_state(bool state);
 	bool get_mute_state();
 	
+	bool has_parameter(std::string name);
+
+	
+	
 };
 } // fsom
 #endif //__REGION__

@@ -394,4 +394,14 @@ bool Region::get_mute_state(){
 
 
 
+bool Region::has_parameter(std::string name){
+	
+	ParameterList::iterator it = m_parameterList.find(name);
+	bool state = false;
+	if(it != m_parameterList.end())state = true;
+	
+	return state;
+	
+}
+
 

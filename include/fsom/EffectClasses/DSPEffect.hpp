@@ -74,6 +74,8 @@ public:
 	bool bypass_active();
 	virtual void reset_effect(){};
 	void set_bypass(bool state);
+	
+	bool has_parameter(std::string name);
 
 };
 
