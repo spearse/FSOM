@@ -265,6 +265,9 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   pRegion->set_meta("image",image);
   pRegion->set_meta("managerId",managerId);
 
+  pRegion->register_meta("vpos");
+	pRegion->set_meta("vpos",meta->Attribute("vpos") );
+	
    fsom::DebugStream << "Metadata read, image = " <<image<<std::endl;
   
   

@@ -97,8 +97,8 @@ namespace fsom{
 				
 				m_modDelayLeft.write(input[0][n]);
 				m_modDelayRight.write(input[1][n]);
-				float wetL = m_modDelayLeft.modulatedDelay(20);
-				float wetR = m_modDelayRight.modulatedDelay(20);
+				float wetL = m_modDelayLeft.modulatedDelay(30);
+				float wetR = m_modDelayRight.modulatedDelay(30);
 				
 				//feedback
 				//		m_modDelayLeft.sum(wetL );

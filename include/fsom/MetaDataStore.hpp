@@ -33,6 +33,7 @@ class MetaDataStoreKeyException{
 	std::string m_keyString;
 public:
 	MetaDataStoreKeyException(const std::string& keyString) : m_keyString(keyString){}
+	std::string get(){return  m_keyString;};
 };
 
 class MetaDataStore
@@ -53,6 +54,8 @@ public:
 	
 	void save_meta_to_xml(TiXmlElement* node);
 	std::map<std::string,std::string> get_map();
+	
+	void print_items();
 };
 
 
