@@ -872,7 +872,7 @@ RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition pos
 RegionPtr Session::splice_region(fsom::RegionPtr region, SamplePosition splicePosition,std::string factoryName ){
 	fsom::RegionPtr newRegion = copy_region(region,splicePosition,factoryName);
   
-	if(factoryName =="Audio"){
+//	if(factoryName =="Audio"){
 	  
 		//std::shared_ptr<fsom::AudioRegion> origAudioRegion = std::dynamic_pointer_cast<fsom::AudioRegion>(region);
 		
@@ -890,9 +890,9 @@ RegionPtr Session::splice_region(fsom::RegionPtr region, SamplePosition splicePo
 		
 				
 		return newRegion;//TODO sort this out needs better implementation
-	}
+//	}
 
-    return newRegion;
+  //  return newRegion;
 }
 
 bool Session::transport_is_rolling(){

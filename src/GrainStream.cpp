@@ -7,7 +7,70 @@
 #include "../include/fsom/Table.hpp"
 namespace fsom{
 
-  
+	
+	Table<float> Grain::s_windowFunction = Table<float>(512);
+
+	
+	Grain::Grain():
+	m_active(false)
+	{
+		s_windowFunction.fill_hann();
+		
+	}
+	void 	Grain::processSample(float& leftChannel,float& rightChannel,float volume,float speed ){
+		if(m_active == true){
+			//fill grain data here....
+			
+			float t =m_audioBuffer->at(0)->linear_lookup(m_internalPos); // * s_windowFunction.linear_lookup((float)m_samplesRemaining/(float)m_grainSize);
+			leftChannel += m_audioBuffer->at(0)->linear_lookup(m_internalPos) * s_windowFunction.linear_lookup(((float)m_samplesRemaining/(float)m_grainSize)* 511);
+			rightChannel += m_audioBuffer->at(1)->linear_lookup(m_internalPos)  * s_windowFunction.linear_lookup(((float)m_samplesRemaining/(float)m_grainSize)*511);
+		
+	
+			
+			leftChannel *= volume;
+			rightChannel *= volume;
+			
+			
+			//pitch tricks done here.....
+			m_internalPos += speed;
+			if(m_internalPos <=0 )m_internalPos+= m_bufferSize;
+			if(m_internalPos >= m_bufferSize)m_internalPos -= m_bufferSize;
+			
+			--m_samplesRemaining;
+			if(m_samplesRemaining <= 0){
+				m_active = false;
+				m_samplesRemaining = m_grainSize;
+			}
+			
+			
+			
+		}
+	}
+	void 	Grain::set_index(int index){
+		m_index = index;
+	}
+	void Grain::activate(MultiTablePtr buffer,float grainsize,float pos){
+		m_audioBuffer = buffer;
+		if(m_audioBuffer){
+			m_grainSize = grainsize;
+			m_samplesRemaining = m_grainSize;
+			m_internalPos = pos;
+			m_bufferSize = buffer->at(0)->get_size();
+			m_active = true;
+		//	std::cout << m_grainSize  << " "<< m_bufferSize<<std::endl;
+			//			std::cout << "/t G active "<< m_index << " "<<std::endl;
+		}
+	}
+	
+	bool 	Grain::is_active(){
+		return m_active;
+	}
+	
+
+	
+	
+	
+  /*
   
 Grain::Grain(TablePtr window,   MultiTablePtr table,int dur,int position, float pitch,float amp):
   m_isDead(false),

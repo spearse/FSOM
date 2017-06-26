@@ -26,6 +26,29 @@
 
 namespace fsom{
 
+	class Grain{
+		
+		bool m_active;
+		static Table<float> s_windowFunction;
+		float m_grainSize;
+		int m_samplesRemaining;
+		MultiTablePtr m_audioBuffer;
+		int m_index;
+		float m_internalPos;
+		int m_bufferSize;
+		float m_left,m_right;
+		float m_speed;
+	public:
+		Grain();
+		void processSample(float& leftChannel,float& rightChannel, float volume,float speed);
+		void set_index(int index);
+		void activate(MultiTablePtr buffer,float grainsize,float pos);
+		bool is_active();
+		
+	};
+	
+/*
+	
 class Grain {
 	bool m_isDead;
 	MultiTablePtr m_table; 
@@ -48,6 +71,8 @@ public:
 	void kill();
 };
 
+ 
+ */
 typedef std::shared_ptr<Grain> GrainPtr;
 
 /*

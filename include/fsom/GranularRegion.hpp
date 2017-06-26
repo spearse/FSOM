@@ -40,13 +40,32 @@ namespace fsom{
     int m_counter;
     bool m_fileLoaded;
 
-    typedef std::vector<GrainPtr> GrainList;
-    GrainList m_grains;
+//    typedef std::vector<GrainPtr> GrainList;
+//    GrainList m_grains;
     MultiTablePtr m_table;
-    TablePtr m_window;
-    int m_density,m_basePosition,m_grainSize,m_internalClock,m_grainRate;
-    float m_basePitch,m_grainAmp;
-    void kill_grains();
+ 
+	  
+	float m_sampleSize;
+	float m_sampleRate;
+	float m_NormalfilePlaybackSpeed;
+	float m_spawnRate;
+	float m_grainSize;
+	float m_pitch;
+	int m_samplesPerSpawn;
+	int m_samplesToNextSpawn;
+	Phasor m_phasor;
+	float m_scrollSpeed;
+	  float m_currentSampleStart;
+	  
+	typedef std::vector<Grain> GrainVector;
+	GrainVector m_grainvector;
+	const int m_numGrains = 4;
+
+   
+
+   
+	  
+	void kill_grains();
     void spawn();
     int m_nextSpawn;
     std::string m_filepath;
