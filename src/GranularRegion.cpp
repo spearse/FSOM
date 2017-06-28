@@ -144,7 +144,7 @@ void GranularRegion::save_to_xml_node(TiXmlElement* node, bool useRelatvie){
 	TiXmlElement * element = new TiXmlElement( "Region" );
 	save_meta_to_xml(element);
 	save_to_region_specifics_to_existing_xml_node(element,useRelatvie);
-	element->SetAttribute("path",get_file_path().c_str());
+	element->SetAttribute("path",m_filepath.c_str());
 	node->LinkEndChild( element );
 	
 }
@@ -165,11 +165,18 @@ void GranularRegion::load_soundfile(std::string filepath){
 		MultiTablePtr t = MultiTablePtr(new MultiTableBuffer( Engine::get_instance().get_active_session().load_file_to_table(filepath))) ;
 		m_filepath = filepath;
 		//     m_grainStream.load_soundfile(filepath);
+		set_file_path(filepath);
+		
+		
+		
 		m_fileLoaded = true;
 		m_sampleSize = t->at(0)->get_size();
 		m_table = t;
 		m_NormalfilePlaybackSpeed =1.0f/( m_sampleSize/m_sampleRate);
 		m_phasor.set_frequency(m_NormalfilePlaybackSpeed  * m_scrollSpeed);
+		
+		
+		
 		
 	}catch(...){
 		m_fileLoaded = false;

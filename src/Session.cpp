@@ -309,9 +309,9 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
   }else if(pRegion->get_meta("RegionType")==std::string("GranularSynthesis") ){
       std::shared_ptr<fsom::GranularRegion> gran_region = std::dynamic_pointer_cast<fsom::GranularRegion>(pRegion);
       if(!path.empty()){
-	gran_region->load_soundfile( m_workingDirectory + path );
+		  gran_region->load_soundfile( m_workingDirectory + path );
       }else{
-	gran_region->fill_table_sin();  
+		  gran_region->fill_table_sin();
       }
   }
   
