@@ -72,7 +72,13 @@ namespace fsom{
 
     void kill_all_grains();
   
-  
+	  
+	  ParameterPtr m_parameterGrainSpawnRate;
+	  ParameterPtr m_parameterGrainSize;
+	  ParameterPtr m_parameterGrainPitch;
+	  ParameterPtr m_parameterGrainAmp;
+	  ParameterPtr m_parameterGrainPosition;
+	  ParameterPtr m_parameterPlaybackSpeed;
   public:
       GranularRegion(regionCreationStruct data);
       virtual ~GranularRegion();
