@@ -98,13 +98,13 @@ void AsymmetricDelay::process(float** input, float** output, int frameSize, int 
 		  nSampleIndex[1] = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Second Delay Time")->get_value() * kSampleRate);
 		  nSampleIndex[2] = truncate_to_integer<DelayBase<float>::sample_index>(get_parameter("Third Delay Time")->get_value() * kSampleRate);
 
-		  a = input[0][n] + (m_delayUnitL.read_sample(nSampleIndex[0]) * fVolume[0])
-			  + (m_delayUnitL.read_sample(nSampleIndex[1]) * fVolume[1])
-			  + (m_delayUnitL.read_sample(nSampleIndex[2]) * fVolume[2]);
+		  a = input[0][n] + (m_delayUnitL.read_sample(nSampleIndex[0]) * fVolume[0] * 0.33)
+			  + (m_delayUnitL.read_sample(nSampleIndex[1]) * fVolume[1]*0.33)
+			  + (m_delayUnitL.read_sample(nSampleIndex[2]) * fVolume[2]*0.33);
 
-		  b = input[1][n] + (m_delayUnitR.read_sample(nSampleIndex[0]) * fVolume[0])
-			  + (m_delayUnitR.read_sample(nSampleIndex[1]) * fVolume[1])
-			  + (m_delayUnitR.read_sample(nSampleIndex[2]) * fVolume[2]);
+		  b = input[1][n] + (m_delayUnitR.read_sample(nSampleIndex[0]) * fVolume[0]*0.33)
+			  + (m_delayUnitR.read_sample(nSampleIndex[1]) * fVolume[1]*0.33)
+			  + (m_delayUnitR.read_sample(nSampleIndex[2]) * fVolume[2]*0.33);
 
 		  output[0][n]= a;
 		  output[1][n]= b;

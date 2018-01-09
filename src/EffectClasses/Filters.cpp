@@ -423,37 +423,29 @@ void AllPassFilter::process(float** input, float** output, int frameSize, int ch
 
 MultiBandFilter::MultiBandFilter(dspCreationStruct data):DSPEffect(data), m_biquadAmount(6),m_combinedAmps(0){
     set_effect_name("MultiBandFilter");
-    add_parameter("Low Shelf Frequency",5,10000.0f,50.0f);
-    add_parameter("Low Shelf Quality",0.2f,10.0f,1);
+    add_parameter("Band Pass One Frequency",5,10000.0f,350);
+    add_parameter("Band Pass One Quality",0.2f,10.0f,1);
     
-    add_parameter("Band Pass Frequency",500,20000.0f,5000.0f);
-    add_parameter("Band Pass Quality",0.2f,10.0f,1);
+    add_parameter("Band Pass Two Frequency",500,10000.0f,2000);
+    add_parameter("Band Pass Two Quality",0.2f,10.0f,1);
     
-    add_parameter("High Shelf Frequency",50,20000.0f,440.0f);
-    add_parameter("High Shelf Quality",0.2f,10.0f,1);
+    add_parameter("Band Pass Three Frequency",50,10000.0f,2800);
+    add_parameter("Band Pass Three Quality",0.2f,10.0f,1);
     
     set_meta(get_tutId(),"link to html");	
-    get_parameter("Low Shelf Frequency")->set_meta("GuiHint","soCustomFader");
-    get_parameter("Low Shelf Quality")->set_meta("GuiHint","soCustomFader");
-    
-    get_parameter("Band Pass Frequency")->set_meta("GuiHint","soCustomFader");
-    get_parameter("Band Pass Quality")->set_meta("GuiHint","soCustomFader");
-    
-    get_parameter("High Shelf Frequency")->set_meta("GuiHint","soCustomFader");
-    get_parameter("High Shelf Quality")->set_meta("GuiHint","soCustomFader");
-    
+	
     for(int n=0;n < m_biquadAmount; n++){
 	m_biquadList.push_back(BiquadPtr(new Biquad(44100)));
     }
     
-    m_biquadList.at(0)->set_HPF(10000.0f,5.0f);
-    m_biquadList.at(1)->set_HPF(10000.0f,5.0f);
+    m_biquadList.at(0)->set_BPF(350,5.0f);
+    m_biquadList.at(1)->set_BPF(350,5.0f);
     
-    m_biquadList.at(2)->set_BPF(5000.0f,5.0f);
-    m_biquadList.at(3)->set_BPF(5000.0f,5.0f);
+    m_biquadList.at(2)->set_BPF(2000,5.0f);
+    m_biquadList.at(3)->set_BPF(2000,5.0f);
     
-    m_biquadList.at(4)->set_LPF(440.0f,5.0f);
-    m_biquadList.at(5)->set_LPF(440.0f,5.0f);
+    m_biquadList.at(4)->set_BPF(2800,5.0f);
+    m_biquadList.at(5)->set_BPF(2800,5.0f);
     
     one_shot(0);
     
@@ -464,14 +456,14 @@ void MultiBandFilter::process(float** input, float** output, int frameSize, int 
   if(!bypass_active()){
     FSOM_ASSERT(channels == 2);
     
-    float lpf = get_parameter("Low Shelf Frequency")->get_value();
-    float lpq = get_parameter("Low Shelf Quality")->get_value();
+    float lpf = get_parameter("Band Pass One Frequency")->get_value();
+    float lpq = get_parameter("Band Pass One Quality")->get_value();
     
-    float bpf = get_parameter("Band Pass Frequency")->get_value();
-    float bpq = get_parameter("Band Pass Quality")->get_value();
+    float bpf = get_parameter("Band Pass Two Frequency")->get_value();
+    float bpq = get_parameter("Band Pass Two Quality")->get_value();
     
-    float hpf = get_parameter("High Shelf Frequency")->get_value();
-    float hpq = get_parameter("High Shelf Quality")->get_value();
+    float hpf = get_parameter("Band Pass Three Frequency")->get_value();
+    float hpq = get_parameter("Band Pass Three Quality")->get_value();
     
       m_biquadList.at(0)->set_LPF(lpf,lpq);
       m_biquadList.at(1)->set_LPF(lpf,lpq);
@@ -483,8 +475,8 @@ void MultiBandFilter::process(float** input, float** output, int frameSize, int 
       m_biquadList.at(5)->set_HPF(hpf,hpq);
     
       for(int n = 0; n < m_biquadAmount; n+=2){
-	m_biquadList.at(n)->process(input[0],output[0],frameSize);
-	m_biquadList.at(n+1)->process(input[1],output[1],frameSize);
+		  m_biquadList.at(n)->process(input[0],output[0],frameSize);
+		  m_biquadList.at(n+1)->process(input[1],output[1],frameSize);
       }
       
   }else{
@@ -495,15 +487,16 @@ void MultiBandFilter::process(float** input, float** output, int frameSize, int 
 }
 
 void MultiBandFilter::one_shot(int steps){
-    float lpf = get_parameter("Low Shelf Frequency")->get_value();
-    float lpq = get_parameter("Low Shelf Quality")->get_value();
-    
-    float bpf = get_parameter("Band Pass Frequency")->get_value();
-    float bpq = get_parameter("Band Pass Quality")->get_value();
-    
-    float hpf = get_parameter("High Shelf Frequency")->get_value();
-    float hpq = get_parameter("High Shelf Quality")->get_value();
-    
+	float lpf = get_parameter("Band Pass One Frequency")->get_value();
+	float lpq = get_parameter("Band Pass One Quality")->get_value();
+	
+	float bpf = get_parameter("Band Pass Two Frequency")->get_value();
+	float bpq = get_parameter("Band Pass Two Quality")->get_value();
+	
+	float hpf = get_parameter("Band Pass Three Frequency")->get_value();
+	float hpq = get_parameter("Band Pass Three Quality")->get_value();
+
+	
       m_biquadList.at(0)->set_LPF(lpf,lpq);
       m_biquadList.at(1)->set_LPF(lpf,lpq);
       

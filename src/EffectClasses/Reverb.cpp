@@ -30,8 +30,8 @@ Reverb::Reverb(dspCreationStruct data):
 {
   set_effect_name("Reverb");
   
-  add_parameter("Roomsize",0,1,0.5f);
-  get_parameter("Roomsize")->set_meta("GuiHint","soCustomFader");
+  add_parameter("Room Size",0,1,0.5f);
+  get_parameter("Room Size")->set_meta("GuiHint","soCustomFader");
   
   add_parameter("Damping",0,1,0.5f);
   get_parameter("Damping")->set_meta("GuiHint","soCustomFader");
@@ -69,7 +69,7 @@ void Reverb::process(float** input, float** output, int frameSize, int channels)
     m_revUnit.setdamp(get_parameter("Damping")->get_value());
     m_revUnit.setdry(1.0f -  get_parameter("Reverb Amount")->get_value());
     m_revUnit.setwet(get_parameter("Reverb Amount")->get_value());
-    m_revUnit.setroomsize(get_parameter("Roomsize")->get_value());
+    m_revUnit.setroomsize(get_parameter("Room Size")->get_value());
 
   //  m_revUnit.setmode(get_parameter("Freeze Amount")->get_value());
     
@@ -97,10 +97,10 @@ SimpleReverb::SimpleReverb(dspCreationStruct data):
 	DSPEffect(data)
 {
   set_effect_name("SimpleReverb");
-  add_parameter("Roomsize",0,1,0.5);
+  add_parameter("Room Size",0,1,0.5);
 
   set_meta(get_tutId(),"link to html");
-  get_parameter("Roomsize")->set_meta("GuiHint","soCustomFader");
+  get_parameter("Room Size")->set_meta("GuiHint","soCustomFader");
   
   set_implementation();
 
@@ -131,7 +131,7 @@ void SimpleReverb::process(float** input, float** output, int frameSize, int cha
     m_revUnit.setdamp(1.0);
     m_revUnit.setdry(0.0);
     m_revUnit.setwet(1.0);
-    m_revUnit.setroomsize(get_parameter("Roomsize")->get_value());
+    m_revUnit.setroomsize(get_parameter("Room Size")->get_value());
 
   //  m_revUnit.setmode(get_parameter("Freeze Amount")->get_value());
     
