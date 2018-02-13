@@ -37,10 +37,10 @@ LowPassFilter::LowPassFilter(dspCreationStruct data):
 {
 	set_effect_name("LowPassFilter");
 	add_parameter("Frequency",5,10000.0f,10000.0f);
-	add_parameter("Quality of Filter",0.2f,10.0f,1);
+//	add_parameter("Quality of Filter",0.2f,10.0f,1);
 	
 	set_meta(get_tutId(),"link to html");	
-	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
+//	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	get_biquad_left().set_LPF(10000.0f,5.0f);
 	get_biquad_right().set_LPF(10000.0f,5.0f);
@@ -55,7 +55,7 @@ LowPassFilter::~LowPassFilter(){
 
 void LowPassFilter::one_shot(){
 	float f = get_parameter("Frequency")->get_value();
-	float q = get_parameter("Quality of Filter")->get_value();
+	float q = 4 ;//("Quality of Filter")->get_value();
 	get_biquad_left().set_LPF(f,q);
 	get_biquad_right().set_LPF(f,q);
 
@@ -78,7 +78,7 @@ void LowPassFilter::process(float** input, float** output, int frameSize, int ch
 	if(!bypass_active()){
 	    FSOM_ASSERT(channels == 2);
 	    float f = get_parameter("Frequency")->get_value();
-	    float q = get_parameter("Quality of Filter")->get_value();
+		float q = 4;//get_parameter("Quality of Filter")->get_value();
 	    get_biquad_left().set_LPF(f,q);
 	    get_biquad_right().set_LPF(f,q);
 	    get_biquad_left().process(input[0],output[0],frameSize);
@@ -100,10 +100,10 @@ HighPassFilter::HighPassFilter(dspCreationStruct data):
 {
 	set_effect_name("HighPassFilter");
 	add_parameter("Frequency",5.0f,20000.0f,440.0f);
-	add_parameter("Quality of Filter",0.2f,10,0.5);
+	//add_parameter("Quality of Filter",0.2f,10,0.5);
 	
 	set_meta(get_tutId(),"link to html");
-	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
+//	get_parameter("Quality of Filter")->set_meta("GuiHint","soCustomFader");
 	get_parameter("Frequency")->set_meta("GuiHint","soCustomFader");
 	get_biquad_left().set_HPF(440,5.0f);
 	get_biquad_right().set_HPF(440.0f,5.0f);
@@ -117,7 +117,7 @@ HighPassFilter::~HighPassFilter(){
 
 void HighPassFilter::one_shot(){
 	float f = get_parameter("Frequency")->get_value();
-	float q = get_parameter("Quality of Filter")->get_value();
+	float q = 4;//get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_HPF(f,q);
 	get_biquad_right().set_HPF(f,q);
 }
@@ -138,7 +138,7 @@ void HighPassFilter::process(float** input, float** output, int frameSize, int c
 	if(!bypass_active()){
 	FSOM_ASSERT(channels == 2);
 	float f = get_parameter("Frequency")->get_value();
-	float q = get_parameter("Quality of Filter")->get_value();
+		float q = 4;// get_parameter("Quality of Filter")->get_value();
 	get_biquad_left().set_HPF(f,q);
 	get_biquad_right().set_HPF(f,q);
  	get_biquad_left().process(input[0],output[0],frameSize);

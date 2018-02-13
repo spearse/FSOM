@@ -29,17 +29,17 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   
   set_meta(get_tutId(),"link to html");
   
-  add_parameter("Pitch One Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Two Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Three Shift Amount",-12.0,12.0,0.0);
-  add_parameter("Pitch Four Shift Amount",-12.0,12.0,0.0); 
+  add_parameter("Pitch One",-12.0,12.0,0.0);
+  add_parameter("Pitch Two",-12.0,12.0,0.0);
+  add_parameter("Pitch Three",-12.0,12.0,0.0);
+  add_parameter("Pitch Four",-12.0,12.0,0.0);
 //  add_parameter("Original Amplitude",0,1,0.2); 
  // add_parameter("Original",0,1,1);
-  add_parameter("Pitch One Amplitude",0,1,0.25);
-  add_parameter("Pitch Two Amplitude",0,1,0.25);
-  add_parameter("Pitch Three Amplitude",0,1,0.25);
-  add_parameter("Pitch Four Amplitude",0,1,0.25);
-  add_parameter("Dry Amplitude",0,2,0.5);
+  add_parameter("Pitch One Gain",0,1,0.25);
+  add_parameter("Pitch Two Gain",0,1,0.25);
+  add_parameter("Pitch Three Gain",0,1,0.25);
+  add_parameter("Pitch Four Gain",0,1,0.25);
+  add_parameter("Dry Gain",0,2,0.5);
   set_implementation();
 }
 
@@ -64,20 +64,20 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
    if(!bypass_active()){
 	double t(0),t1(0),origAmount(0.2);
 	for (int n = 0; n < frameSize; ++n){
-	      m_unit1.set_frequency(get_parameter("Pitch One Shift Amount")->get_value());
-	      m_unit2.set_frequency(get_parameter("Pitch Two Shift Amount")->get_value());
-	      m_unit3.set_frequency(get_parameter("Pitch Three Shift Amount")->get_value());
-	      m_unit4.set_frequency(get_parameter("Pitch Four Shift Amount")->get_value());
+	      m_unit1.set_frequency(get_parameter("Pitch One")->get_value());
+	      m_unit2.set_frequency(get_parameter("Pitch Two")->get_value());
+	      m_unit3.set_frequency(get_parameter("Pitch Three")->get_value());
+	      m_unit4.set_frequency(get_parameter("Pitch Four")->get_value());
  	  
-	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch One Amplitude")->get_value());
-	      m_unit2.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Two Amplitude")->get_value());
-	      m_unit3.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Three Amplitude")->get_value());
-	      m_unit4.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Four Amplitude")->get_value());
+	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch One Gain")->get_value());
+	      m_unit2.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Two Gain")->get_value());
+	      m_unit3.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Three Gain")->get_value());
+	      m_unit4.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Four Gain")->get_value());
 	      for(ParameterList::const_iterator it = get_parameter_list().begin(); it != get_parameter_list().end();++it){
 		  (*it).second->tick(samplesRead);
 	      }
-	      output[0][n] += (original[0][n])* get_parameter("Dry Amplitude")->get_value();
-      	      output[1][n] += (original[1][n])* get_parameter("Dry Amplitude")->get_value();
+	      output[0][n] += (original[0][n])* get_parameter("Dry Gain")->get_value();
+      	      output[1][n] += (original[1][n])* get_parameter("Dry Gain")->get_value();
 
 	      samplesRead++;
 	}

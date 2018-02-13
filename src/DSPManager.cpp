@@ -62,7 +62,7 @@ DSPManager::get_instance().register_factory("HighPassFilter",HighPassFilter::cre
 //DSPManager::get_instance().register_factory("ResonatingFilter",ResonatingFilter::create);
 DSPManager::get_instance().register_factory("BandRejectFilter",BandRejectFilter::create);
 DSPManager::get_instance().register_factory("BandPassFilter",BandPassFilter::create);
-DSPManager::get_instance().register_factory("MultiBandFilter",MultiBandFilter::create);
+//DSPManager::get_instance().register_factory("MultiBandFilter",MultiBandFilter::create);
 
 DSPManager::get_instance().register_factory("Transpose",Transpose::create);
 DSPManager::get_instance().register_factory("Distort",Distort::create);
@@ -77,7 +77,7 @@ DSPManager::get_instance().register_factory("Chorus",Chorus::create);
 DSPManager::get_instance().register_factory("LowAmpMod",LowAmpMod::create);
 DSPManager::get_instance().register_factory("HighAmpMod",HighAmpMod::create);
 DSPManager::get_instance().register_factory("LowFrequencyModulation",LowFrequencyModulation::create);
-DSPManager::get_instance().register_factory("HighFrequencyModulation",HighFrequencyModulation::create);
+//DSPManager::get_instance().register_factory("HighFrequencyModulation",HighFrequencyModulation::create);
 DSPManager::get_instance().register_factory("Harmoniser",Harmoniser::create);
 
 DSPManager::get_instance().register_factory("AsymmetricDelay",AsymmetricDelay::create);
