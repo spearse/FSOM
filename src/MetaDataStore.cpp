@@ -99,7 +99,7 @@ namespace fsom{
 		std::map<std::string,std::string>::iterator it;
 		for (it = m_map.begin();it != m_map.end();++it){
 			element->SetAttribute((*it).first.c_str(),(*it).second.c_str());
-			std::cout<<  "meta saving "<< (*it).first.c_str() << " attribute to......." << (*it).second.c_str() << std::endl;
+//			std::cout<<  "meta saving "<< (*it).first.c_str() << " attribute to......." << (*it).second.c_str() << std::endl;
 		}
 		
 		node->LinkEndChild( element );

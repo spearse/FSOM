@@ -77,6 +77,11 @@ public:
 	
 	bool has_parameter(std::string name);
 
+	void print_parameters();
+	
+//	inline ParameterList& get_copy_of_parameters(){return &m_parameterList;}
+	//potentially unsafe as there is no checking here....
+	void set_parameters(ParameterList list);
 };
 
 typedef std::shared_ptr<DSPEffect> DSPEffectPtr;

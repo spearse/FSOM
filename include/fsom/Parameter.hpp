@@ -67,6 +67,7 @@ class Parameter : public MetaDataStore
 	
 	void set_upperBound(float upperBound);
 	
+	float get_duration();
 };
 
 typedef std::shared_ptr<Parameter> ParameterPtr;

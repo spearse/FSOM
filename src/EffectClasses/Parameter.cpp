@@ -136,3 +136,6 @@ void Parameter::set_upperBound(float upperBound ){
 	m_upperBound = upperBound;
 }
 
+float Parameter::get_duration(){
+	return m_duration;
+}

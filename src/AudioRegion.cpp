@@ -60,8 +60,10 @@ void AudioRegion::process(float** input, float** output, int frameSize, int chan
 	// make a request to the audiofile object to fill the disk stream buffers. 
 	if(!get_reverse_state()){
 	      m_file->seek(m_samplePosition);
+		if(m_samplePosition <= get_duration()){
 	      m_file->get_block(m_diskStreamBuffers.get_buffers(),frameSize);
 	      m_samplePosition+=frameSize;
+		}
 	      // copy from the disk stream buffers through the DSP onto the output buffers.
 	      float** t=m_diskStreamBuffers.get_buffers();	
 	      process_dsp_stack(t,output,frameSize,channels);
@@ -71,8 +73,10 @@ void AudioRegion::process(float** input, float** output, int frameSize, int chan
 // 	      fsom::DebugStream <<"sp"  <<m_samplePosition<< std::endl;
 // 	      fsom::DebugStream << "frmsz " << frameSize<<std::endl;
 	      m_file->seek(m_samplePosition);
+		if(m_samplePosition >= 0){
 	      m_file->get_block(m_diskStreamBuffers.get_buffers(),frameSize);
 	      m_samplePosition-=frameSize;
+		}
 	      float** norm = m_diskStreamBuffers.get_buffers();
 	      MultiChannelBuffer out(channels,frameSize);
 	      int index = 0;

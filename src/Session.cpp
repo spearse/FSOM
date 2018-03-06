@@ -858,7 +858,18 @@ RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition pos
 	int size = region->get_DSPStack().size();
 	for( int n = 0; n < size; ++n){
 		fsom::DebugStream << "cloning fx " << region->get_DSPStack()[n]->get_effect_name() << std::endl;
+		std::cout << "<Original> "<<std::endl;
+		region->get_DSPStack()[n]->print_parameters();
+		
 		newRegion->attach_effect( region->get_DSPStack()[n]->clone() );
+/*
+		newRegion->get_effect(n)->set_parameters(region->get_DSPStack()[n]->get_parameter_list() );
+
+				std::cout << "Original > "<<std::endl;
+		region->get_DSPStack()[n]->print_parameters();
+				std::cout << "Duplicate > "<<std::endl;
+		newRegion->get_DSPStack()[n]->print_parameters();
+ */
 	}
 	m_audioMutex->unlock();
 	//----------------------------------------------------------------------------------------------
