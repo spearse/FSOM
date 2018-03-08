@@ -59,7 +59,8 @@ Session::Session() :
 	m_rightLocator(44100),
 	m_loopState(false),
 	m_channelAmps(2,0),
-	m_peakData(new PeakData())
+	m_peakData(new PeakData()),
+	m_hardLimit(true)
 {
 	BreakPointUnitPtr tempBPUnit = BreakPointUnitPtr(new BreakPointUnit());
 	tempBPUnit->add_breakpoint(TVPair(0.f,1.f));
@@ -645,14 +646,24 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 		      }
 		  }
 	}
-	//TEMPORARY usage for stereo envelope tracking
 	
 	float t_lTotal(0),t_rTotal(0);
 	int t = frameCount/channelCount;
+
+	limit_block(outs, frameCount, channelCount);
+	
 	for(int n = 0; n < frameCount;++n){
-	    t_lTotal +=  std::abs( outs[0][n]);
+		
+	
+		
+		t_lTotal +=  std::abs( outs[0][n]);
 	    t_rTotal += std::abs( outs[1][n]);
+		
+		
+		
+		
 	}
+
 	m_channelAmps[0] =   (( float( t_lTotal)/float(t))*2.0f);
 	m_channelAmps[1] =   (float( t_rTotal)/float(t))*2.0f;
 	m_peakData->analyse(outs,channelCount,frameCount,startSamp);
@@ -763,6 +774,7 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 	    
 	    for (size_t n = start; n < frames; n += frameSize){
 		    process(0,deint.get_buffers(),frameSize,m_info.channels);
+
 		    interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
 		    sf_writef_float(outfile,output,frameSize);
 		    fsom::DebugStream << " Export frame " << n << " : frames = "<< frames << std::endl;
@@ -1133,3 +1145,25 @@ float Session::get_amp_envelope(int chan){
 PeakData* Session::get_peak_data(){
     return m_peakData;
 }
+
+void Session::set_hard_limit_state(bool state){
+	ScopedMutexLock lock(*m_audioMutex);
+	m_hardLimit = state;
+}
+
+
+void Session::limit_block(float **block, int blocksize,int channels){
+	float v;
+	for(int n = 0 ; n < blocksize;++n){
+		for(int c = 0; c < channels;++c){
+			v = block[c][n];
+			if(v < -1){
+				block[c][n] = -1.0f;
+			}else if(v > 1){
+				block[c][n] = 1.0f;
+			}
+		}
+	}
+	
+}
+

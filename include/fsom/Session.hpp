@@ -73,6 +73,8 @@ private:
 	bool m_loopPreviewState;
 	
 	bool m_loopState;
+	
+	bool m_hardLimit;
 
 	/// playhead location
 	SamplePosition m_playHead;
@@ -140,7 +142,8 @@ public:
 private:
 	Session(const Session&);
 	Session& operator = (const Session&);
-		
+	
+	void limit_block(float** block,int blocksize,int channels);
 	
 public:
 // 	Session(std::string preset_path);
@@ -240,7 +243,9 @@ public:
 	
 	MultiTableBuffer load_file_to_table(std::string path);
 
-	PeakData* get_peak_data();    
+	PeakData* get_peak_data();
+	
+	void set_hard_limit_state(bool state);
 };
 
 
