@@ -56,14 +56,23 @@ void AudioRegion::show_info(){
 }
 
 void AudioRegion::process(float** input, float** output, int frameSize, int channels){
+	
+	//need to check the truncation info here...
+	
+	
 	//FSOM_ASSERT(channels == m_file.get_channels() && channels == 2);
 	// make a request to the audiofile object to fill the disk stream buffers. 
 	if(!get_reverse_state()){
 	      m_file->seek(m_samplePosition);
-		if(m_samplePosition <= get_duration()){
+
+	//	std::cout << m_samplePosition << " "   <<  get_duration() << std::endl;
+		/// THIS IS CAUSING THE AUDIO ERRORS AFTER SPLICE
+		if(m_samplePosition <= get_duration() + get_offset_amount() ){
 	      m_file->get_block(m_diskStreamBuffers.get_buffers(),frameSize);
 	      m_samplePosition+=frameSize;
 		}
+		
+		
 	      // copy from the disk stream buffers through the DSP onto the output buffers.
 	      float** t=m_diskStreamBuffers.get_buffers();	
 	      process_dsp_stack(t,output,frameSize,channels);
@@ -129,7 +138,11 @@ void AudioRegion::on_region_start(SamplePosition seekTime){
     // 	  m_file->seek(); // add the audiofile offset to the seek offset in case of spliced region
 	    }else{
 	      fsom::DebugStream << "else" << std::endl;
-	      m_samplePosition =get_offset_amount();
+			//COULD THIS BE IT?!?
+			
+	//		std::cout << "Dur " << get_duration()<< std::endl;
+	//		std::cout << m_samplePosition <<std::endl;
+	      m_samplePosition = get_offset_amount()  ;
     // 	  m_file->seek(0 + get_region_offset());
 	    }
 	}else{

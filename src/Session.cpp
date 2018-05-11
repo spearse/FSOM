@@ -269,6 +269,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	pRegion->register_meta("vpos");
 	pRegion->set_meta("vpos",meta->Attribute("vpos") );
 	
+	pRegion->register_meta("createdFromSplice");
+	pRegion->set_meta("createdFromSplice",meta->Attribute("createdFromSplice") );
+
+	
 	fsom::DebugStream << "Metadata read, image = " <<image<<std::endl;
 	
 	
