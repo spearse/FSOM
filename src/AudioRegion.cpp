@@ -47,6 +47,14 @@ AudioRegion::AudioRegion(regionCreationStruct data):
 	  fsom::DebugStream << "full path = " << data.m_filepath<<std::endl;
 	  fsom::DebugStream << "working directory path = " << data.m_workingDirectory<<std::endl;
 }
+void AudioRegion::load_new_audiofile(std::string path){
+	
+	m_file = AudioFilePool::get_instance().get_audio_file_ptr(path);
+	m_samplePosition = 0;
+	m_file->seek(m_samplePosition);
+	
+}
+
 
 AudioRegion::~AudioRegion(){
 }

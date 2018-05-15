@@ -57,8 +57,13 @@ SamplePosition m_samplePosition;
 	///returns a reference to the audioregions audiofile
 	AudioFilePtr get_audiofile();
 	
+	
+	void load_new_audiofile(std::string path);
+	
+	
 	///static create function that returns a pointer to its region
 	static RegionPtr create(regionCreationStruct data) { return RegionPtr(new AudioRegion(data)) ; }
+	
 	
 };
 } //fsom

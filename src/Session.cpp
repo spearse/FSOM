@@ -865,7 +865,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 		
 		bypassStates[n] = region->get_DSPStack()[n]->bypass_active();
 		
-		if(bypassStates[n] == true) region->get_DSPStack()[n]->set_bypass(false);
+		if(bypassStates[n] == false) region->get_DSPStack()[n]->set_bypass(true);
 	}
 		
 	
@@ -875,7 +875,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	
 	for(int n = 0 ; n < region->get_DSPStack().size();++n){
 		
-		if(bypassStates[n] == true) region->get_DSPStack()[n]->set_bypass(true);
+		if(bypassStates[n] == false) region->get_DSPStack()[n]->set_bypass(false);
 	}
 	
 }
