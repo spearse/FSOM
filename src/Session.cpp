@@ -845,6 +845,41 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	region->set_start_pos(storedPosition);
 }
 
+void Session::bounce_region_pre(RegionPtr region, std::string filename, Session::FileType type){
+	
+	//use the bounce session to create file
+	//e.g Session temp;
+	//add the region
+	//temp->add_region(region)
+	//bounce down
+	//temp->bounce_session(filename)
+	//change original region to the new soundfile.
+	SamplePosition storedPosition = region->get_start_pos();
+	Session temp;
+	temp.set_playback_duration(region->get_duration());
+	region->set_start_pos(0);
+	
+	bool bypassStates[region->get_DSPStack().size()];
+	
+	for(int n = 0 ; n < region->get_DSPStack().size();++n){
+		
+		bypassStates[n] = region->get_DSPStack()[n]->bypass_active();
+		
+		if(bypassStates[n] == true) region->get_DSPStack()[n]->set_bypass(false);
+	}
+		
+	
+	temp.add_region(region);
+	temp.bounce_session(filename,type);
+	region->set_start_pos(storedPosition);
+	
+	for(int n = 0 ; n < region->get_DSPStack().size();++n){
+		
+		if(bypassStates[n] == true) region->get_DSPStack()[n]->set_bypass(true);
+	}
+	
+}
+
 
 RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition position, std::string factoryName, int laneId){
 	//copy region from existing

@@ -203,6 +203,8 @@ public:
 	
 	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
 	
+	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
+	
 	const SampleLength& get_playback_duration() const; ///returns the length of playback time in session
 	
 	RegionPtr copy_region(const fsom::RegionPtr& region, SamplePosition position , std::string factoryName,int laneId=NULL); ///Function to create a new region from an existing region and add it to the session;
