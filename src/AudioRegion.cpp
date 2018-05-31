@@ -49,6 +49,9 @@ AudioRegion::AudioRegion(regionCreationStruct data):
 }
 void AudioRegion::load_new_audiofile(std::string path){
 	
+	
+
+	
 	m_file = AudioFilePool::get_instance().get_audio_file_ptr(path);
 	m_samplePosition = 0;
 	m_file->seek(m_samplePosition);

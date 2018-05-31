@@ -240,6 +240,10 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	
 	int muteState = 0;
 	basicInfoElement->QueryIntAttribute("mutestate",&muteState);
+
+	
+	int soloState = 0;
+	basicInfoElement->QueryIntAttribute("solostate",&soloState);
 	
 	std::string path = basicInfoElement->Attribute("path");
 	fsom::DebugStream << "Loading, working directory = "<< m_workingDirectory<<std::endl;
@@ -249,6 +253,8 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	
 	RegionPtr pRegion = RegionManager::get_instance().create(meta->Attribute("RegionType"),cs);
 	pRegion->set_mute_state((muteState != 0));
+	pRegion->set_solo_state((soloState != 0));
+	
 	FSOM_ASSERT(pRegion);
 	
 	load_region_parameters(element,pRegion.get());

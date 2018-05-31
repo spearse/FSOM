@@ -65,6 +65,7 @@ class Region : public MetaDataStore, private NonCopyable{
 	bool m_isInExtensionMode;
 	SamplePosition m_internalPos;
 	bool m_muted;
+	bool m_isSoloed,m_soloMute;
 public:
 	Region(regionCreationStruct creationStruct);
 	//copy constructor
@@ -136,6 +137,10 @@ public:
 	void set_mute_state(bool state);
 	bool get_mute_state();
 	
+	void set_solo_state(bool state);
+	bool get_solo_state();
+	void set_soloMuteState(bool state);
+	bool get_soloMuteState();
 	bool has_parameter(std::string name);
 
 	
