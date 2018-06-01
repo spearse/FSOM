@@ -56,16 +56,16 @@ m_scrollSpeed(1)
 	
 	
 	set_meta("RegionType", "GranularSynthesis");
-	add_parameter("GrainSize - ms",10.f,1000.f,100.f);
-	add_parameter("GrainPitch",0.f,3.f,1.f);
+	add_parameter("GrainSize",10.f,1000.f,100.f);
+	add_parameter("GrainPitch",-3.f,3.f,1.f);
 	add_parameter("GrainPosition",0.f,1.f,0.f);
-	add_parameter("GrainRate - grains per second",0.1f,64.f,10.f);
+	add_parameter("GrainRate",0.01f,1,0.25);
 	add_parameter("GrainAmp",0.01f,1.5f,0.3f);
 	add_parameter("PlaySpeed", -5.0f, 5.0f, 1.0f);
 	
-	m_parameterGrainSpawnRate = get_parameter("GrainRate - grains per second");
+	m_parameterGrainSpawnRate = get_parameter("GrainRate");
 	m_parameterGrainAmp = get_parameter("GrainAmp");
-	m_parameterGrainSize = get_parameter("GrainSize - ms");
+	m_parameterGrainSize = get_parameter("GrainSize");
 	m_parameterGrainPosition = get_parameter("GrainPosition");
 	m_parameterGrainPitch = get_parameter("GrainPitch");
 	m_parameterPlaybackSpeed = get_parameter("PlaySpeed");
@@ -255,7 +255,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 		
 		m_grainSize = m_parameterGrainSize->get_value() * 44.1f;
 		
-		m_samplesPerSpawn = m_parameterGrainSpawnRate->get_value()*0.00002267573696;
+		m_samplesPerSpawn = m_parameterGrainSpawnRate->get_value() * 44100.0f;
 		
 		for(int g = 0; g < m_grainvector.size();++g){
 			
@@ -266,7 +266,7 @@ void GranularRegion::grain_process(float** output, int channels,int frames){
 			
 			if(m_samplesToNextSpawn <=0){
 				
-				m_currentSampleStart = m_phasor.get_phase()  * m_sampleSize;
+				m_currentSampleStart = (m_phasor.get_phase() + m_parameterGrainPosition->get_value()) * m_sampleSize ;
 				if(m_currentSampleStart <= 0)m_currentSampleStart +=m_sampleSize;
 				if(m_currentSampleStart >= m_sampleSize) m_currentSampleStart-=m_sampleSize;
 				//		std::cout  << "start " << sampleStart <<std::endl;
