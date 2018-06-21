@@ -37,7 +37,7 @@ class TransposeUnit
   public:
     TransposeUnit();
     virtual ~TransposeUnit();
-    void process(float& inL, float& inR, float& outL, float& outR,float amp);
+    void process(float& inL, float& inR, float& outL, float& outR,float amp,bool replace=false);
     void process_replace(float& inL, float& inR, float& outL, float& outR);
     void set_frequency(float value);
     void clear_delays();

@@ -69,7 +69,7 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
 	      m_unit3.set_frequency(get_parameter("Pitch Three")->get_value());
 	      m_unit4.set_frequency(get_parameter("Pitch Four")->get_value());
  	  
-	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch One Gain")->get_value());
+	      m_unit1.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch One Gain")->get_value(),true);
 	      m_unit2.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Two Gain")->get_value());
 	      m_unit3.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Three Gain")->get_value());
 	      m_unit4.process(input[0][n],input[1][n],output[0][n],output[1][n],get_parameter("Pitch Four Gain")->get_value());
@@ -77,7 +77,7 @@ void Harmoniser::process(float** input, float** output, int frameSize, int chann
 		  (*it).second->tick(samplesRead);
 	      }
 	      output[0][n] += (original[0][n])* get_parameter("Dry Gain")->get_value();
-      	      output[1][n] += (original[1][n])* get_parameter("Dry Gain")->get_value();
+      	  output[1][n] += (original[1][n])* get_parameter("Dry Gain")->get_value();
 
 	      samplesRead++;
 	}

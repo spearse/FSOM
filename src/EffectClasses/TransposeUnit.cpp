@@ -37,7 +37,7 @@ TransposeUnit::TransposeUnit():
 
 TransposeUnit::~TransposeUnit(){
 }
-void TransposeUnit::process(float& inL, float& inR, float& outL, float& outR, float amp){
+void TransposeUnit::process(float& inL, float& inR, float& outL, float& outR, float amp,bool replace){
 	m_delayUnitL.write_sample(inL);
 	m_delayUnitR.write_sample(inR);
 	float phasorPos = m_phasor.get_phase();
@@ -54,9 +54,14 @@ void TransposeUnit::process(float& inL, float& inR, float& outL, float& outR, fl
 	float o1 = m_table.linear_lookup(phasorPos * m_table.get_size());
 	float o2 = m_table.linear_lookup(phasorPosOffset * m_table.get_size());
 
+	if(replace == false){
 	outL += (d1*o1 + d2*o2)*amp;
 	outR += (dR1*o1 + dR2*o2)*amp;
+	}else{
+		outL = (d1*o1 + d2*o2)*amp;
+		outR = (dR1*o1 + dR2*o2)*amp;
 
+	}
 	m_phasor.tick();
 	m_delayUnitL.tick();
 	m_delayUnitR.tick();
