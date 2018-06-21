@@ -32,7 +32,7 @@ class TransposeUnit
   DelayBase<float> m_delayUnitL,m_delayUnitR;
   Table<float> m_table;
   Phasor m_phasor;
-  int m_proportion;
+  float m_proportion;
   
   public:
     TransposeUnit();
