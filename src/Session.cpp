@@ -865,7 +865,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	temp.set_playback_duration(region->get_duration());
 	region->set_start_pos(0);
 	
-	bool bypassStates[region->get_DSPStack().size()];
+	bool* bypassStates = new bool[region->get_DSPStack().size()];
 	
 	for(int n = 0 ; n < region->get_DSPStack().size();++n){
 		
@@ -883,7 +883,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 		
 		if(bypassStates[n] == false) region->get_DSPStack()[n]->set_bypass(false);
 	}
-	
+	delete [] bypassStates;
 }
 
 
