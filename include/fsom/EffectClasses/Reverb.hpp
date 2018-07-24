@@ -34,24 +34,33 @@ typedef DSPEffectPtr(*DSPEffectCreateFunc)();
 class Reverb : public DSPEffect
 {
   revmodel m_revUnit;
+  int m_blocksize;
+  		
 public:
     Reverb(dspCreationStruct data);
     virtual ~Reverb();
     void process(float** input, float** output, int frameSize, int channels) ;
 	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new Reverb(data)) ; }
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new Reverb(*this) ); }
+	virtual void reset_effect();
+	void clearReverbUnit();
+	
 };
 
 
 class SimpleReverb : public DSPEffect
 {
   revmodel m_revUnit;
+	int m_blocksize;
 public:
     SimpleReverb(dspCreationStruct data);
     virtual ~SimpleReverb();
     void process(float** input, float** output, int frameSize, int channels) ;
 	static DSPEffectPtr create(dspCreationStruct data) { return DSPEffectPtr(new SimpleReverb(data)) ; }
 	virtual DSPEffectPtr clone() { return DSPEffectPtr( new SimpleReverb(*this) ); }
+	virtual void reset_effect();
+	void clearReverbUnit();
+
 };
 
 

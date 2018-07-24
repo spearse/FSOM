@@ -144,6 +144,7 @@ public:
 	bool has_parameter(std::string name);
 
 	
+	void copy_effects(fsom::RegionPtr other);
 	
 };
 } // fsom

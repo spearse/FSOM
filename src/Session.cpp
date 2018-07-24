@@ -844,7 +844,11 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	//change original region to the new soundfile.
 	SamplePosition storedPosition = region->get_start_pos();
 	Session temp;
-	temp.set_playback_duration(region->get_duration() + region->get_extension());
+	fsom::SampleLength newDur = region->get_duration();
+	if(region->get_reverse_state() == false){
+		newDur += region->get_extension();
+	}
+	temp.set_playback_duration(newDur);
 	region->set_start_pos(0);
 	temp.add_region(region);
 	temp.bounce_session(filename,type);

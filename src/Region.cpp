@@ -425,3 +425,19 @@ bool Region::has_parameter(std::string name){
 }
 
 
+void Region::copy_effects(fsom::RegionPtr other){
+
+	m_DSPStack.clear();
+	
+	for(auto effect : other->m_DSPStack){
+		
+		DSPEffectPtr cloned = effect->clone();
+		m_DSPStack.push_back(cloned);
+	}
+	
+}
+
+	
+
+
+
