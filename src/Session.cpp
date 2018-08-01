@@ -644,7 +644,8 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	}
 	
 	if(m_previewState){
-		if(m_previewPlayHead < m_previewRegion->get_duration() + m_previewRegion->get_extension()){
+		//+ m_previewRegion->get_extension()
+		if(m_previewPlayHead < m_previewRegion->get_duration() ){
 			m_previewRegion->process(ins,outs,frameCount,channelCount);
 			m_previewPlayHead += frameCount;
 		}else {
