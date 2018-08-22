@@ -55,6 +55,7 @@ m_playbackDuration( (60*5)*44100), ///This currently sets the duration of entire
 m_playbackDuration( (60*10)*44100), ///This currently sets the duration of entire session,
 #endif
 m_loopPreviewState(true),
+m_loopPreviewExtendState(false),
 m_leftLocator(0),
 m_rightLocator(44100),
 m_loopState(false),
@@ -645,7 +646,8 @@ void Session::process(float** ins,float** outs,int frameCount,int channelCount){
 	
 	if(m_previewState){
 		//+ m_previewRegion->get_extension()
-		if(m_previewPlayHead < m_previewRegion->get_duration() ){
+		int extension = m_loopPreviewExtendState ? m_previewRegion->get_extension() : 0;
+		if(m_previewPlayHead < m_previewRegion->get_duration() + extension ){
 			m_previewRegion->process(ins,outs,frameCount,channelCount);
 			m_previewPlayHead += frameCount;
 		}else {
@@ -994,6 +996,16 @@ bool Session::get_preview_loop_state(){
 void Session::set_preview_loop_state(bool state){
 	m_loopPreviewState = state;
 }
+bool Session::get_preview_loop_extend_state(){
+	return m_loopPreviewExtendState;
+}
+
+void Session::set_preview_loop_extend_state(bool state){
+	m_loopPreviewExtendState = state;
+}
+
+
+
 SamplePosition& Session::get_previed_playhead_value(){
 	return m_previewPlayHead;
 }

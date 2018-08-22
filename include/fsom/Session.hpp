@@ -72,6 +72,8 @@ private:
 	
 	bool m_loopPreviewState;
 	
+	bool m_loopPreviewExtendState;
+	
 	bool m_loopState;
 	
 	bool m_hardLimit;
@@ -196,6 +198,10 @@ public:
 	bool get_preview_loop_state();
 	
 	void set_preview_loop_state(bool state);
+	
+	void set_preview_loop_extend_state(bool state);
+	
+	bool get_preview_loop_extend_state();
 	
 	SamplePosition get_playhead_value();
 	
