@@ -76,7 +76,7 @@ float Parameter::get_value() const {
 }
 
 float Parameter::get_value_zero_one()const {
-	return m_currentValue/get_range();
+	return (m_currentValue - m_lowerBound) /get_range();
 }
 
 
