@@ -892,7 +892,69 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	}
 	delete [] bypassStates;
 }
+void Session::bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type)
+{
+	
+	//use the bounce session to create file
+	//e.g Session temp;
+	//add the region
+	//temp->add_region(region)
+	//bounce down
+	//temp->bounce_session(filename)
+	//change original region to the new soundfile.
+	SamplePosition start = regionList.front()->get_start_pos();
+	std::vector<SamplePosition> m_starts;
+	
+	for(auto region: regionList){
+		m_starts.push_back(region->get_start_pos());
+		if (region->get_start_pos() < start) start = region->get_start_pos();
+	}
+	
+	SamplePosition storedPosition = regionList.front()->get_start_pos();
+	Session temp;
+	
+	
+	SampleLength newDur= regionList.front()->get_start_pos() + regionList.front()->get_duration() + regionList.front()->get_extension();
+	
+	for(auto region : regionList){
+		
+		SampleLength t = region->get_start_pos() + region->get_duration();
+		if(region->get_reverse_state() == false){
+			t += region->get_extension();
+		}
+		if(t > newDur)newDur = t;
+	}
+	
+	
+	
+	/*
+	fsom::SampleLength newDur = region->get_duration();
+	if(region->get_reverse_state() == false){
+		newDur += region->get_extension();
+	}
+	 */
+	
+	
+	temp.set_playback_duration(newDur - start);
+	
+	for(auto region : regionList){
+		
+		region->set_start_pos(region->get_start_pos() - start);
+		temp.add_region(region);
 
+	}
+	
+//	region->set_start_pos(0);
+	temp.bounce_session(filename,type);
+	
+	//reset position/
+	int i=0;
+	for(auto region: regionList){
+		region->set_start_pos(m_starts[i]);
+		++i;
+	}
+	
+}
 
 RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition position, std::string factoryName, int laneId){
 	//copy region from existing

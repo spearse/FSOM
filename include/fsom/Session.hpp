@@ -210,6 +210,8 @@ public:
 	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
 	
 	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
+	//for bouncing a selection of regions..
+	void bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type=FT_WAV);
 	
 	const SampleLength& get_playback_duration() const; ///returns the length of playback time in session
 	
