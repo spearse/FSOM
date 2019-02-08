@@ -481,17 +481,20 @@ namespace fsom
 	{
 		float t_;
 		float v_;
-		
+		int i_;
 		TVPair()
 		: t_(0)
-		, v_(0){};
-		TVPair(float t, float v)
+		, v_(0)
+		, i_(0){};
+		TVPair(float t, float v,int  i = 0)
 		: t_(t)
-		, v_(v){};
+		, v_(v)
+		, i_(i){};
 		///copy constructor
 		TVPair(const TVPair& old)
 		: t_(old.t_)
 		, v_(old.v_)
+		, i_(old.i_)
 		{
 		}
 		bool operator<(const TVPair& op) const
@@ -533,11 +536,20 @@ namespace fsom
 				bpList_.push_back(old.bpList_.at(n));
 			}
 		}
+		//Assign indexes;
+		void assignIndexes(){
+			for(int n = 0; n < bpList_.size();++n){
+				bpList_.at(n).i_ = n;
+			}
+		}
+		
 		//returns new index for the point
 		BPList::iterator const add_breakpoint(const TVPair& tvPair)
 		{
 			bpList_.push_back(tvPair);
 			std::sort(bpList_.begin(), bpList_.end());
+			assignIndexes();
+			
 			BPList::iterator it = std::find(bpList_.begin(),bpList_.end(),tvPair);
 			return it;
 		}
@@ -574,6 +586,7 @@ namespace fsom
 		{
 			bpList_.erase(bpList_.begin() + index);
 			sort();
+			
 		}
 		
 		void remove_pair(fsom::TVPair pair)
@@ -619,7 +632,10 @@ namespace fsom
 			}
 		}
 		
-		void sort() { std::sort(bpList_.begin(), bpList_.end()); }
+		void sort() {
+			std::sort(bpList_.begin(), bpList_.end());
+			assignIndexes();
+		}
 		float get_last_breakpoint()
 		{
 			return bpList_.back().t_;

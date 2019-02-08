@@ -31,7 +31,7 @@ namespace fsom{
 	{
 		set_effect_name("Flanger");
 		
-		add_parameter("Flanger Amount",0.0f, 1.0f, 0.5f);
+		add_parameter("Flanger Amount",0.0f, 1.0f, 1.0f);
 		m_amountParam = get_parameter("Flanger Amount");
 		
 		add_parameter("Depth",0.0f, 1.0f, 0.5f);
