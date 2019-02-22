@@ -32,7 +32,7 @@ Echo::Echo(dspCreationStruct data) :
 	{
 		set_effect_name("Echo");
 		set_meta(get_tutId(),"link to html");
-		add_parameter("Echo Time", 0.0f, 5.0f ,1.0f);
+		add_parameter("Echo Time", 0.0f, 5.0f ,0.33f);
 		get_parameter("Echo Time")->set_meta("GuiHint","soCustomFader");
 		add_parameter("Echo Volume",0.0f, 1.0f, 0.9f);
 		get_parameter("Echo Volume")->set_meta("GuiHint","soCustomFader");
