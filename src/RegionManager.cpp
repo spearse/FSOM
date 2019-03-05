@@ -26,6 +26,7 @@
 #include "fsom/GranularRegion.hpp"
 #include "fsom/SubtractiveSynthesisRegion.hpp"
 #include "fsom/GranularRegion.hpp"
+#include "fsom/DummyRegion.hpp"
 
 using namespace fsom;
 
@@ -36,5 +37,7 @@ RegionManager::get_instance().register_factory("Granular",GranularRegion::create
 RegionManager::get_instance().register_factory("AdditiveSynthesis",AdditiveSynthesisRegion::create);
 RegionManager::get_instance().register_factory("SubtractiveSynthesis",SubtractiveSynthesisRegion::create);
 RegionManager::get_instance().register_factory("GranularSynthesis",GranularRegion::create);
+RegionManager::get_instance().register_factory("Dummy",DummyRegion::create);
+	
 
 }

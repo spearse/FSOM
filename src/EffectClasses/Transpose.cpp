@@ -36,9 +36,7 @@ Transpose::Transpose(dspCreationStruct data):
 	  	
   
 }
-
-Transpose::~Transpose()
-{
+Transpose::~Transpose(){
 
 }
 void Transpose::process(float** input, float** output, int frameSize, int channels) {

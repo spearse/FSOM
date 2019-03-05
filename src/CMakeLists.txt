@@ -83,6 +83,7 @@ set(FSOM_SOURCES
 	GrainStream.cpp
 	GranularRegion.cpp
 	EffectClasses/FrequencyModulation.cpp
+	DummyRegion.cpp
 )
 
 set(FSOM_HEADERS
@@ -113,6 +114,7 @@ set(FSOM_HEADERS
 ../include/fsom/Table.hpp
 ../include/fsom/TimeStretcher.hpp
 ../include/fsom/Utilities.hpp
+../include/fsom/DummyRegion.hpp
 )
 
 source_group(sources FILES ${FSOM_SOURCES} ${FSOM_HEADERS})
