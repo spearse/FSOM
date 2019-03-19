@@ -30,7 +30,7 @@ Distort::Distort(dspCreationStruct data):
   
 	set_effect_name("Distort");
 	set_meta(get_tutId(),"link to html");
-	add_parameter("Distortion Level", 0.1f, 1.0f, 0.1f);
+	add_parameter("Distortion Level", 0.1f, 1.0f, 0.5f);
 	get_parameter("Distortion Level")->set_meta("GuiHint","soCustomFader");
 	m_table.fill_clipped(0.01f);
 	//m_table.print_table();

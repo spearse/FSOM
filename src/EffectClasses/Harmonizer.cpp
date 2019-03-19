@@ -29,16 +29,16 @@ Harmoniser::Harmoniser(dspCreationStruct data): DSPEffect(data){
   
   set_meta(get_tutId(),"link to html");
   
-  add_parameter("Pitch One",-12.0,12.0,0.0);
-  add_parameter("Pitch Two",-12.0,12.0,0.0);
-  add_parameter("Pitch Three",-12.0,12.0,0.0);
-  add_parameter("Pitch Four",-12.0,12.0,0.0);
+  add_parameter("Pitch One",-12.0,12.0,12.0);
+  add_parameter("Pitch Two",-12.0,12.0,7.0);
+  add_parameter("Pitch Three",-12.0,12.0,-12.0);
+  add_parameter("Pitch Four",-12.0,12.0,-5.0);
 //  add_parameter("Original Amplitude",0,1,0.2); 
  // add_parameter("Original",0,1,1);
   add_parameter("Pitch One Gain",0,1,0.25);
-  add_parameter("Pitch Two Gain",0,1,0.25);
+  add_parameter("Pitch Two Gain",0,1,0.15);
   add_parameter("Pitch Three Gain",0,1,0.25);
-  add_parameter("Pitch Four Gain",0,1,0.25);
+  add_parameter("Pitch Four Gain",0,1,0.15);
   add_parameter("Dry Gain",0,2,0.5);
   set_implementation();
 }

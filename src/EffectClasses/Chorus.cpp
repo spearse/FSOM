@@ -30,20 +30,30 @@ namespace fsom{
 	Chorus::Chorus(dspCreationStruct data):
 	DSPEffect(data),
 	m_modDelayLeft(44100,44100,0.5),
-	m_modDelayRight(44100,44100,0.5)
+	m_modDelayRight(44100,44100,0.5),
+	m_widthCoeff(1)
 	{
 		set_effect_name("Chorus");
 		set_meta(get_tutId(),"link to html");
 		
-		add_parameter("Chorus Amount", 0.0f, 1.0f, 0.5f);
+		add_parameter("Chorus Amount", 0.0f, 1.0f, 1.0f);
 		m_amountParam = get_parameter("Chorus Amount");
 		
 		
-		add_parameter("Depth", 0.0f, 1.0f, 0.5f);
+		add_parameter("Depth", 0.0f, 1.0f, 0.66f);
 		m_depthParam = get_parameter("Depth");
 		
-		add_parameter("Frequency", 0.00f, 5.0f, 1.0f);
+		add_parameter("Frequency", 0.00f, 40.0, 5.0f);
 		m_frequencyParam = get_parameter("Frequency");
+		
+		add_parameter("Width", 0,2, 1);
+		m_stereoWidth = get_parameter("Width");
+		
+		
+		m_modDelayLeft.set_min_depth(0.1);
+		m_modDelayLeft.set_max_depth(2);
+		//m_maxDepth(0.2f),
+		//m_minDepth(0.005),
 		
 		set_implementation();
 		
@@ -82,13 +92,16 @@ namespace fsom{
 			float outL(0),outR(0);
 			float dry(0.5);
 			
-			
+			float m(0),s(0);
 			
 			for(int n = 0; n < frameSize; ++n){
 				f = m_frequencyParam->get_value_zero_one();
 				d = m_depthParam->get_value_zero_one();
 				wet = m_amountParam->get_value_zero_one();
 				dry = 1.0f - wet;
+				
+				m_widthCoeff = m_stereoWidth->get_value() * 0.5;
+				
 				m_modDelayLeft.set_frequency(f);
 				m_modDelayRight.set_frequency(f);
 				m_modDelayLeft.setDepth(d);
@@ -108,6 +121,13 @@ namespace fsom{
 				outR = wetR *wet;
 				outL += input[0][n] * dry;
 				outR += input[1][n] * dry;
+				
+				
+				m = (outL + outR) * 0.5;
+				s = (outR - outL) * m_widthCoeff;
+				
+				outL = m - s;
+				outR = m + s;
 				
 				output[0][n] += outL;
 				output[1][n] += outR;

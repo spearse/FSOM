@@ -35,7 +35,8 @@ namespace fsom{
 	class Chorus : public DSPEffect
 	{
 		ModulatedDelay m_modDelayLeft,m_modDelayRight;
-		ParameterPtr m_frequencyParam, m_depthParam, m_amountParam;
+		ParameterPtr m_frequencyParam, m_depthParam, m_amountParam, m_stereoWidth;
+		float m_widthCoeff;
 	public:
 		Chorus(dspCreationStruct data);
 		virtual ~Chorus();

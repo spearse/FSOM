@@ -31,7 +31,7 @@ Delay::Delay(dspCreationStruct data):
 {
 	set_effect_name("Delay");
 	set_meta(get_tutId(),"link to html");
-	add_parameter("Delay Time",0.01f,10.0f,1.0f);
+	add_parameter("Delay Time",0.01f,10.0f,0.25f);
 // 	get_parameter("Delay Time")->set_meta("GuiHint","soCustomFader");
 	add_parameter("Delay Volume",0.01f,1,0.9f);
 // 	get_parameter("Delay Volume")->set_meta("GuiHint","soCustomFader");

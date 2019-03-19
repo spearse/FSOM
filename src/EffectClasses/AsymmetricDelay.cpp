@@ -34,19 +34,19 @@ AsymmetricDelay::AsymmetricDelay(dspCreationStruct data):
     set_effect_name("AsymmetricDelay");
     set_meta(get_tutId(),"link to html");
     
-    add_parameter("First Delay Time",0,10,1);
+    add_parameter("First Delay Time",0,10,0.25);
     get_parameter("First Delay Time")->set_meta("GuiHint","soCustomFader");
     
     add_parameter("First Delay Volume",0,1,0.5);
     get_parameter("First Delay Volume")->set_meta("GuiHint","soCustomFader");
     
-    add_parameter("Second Delay Time",0,10,3);
+    add_parameter("Second Delay Time",0,10,0.33);
     get_parameter("Second Delay Time")->set_meta("GuiHint","soCustomFader");
     
     add_parameter("Second Delay Volume",0,1,0.5);
     get_parameter("Second Delay Volume")->set_meta("GuiHint","soCustomFader");
     
-    add_parameter("Third Delay Time",0,10,5);
+    add_parameter("Third Delay Time",0,10,1);
     get_parameter("Third Delay Time")->set_meta("GuiHint","soCustomFader");
     
     add_parameter("Third Delay Volume",0,1,0.5);
