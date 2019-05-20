@@ -101,8 +101,14 @@ namespace fsom{
 			element->SetAttribute((*it).first.c_str(),(*it).second.c_str());
 //			std::cout<<  "meta saving "<< (*it).first.c_str() << " attribute to......." << (*it).second.c_str() << std::endl;
 		}
-		
 		node->LinkEndChild( element );
+		for(auto tag: m_tags){
+			TiXmlElement * tagElement = new TiXmlElement( "Tag" );
+			tagElement->SetAttribute("id",tag.m_tag.c_str()  );
+			tagElement->SetAttribute("dateadded",tag.m_dateAdded.c_str()  );
+
+			element->LinkEndChild(tagElement);
+		}
 	}
 	
 	
@@ -117,7 +123,47 @@ namespace fsom{
 		}
 
 	}
-	
-	
+	void MetaDataStore::copyMetaData(const MetaDataStore& other){
+		m_map = other.m_map;
+		for(auto tag : m_tags){
+			if(!containsTag(tag.m_tag)){
+				m_tags.push_back(tag);
+			}
+		}
+	}
+	void MetaDataStore::copyTags(const MetaDataStore& other){
+		for(auto tag : m_tags){
+			if(!containsTag(tag.m_tag)){
+				m_tags.push_back(tag);
+			}
+		}
+	}
+	void MetaDataStore::addTag(std::string tag,std::string date){
+		if(!containsTag(tag)){
+				m_tags.push_back(Tag(tag,date));
+		}
+	}
+	const TagVector* MetaDataStore::getTags(){
+		return &m_tags;
+	}
+	bool MetaDataStore::containsTag(std::string tagName){
+		
+		for(auto tag : m_tags){
+			if(tag.contains(tagName))return true;
+		}
+		
+		return false;
+	}
+	void MetaDataStore::loadTagsFromXML(TiXmlElement* element){
+		TiXmlElement* tag = element->FirstChildElement("Tag");
+		while(tag){
+			std::string tagText = tag->Attribute("id");
+			std::string dateAdded = tag->Attribute("dateadded");
+			
+			addTag(tagText, dateAdded);
+			
+			tag = tag->NextSiblingElement("Tag");
+		}
+	}
 	
 }
