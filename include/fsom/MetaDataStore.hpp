@@ -70,6 +70,9 @@ namespace fsom{
 	public:
 		MetaDataStore();
 		virtual ~MetaDataStore();
+		MetaDataStore(const MetaDataStore& other);
+		
+		
 		void register_meta(const std::string& key);
 		
 		void set_meta(const std::string& key,const std::string& value);

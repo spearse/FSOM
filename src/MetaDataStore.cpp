@@ -42,7 +42,11 @@ namespace fsom{
 	{
 		
 	}
-	
+	MetaDataStore::MetaDataStore(const MetaDataStore& other)
+	{
+		copyMetaData(other);
+	}
+
 	MetaDataStore::~MetaDataStore()
 	{
 		
