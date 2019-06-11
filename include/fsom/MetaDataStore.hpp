@@ -92,7 +92,7 @@ namespace fsom{
 		void addTag(std::string tag,std::string date);
 		const TagVector* getTags();
 		bool containsTag(std::string tagName);
-		
+		std::string getFormattedTags();
 		void loadTagsFromXML(TiXmlElement* element);
 		
 	};

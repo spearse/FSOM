@@ -129,14 +129,14 @@ namespace fsom{
 	}
 	void MetaDataStore::copyMetaData(const MetaDataStore& other){
 		m_map = other.m_map;
-		for(auto tag : m_tags){
+		for(auto tag : other.m_tags){
 			if(!containsTag(tag.m_tag)){
 				m_tags.push_back(tag);
 			}
 		}
 	}
 	void MetaDataStore::copyTags(const MetaDataStore& other){
-		for(auto tag : m_tags){
+		for(auto tag : other.m_tags){
 			if(!containsTag(tag.m_tag)){
 				m_tags.push_back(tag);
 			}
@@ -168,6 +168,13 @@ namespace fsom{
 			
 			tag = tag->NextSiblingElement("Tag");
 		}
+	}
+	std::string MetaDataStore::getFormattedTags(){
+		std::string out;
+		for(auto tag : m_tags){
+			out += tag.m_tag + "  ";
+		}
+		return out;
 	}
 	
 }
