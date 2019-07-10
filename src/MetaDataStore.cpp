@@ -176,5 +176,19 @@ namespace fsom{
 		}
 		return out;
 	}
-	
+	void MetaDataStore::removeTag(std::string tag){
+		int n = 0;
+		TagVector::iterator it = std::find(m_tags.begin(), m_tags.end(), tag);
+		if(it != m_tags.end()){
+			m_tags.erase(it);
+		}
+		/*
+		f8or(auto itag : m_tags){
+			if(itag == tag){
+				m_tags.e
+			}
+				++n;
+		}
+		 */
+	}
 }

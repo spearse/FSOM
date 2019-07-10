@@ -94,6 +94,7 @@ namespace fsom{
 		bool containsTag(std::string tagName);
 		std::string getFormattedTags();
 		void loadTagsFromXML(TiXmlElement* element);
+		void removeTag(std::string tag );
 		
 	};
 	
