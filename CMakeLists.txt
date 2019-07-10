@@ -15,5 +15,5 @@ IF(WIN32)
 ENDIF(WIN32)
 
 add_subdirectory(src)
-add_subdirectory(unit_test)
+#add_subdirectory(unit_test)
 
