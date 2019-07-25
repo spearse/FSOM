@@ -183,7 +183,7 @@ public:
 	RegionList& get_region_list();
 
 	///Function to bounce session down to (initially) stereo wav.  Boolean allows you to toggle whether you wish to bounce between locators.
-	void bounce_session(std::string filepath,FileType type = FT_WAV,bool useLocators=false);
+	void bounce_session(std::string filepath,FileType type = FT_WAV,bool useLocators=false,bool useDefinedDuration=false);
 	
 	void normalise_file(std::string filepath,float targetDb);
 	

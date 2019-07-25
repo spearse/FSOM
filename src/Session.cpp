@@ -734,7 +734,7 @@ RegionList& Session::get_region_list(){
 	return m_regionPlaylist;
 }
 
-void Session::bounce_session(std::string filepath, Session::FileType type, bool useLocators){
+void Session::bounce_session(std::string filepath, Session::FileType type, bool useLocators,bool useDefinedDuration){
 	
 	if(!m_regionPlaylist.empty()){
 		
@@ -763,10 +763,13 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 		FSOM_ASSERT(outfile);
 		size_t frames;
 		size_t start;
-		if(!useLocators){
+		if(!useLocators && !useDefinedDuration){
 			//size_t frames = m_info.samplerate * 20; //TODO make arbitrary numbers in bouncedown and session playback the same.//FIXME Stopping through regions causes serious glitching on playback or exporting
 			frames = m_regionPlaylist.back()->get_start_pos() + m_regionPlaylist.back()->get_duration() + m_regionPlaylist.back()->get_extension(); //5 seconds removed to give accurate bouncedown for single region
 			start = 0;
+		}else if(useDefinedDuration){
+			frames = m_playbackDuration;
+			start= 0;
 		}else{
 			frames = m_rightLocator;
 			start = m_leftLocator;
@@ -855,7 +858,7 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	temp.set_playback_duration(newDur);
 	region->set_start_pos(0);
 	temp.add_region(region);
-	temp.bounce_session(filename,type);
+	temp.bounce_session(filename,type,false,true);
 	region->set_start_pos(storedPosition);
 }
 
@@ -870,7 +873,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	//change original region to the new soundfile.
 	SamplePosition storedPosition = region->get_start_pos();
 	Session temp;
-	temp.set_playback_duration(region->get_duration());
+	temp.set_playback_duration(region->get_duration() - region->get_offset_amount());
 	region->set_start_pos(0);
 	
 	bool* bypassStates = new bool[region->get_DSPStack().size()];
@@ -884,7 +887,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 		
 	
 	temp.add_region(region);
-	temp.bounce_session(filename,type);
+	temp.bounce_session(filename,type,false,true);
 	region->set_start_pos(storedPosition);
 	
 	for(int n = 0 ; n < region->get_DSPStack().size();++n){
