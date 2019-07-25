@@ -273,11 +273,18 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	pRegion->set_meta("image",image);
 	pRegion->set_meta("managerId",managerId);
 	
-	pRegion->register_meta("vpos");
-	pRegion->set_meta("vpos",meta->Attribute("vpos") );
 	
+	
+	int vpos;
+	meta->QueryIntAttribute("vpos",&vpos);
+	
+	pRegion->register_meta("vpos");
+	pRegion->set_meta("vpos",std::to_string(vpos));
+	
+	int splice;
+	meta->QueryIntAttribute("createdFromSplice",&splice);
 	pRegion->register_meta("createdFromSplice");
-	pRegion->set_meta("createdFromSplice",meta->Attribute("createdFromSplice") );
+	pRegion->set_meta("createdFromSplice",std::to_string(splice) );
 
 	pRegion->loadTagsFromXML(meta);
 	
