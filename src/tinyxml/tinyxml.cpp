@@ -657,7 +657,7 @@ int TiXmlElement::QueryIntAttribute( const char* name, int* ival ) const
 {
 	const TiXmlAttribute* attrib = attributeSet.Find( name );
 	if ( !attrib )
-		return TIXML_NO_ATTRIBUTE;
+		return 0;
 	return attrib->QueryIntValue( ival );
 }
 
@@ -667,7 +667,7 @@ int TiXmlElement::QueryIntAttribute( const std::string& name, int* ival ) const
 {
 	const TiXmlAttribute* attrib = attributeSet.Find( name );
 	if ( !attrib )
-		return TIXML_NO_ATTRIBUTE;
+		return 0;
 	return attrib->QueryIntValue( ival );
 }
 #endif
@@ -677,7 +677,7 @@ int TiXmlElement::QueryDoubleAttribute( const char* name, double* dval ) const
 {
 	const TiXmlAttribute* attrib = attributeSet.Find( name );
 	if ( !attrib )
-		return TIXML_NO_ATTRIBUTE;
+		return 0;
 	return attrib->QueryDoubleValue( dval );
 }
 
@@ -687,7 +687,7 @@ int TiXmlElement::QueryDoubleAttribute( const std::string& name, double* dval ) 
 {
 	const TiXmlAttribute* attrib = attributeSet.Find( name );
 	if ( !attrib )
-		return TIXML_NO_ATTRIBUTE;
+		return 0;
 	return attrib->QueryDoubleValue( dval );
 }
 #endif

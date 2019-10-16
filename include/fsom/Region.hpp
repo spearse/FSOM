@@ -47,9 +47,10 @@ struct regionCreationStruct{
   SampleLength m_extension;
   std::string m_filepath;
   std::string m_workingDirectory;
+    SampleLength m_previousOffset;
   bool m_reverseState;
-  regionCreationStruct(SamplePosition start, SampleLength duration, SampleLength offset, int laneNum,SampleLength extension=0,std::string filepath="",std::string workingDirectory="",bool reverseState=false) : 
-	  m_startPos(start), m_duration(duration),m_offset(offset), m_laneNum(laneNum),m_filepath(filepath),m_workingDirectory(workingDirectory),m_extension(extension),m_reverseState(reverseState){
+  regionCreationStruct(SamplePosition start, SampleLength duration, SampleLength offset, int laneNum,SampleLength extension=0,std::string filepath="",std::string workingDirectory="",bool reverseState=false,SampleLength previousOffset = 0) :
+	  m_startPos(start), m_duration(duration),m_offset(offset), m_laneNum(laneNum),m_filepath(filepath),m_workingDirectory(workingDirectory),m_extension(extension),m_previousOffset(previousOffset),m_reverseState(reverseState){
 	fsom::DebugStream << "region creation struct complete"<<std::endl;
   }
 };
@@ -89,7 +90,9 @@ public:
 	void set_duration(SampleLength duration);
 	void set_file_path(std::string);
 	void set_working_directory(std::string directory);
-
+    void set_previous_offset(SampleLength previousOffset);
+    SampleLength get_previous_offset();
+    
 	std::string get_working_directory()const;
 	std::string get_file_path() const;
 	SamplePosition get_start_pos() const;

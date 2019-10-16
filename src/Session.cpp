@@ -230,8 +230,11 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	basicInfoElement->QueryIntAttribute("duration", &duration);
 	int offset = 0;
 	basicInfoElement->QueryIntAttribute("offset", &offset);
-	int lanenum = 0;
 	
+    int previousOffset = 0;
+    basicInfoElement->QueryIntAttribute("previousoffset", &previousOffset);
+    
+    int lanenum = 0;
 	basicInfoElement->QueryIntAttribute("lanenum", &lanenum);
 	int extension = 0;
 	basicInfoElement->QueryIntAttribute("extension", &extension);
@@ -243,12 +246,13 @@ RegionPtr Session::create_region_from_node(TiXmlElement* element){
 	basicInfoElement->QueryIntAttribute("mutestate",&muteState);
 
 	
+    
 	int soloState = 0;
 	basicInfoElement->QueryIntAttribute("solostate",&soloState);
 	
 	std::string path = basicInfoElement->Attribute("path");
 	fsom::DebugStream << "Loading, working directory = "<< m_workingDirectory<<std::endl;
-	regionCreationStruct cs(start, duration,offset,lanenum,extension, path,m_workingDirectory, (reverseState != 0));
+	regionCreationStruct cs(start, duration,offset,lanenum,extension, path,m_workingDirectory, (reverseState != 0),previousOffset);
 	
 	TiXmlElement * meta = element->FirstChildElement("MetaData");
 	
@@ -869,7 +873,7 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	region->set_start_pos(storedPosition);
 }
 
-void Session::bounce_region_pre(RegionPtr region, std::string filename, Session::FileType type){
+void Session::bounce_region_pre(RegionPtr region, std::string filename, Session::FileType type,bool removeOffset){
 	
 	//use the bounce session to create file
 	//e.g Session temp;
@@ -880,8 +884,12 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	//change original region to the new soundfile.
 	SamplePosition storedPosition = region->get_start_pos();
 	Session temp;
-	temp.set_playback_duration(region->get_duration() - region->get_offset_amount());
-	region->set_start_pos(0);
+        if(!removeOffset){
+	temp.set_playback_duration(region->get_duration());
+        }else{
+    temp.set_playback_duration(region->get_duration() - region->get_offset_amount());
+        }
+        region->set_start_pos(0);
 	
 	bool* bypassStates = new bool[region->get_DSPStack().size()];
 	
@@ -978,7 +986,8 @@ RegionPtr Session::copy_region(const fsom::RegionPtr& region, SamplePosition pos
 	newRegion->set_duration(region->get_duration());
 	newRegion->set_extension(region->get_extension());
 	newRegion->set_reverse_state(region->get_reverse_state());
-	if(laneId != NULL){
+    newRegion->set_previous_offset(region->get_previous_offset());
+	if(laneId >= 0){
 	 newRegion->set_lane_num(laneId);
 	}
 	
@@ -1033,7 +1042,7 @@ RegionPtr Session::splice_region(fsom::RegionPtr region, SamplePosition splicePo
 	newRegion->set_duration(splicePortionB);
 	
 	region->set_duration(splicePortionA);
-	
+    newRegion->set_previous_offset(newRegion->get_offset_amount());
 	newRegion->set_offset_amount(splicePortionA  + region->get_offset_amount());
 	newRegion->set_extension(region->get_extension());
 	

@@ -209,7 +209,7 @@ public:
 	
 	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
 	
-	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
+	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV,bool removeOffset=false);
 	//for bouncing a selection of regions..
 	void bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type=FT_WAV);
 	

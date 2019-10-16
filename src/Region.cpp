@@ -90,8 +90,12 @@ SampleLength Region::get_extension()const{
 void Region::set_extension(SampleLength extension){
 	m_dataStruct.m_extension = extension;
 }
-
-
+void Region::set_previous_offset(SampleLength previousOffset){
+    m_dataStruct.m_previousOffset = previousOffset;
+}
+SampleLength Region::get_previous_offset(){
+    return m_dataStruct.m_previousOffset;
+}
 
 std::string Region::get_file_path() const{
 	return m_dataStruct.m_filepath;
@@ -144,7 +148,7 @@ void Region::save_to_region_specifics_to_existing_xml_node(TiXmlElement* node, b
 	BasicInfo->SetAttribute("offset",m_dataStruct.m_offset);
 	BasicInfo->SetAttribute("lanenum",m_dataStruct.m_laneNum);
 	BasicInfo->SetAttribute("extension",m_dataStruct.m_extension);
-	
+    BasicInfo->SetAttribute("previousoffset", m_dataStruct.m_previousOffset);
 	if(useRelative){
 		std::size_t pos = m_dataStruct.m_filepath.find_last_of("/\\");
 		std::string relative = m_dataStruct.m_filepath.substr(pos+1);
