@@ -51,11 +51,11 @@ private:
 public:
 	///enums to set the depth of peak image draw values
 	enum DrawDepth{
-		//D16 =0,
-		//D32,
-		//D64,
-		//D128,
-		D256=0,
+		D16 =0,
+		D32,
+		D64,
+		D128,
+		D256,
 		D512,
 		D1024,
 		D2048,

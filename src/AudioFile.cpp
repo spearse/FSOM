@@ -72,13 +72,20 @@ AudioFile::AudioFile(const std::string& filePath)
 		throw AudioFileException();
 	}
 #endif // FORCE_SR_44100
-
+    m_peakImage.at(D32) = multiRangeList(m_pImpl->m_sfInfo.channels);
+    m_peakImage.at(D64) = multiRangeList(m_pImpl->m_sfInfo.channels);
+    m_peakImage.at(D128) = multiRangeList(m_pImpl->m_sfInfo.channels);
+  
 	m_peakImage.at(D256) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D512) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D1024) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D2048) = multiRangeList(m_pImpl->m_sfInfo.channels);
 	m_peakImage.at(D4096) = multiRangeList(m_pImpl->m_sfInfo.channels);
 
+    fill_range_list(m_peakImage.at(D32), 32);
+    fill_range_list(m_peakImage.at(D64), 64);
+    fill_range_list(m_peakImage.at(D128), 128);
+    
 	fill_range_list(m_peakImage.at(D256), 256);
 	fill_range_list(m_peakImage.at(D512), 512);
 	fill_range_list(m_peakImage.at(D1024), 1024);
