@@ -885,9 +885,9 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	SamplePosition storedPosition = region->get_start_pos();
 	Session temp;
         if(!removeOffset){
-	temp.set_playback_duration(region->get_duration());
+            temp.set_playback_duration(region->get_duration());
         }else{
-    temp.set_playback_duration(region->get_duration() - region->get_offset_amount());
+            temp.set_playback_duration(region->get_duration() - region->get_offset_amount());
         }
         region->set_start_pos(0);
 	
