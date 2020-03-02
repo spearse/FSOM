@@ -720,7 +720,8 @@ void Session::add_region(RegionPtr region){
 }
 
 void Session::remove_region(RegionPtr region){
-	ScopedMutexLock lock(*m_audioMutex);
+   // if(m_audioMutex != nullptr){
+//	ScopedMutexLock lock(*m_audioMutex);
 	// 	FSOM_ASSERT(region && "Remove Region: RegionPtr Invalid");
 	
 	// 	FSOM_ASSERT(std::find(m_regionPlaylist.begin(), m_regionPlaylist.end(), region) != m_regionPlaylist.end()) ;
@@ -728,6 +729,7 @@ void Session::remove_region(RegionPtr region){
 	if(std::find(m_regionPlaylist.begin(),m_regionPlaylist.end(),region) == m_regionPlaylist.end() )throw "Could not find region";
 	m_regionPlaylist.remove(region);
 	region.reset();
+  //  }
 }
 
 
