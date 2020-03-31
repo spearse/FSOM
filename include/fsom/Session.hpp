@@ -183,7 +183,7 @@ public:
 	RegionList& get_region_list();
 
 	///Function to bounce session down to (initially) stereo wav.  Boolean allows you to toggle whether you wish to bounce between locators.
-	void bounce_session(std::string filepath,FileType type = FT_WAV,bool useLocators=false,bool useDefinedDuration=false);
+    void bounce_session(std::string filepath,FileType type = FT_WAV,bool useLocators=false,bool useDefinedDuration=false,std::function<void()> callBack=[](){});
 	
 	void normalise_file(std::string filepath,float targetDb);
 	
@@ -207,11 +207,11 @@ public:
 	
 	SamplePosition& get_previed_playhead_value();
 	
-	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV);
+	void bounce_region(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV,std::function<void()> callBack=[](){});
 	
-	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV,bool removeOffset=false);
+	void bounce_region_pre(fsom::RegionPtr region, std::string filename,FileType type = FT_WAV,bool removeOffset=false,std::function<void()> callBack=[](){});
 	//for bouncing a selection of regions..
-	void bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type=FT_WAV);
+	void bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type=FT_WAV,std::function<void()> callBack=[](){});
 	
 	const SampleLength& get_playback_duration() const; ///returns the length of playback time in session
 	
@@ -227,7 +227,7 @@ public:
 	
 	std::string get_working_directory()const;
 	
-	std::string timestretch_region(RegionPtr region, float speed,std::string folderpath,std::string name,int fftSize = 512,int numOverlaps = 4);
+    std::string timestretch_region(RegionPtr region, float speed,std::string folderpath,std::string name,int fftSize = 512,int numOverlaps = 4,std::function<void()> callBack=[](){});
 	
 	///function to set left locator
 	void set_left_locator(SamplePosition location);

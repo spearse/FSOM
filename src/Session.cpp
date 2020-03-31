@@ -747,7 +747,7 @@ RegionList& Session::get_region_list(){
 	return m_regionPlaylist;
 }
 
-void Session::bounce_session(std::string filepath, Session::FileType type, bool useLocators,bool useDefinedDuration){
+void Session::bounce_session(std::string filepath, Session::FileType type, bool useLocators,bool useDefinedDuration,std::function<void()> callBack){
 	
 	if(!m_regionPlaylist.empty()){
 		
@@ -809,6 +809,7 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 			interleave((const float**)deint.get_buffers(),output,m_info.channels,frameSize);
 			sf_writef_float(outfile,output,frameSize);
 			fsom::DebugStream << " Export frame " << n << " : frames = "<< frames << std::endl;
+            callBack();
 		}
 		//FIXME this looses data if the num frames isnt perfectly divisible by the framesize.
 		size_t remainingblock = frames % frameSize;
@@ -817,6 +818,8 @@ void Session::bounce_session(std::string filepath, Session::FileType type, bool 
 			process(0,deint.get_buffers(),remainingblock,m_info.channels);
 			interleave((const float**)deint.get_buffers(),output,m_info.channels,remainingblock);
 			sf_writef_float(outfile,output,remainingblock);
+            callBack();
+
 		}
 		delete [] output;
 		//
@@ -853,7 +856,7 @@ const SampleLength& Session::get_playback_duration() const{
 }
 
 
-void Session::bounce_region(RegionPtr region, std::string filename, Session::FileType type){
+void Session::bounce_region(RegionPtr region, std::string filename, Session::FileType type,std::function<void()> callBack){
 	
 	//use the bounce session to create file
 	//e.g Session temp;
@@ -871,11 +874,11 @@ void Session::bounce_region(RegionPtr region, std::string filename, Session::Fil
 	temp.set_playback_duration(newDur);
 	region->set_start_pos(0);
 	temp.add_region(region);
-	temp.bounce_session(filename,type,false,true);
+	temp.bounce_session(filename,type,false,true,callBack);
 	region->set_start_pos(storedPosition);
 }
 
-void Session::bounce_region_pre(RegionPtr region, std::string filename, Session::FileType type,bool removeOffset){
+void Session::bounce_region_pre(RegionPtr region, std::string filename, Session::FileType type,bool removeOffset,std::function<void()> callBack){
 	
 	//use the bounce session to create file
 	//e.g Session temp;
@@ -904,7 +907,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 		
 	
 	temp.add_region(region);
-	temp.bounce_session(filename,type,false,true);
+	temp.bounce_session(filename,type,false,true,callBack);
 	region->set_start_pos(storedPosition);
 	
 	for(int n = 0 ; n < region->get_DSPStack().size();++n){
@@ -913,7 +916,7 @@ void Session::bounce_region_pre(RegionPtr region, std::string filename, Session:
 	}
 	delete [] bypassStates;
 }
-void Session::bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type)
+void Session::bounce_regions(fsom::RegionList& regionList,std::string filename,FileType type,std::function<void()> callBack)
 {
 	
 	//use the bounce session to create file
@@ -966,7 +969,7 @@ void Session::bounce_regions(fsom::RegionList& regionList,std::string filename,F
 	}
 	
 //	region->set_start_pos(0);
-	temp.bounce_session(filename,type);
+	temp.bounce_session(filename,type,false,false,callBack);
 	
 	//reset position/
 	int i=0;
@@ -1127,7 +1130,7 @@ MultiTableBuffer Session::load_file_to_table(std::string path){
 	
 }
 
-std::string Session::timestretch_region(RegionPtr region, float speed, std::string folderpath, std::string name, int fftSize, int numOverlaps){
+std::string Session::timestretch_region(RegionPtr region, float speed, std::string folderpath, std::string name, int fftSize, int numOverlaps,std::function<void()> callBack){
 	//got here
 	//need to take region,
 	//call internal process on the region passing the output into a table,
@@ -1146,7 +1149,7 @@ std::string Session::timestretch_region(RegionPtr region, float speed, std::stri
 	region->set_start_pos(0);
 	temp.add_region(region);
 	std::string filepath = folderpath + name+"bounce.wav";
-	temp.bounce_session(filepath);
+	temp.bounce_session(filepath,FT_WAV,false,false,callBack);
 	region->set_start_pos(storedPosition);
 	fsom::DebugStream << "Region Bounced"<<std::endl;
 	///////////////////////////////////////////////////////
