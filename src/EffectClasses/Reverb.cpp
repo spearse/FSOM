@@ -90,12 +90,12 @@ namespace fsom{
 	}
 	
 	void Reverb::clearReverbUnit(){
-		
-//m_revUnit.mute();
-	//	m_revUnit.mute();
+        //m_revUnit.mute();
+        m_revUnit.mute();
+	//	_revUnit.mute();
 	}
 	void Reverb::reset_effect(){
-	//	m_revUnit.mute();
+        m_revUnit.mute();
 	}
 	
 	//---------------SIMPLE REVERB---------------------------------------------//
@@ -161,10 +161,11 @@ namespace fsom{
 	}
 	void SimpleReverb::clearReverbUnit(){
 		
-	//	m_revUnit.mute();
+	
+        m_revUnit.mute();
 	//	m_revUnit.mute();
 	}
 	void SimpleReverb::reset_effect(){
-	//	m_revUnit.mute();
+		m_revUnit.mute();
 	}
 }
